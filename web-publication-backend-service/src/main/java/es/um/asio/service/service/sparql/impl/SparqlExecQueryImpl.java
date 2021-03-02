@@ -131,7 +131,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		final List<FusekiResponse> result = new ArrayList<>();
 
 		// call for Fuseki-Trellis
-		final ResponseEntity<Object> res = this.callFusekiTrellis(query);
+		final ResponseEntity<Object> res = this.callFusekiTrellis(query, false);
 
 		if ((res != null) && (res.getBody() != null)) {
 			final LinkedHashMap<String, Object> body = (LinkedHashMap<String, Object>) res.getBody();
@@ -151,7 +151,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		Integer result = 0;
 
 		// call for Fuseki-Trellis
-		final ResponseEntity<Object> res = this.callFusekiTrellis(query);
+		final ResponseEntity<Object> res = this.callFusekiTrellis(query, false);
 
 		if ((res != null) && (res.getBody() != null)) {
 			final LinkedHashMap<String, Object> body = (LinkedHashMap<String, Object>) res.getBody();
@@ -178,7 +178,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	 * @param query the query
 	 * @return the response entity
 	 */
-	public ResponseEntity<Object> callFusekiTrellis(final String query) {
+	public ResponseEntity<Object> callFusekiTrellis(final String query, Boolean isFederated) {
 		ResponseEntity<Object> result = null;
 		try {
 			result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.POST, this.getBody(query),

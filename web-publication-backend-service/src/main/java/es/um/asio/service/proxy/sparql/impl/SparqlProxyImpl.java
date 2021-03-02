@@ -33,9 +33,10 @@ public class SparqlProxyImpl implements SparqlProxy {
 	 * @return the response entity
 	 */
 	@Override
-	public ResponseEntity<Object> run(String query) {
+	public ResponseEntity<Object> run(String query, Boolean isFederated) {
 		logger.info("Running sparql {}", query);
-		return sparqlExecQuery.callFusekiTrellis(query);
+		return sparqlExecQuery.callFusekiTrellis(query, isFederated);
 	}
+
 
 }

@@ -4,5 +4,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface SparqlProxy {
 
-	ResponseEntity<Object> run(String query);
+	ResponseEntity<Object> run(String query, Boolean isFederated);
+
 }

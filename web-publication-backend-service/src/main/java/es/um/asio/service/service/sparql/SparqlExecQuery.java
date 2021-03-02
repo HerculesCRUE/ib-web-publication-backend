@@ -22,5 +22,7 @@ public interface SparqlExecQuery {
 	 * @param query the query
 	 * @return the response entity
 	 */
-	ResponseEntity<Object> callFusekiTrellis(String query);
+	ResponseEntity<Object> callFusekiTrellis(String query, Boolean isFederated);
+	
+
 }

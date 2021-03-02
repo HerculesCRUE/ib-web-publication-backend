@@ -45,13 +45,36 @@ public class SparqlController {
 	@RequestMapping(value = SparqlController.Mappings.SPARQL, method = RequestMethod.POST,
 	        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, 
 	        produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Object> searchProyects(@RequestParam Map<String, String> body) {
+	public ResponseEntity<Object> searchSPARQL(@RequestParam Map<String, String> body) {
 		logger.info("Searching sparql query");
 		
 		ResponseEntity<Object> result = null;
 		
 		if(body != null && StringUtils.isNotBlank(body.get(SparqlController.QUERY))) {
-			result = sparqlProxy.run(body.get(SparqlController.QUERY));
+			result = sparqlProxy.run(body.get(SparqlController.QUERY), false);
+		} else {
+			logger.error("Empty sparql query");
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Search proyects.
+	 *
+	 * @param body the body
+	 * @return the response entity
+	 */
+	@RequestMapping(value = SparqlController.Mappings.SPARQL_FEDER, method = RequestMethod.POST,
+	        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, 
+	        produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Object> searchSPARQLFeder(@RequestParam Map<String, String> body) {
+		logger.info("Searching sparql query");
+		
+		ResponseEntity<Object> result = null;
+		
+		if(body != null && StringUtils.isNotBlank(body.get(SparqlController.QUERY))) {
+			result = sparqlProxy.run(body.get(SparqlController.QUERY), true);
 		} else {
 			logger.error("Empty sparql query");
 		}
@@ -70,5 +93,8 @@ public class SparqlController {
 		
 		/** The Constant SPARQL. */
 		protected static final String SPARQL = "/sparql";
+		
+		/** The Constant SPARQL. */
+		protected static final String SPARQL_FEDER = "/sparqlfeder";
 	}
 }
