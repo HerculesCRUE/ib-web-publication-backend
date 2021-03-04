@@ -3,6 +3,10 @@ app:
   # trellis
   fusekitrellis:
     url: http://localhost:3030/trellis/sparql
+  federationAll:
+    url: http://localhost:9328/federation/nodes/all
+  federationNode:
+    url: http://localhost:9328/federation/nodes/list
   # CORS
   cors:
     enabled: true
