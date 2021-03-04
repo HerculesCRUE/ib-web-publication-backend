@@ -196,9 +196,13 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		ResponseEntity<Object> result = null;
 		if (!isFederated) {
 			try {
-				// result = this.restTemplate.exchange(this.federationNode, HttpMethod.POST, this.getBody(query), Object.class);
-				result = this.restTemplate.exchange(this.federationNode, HttpMethod.POST,
-						this.getBody(query, PAGE_SIZE, "fuseki", NODES), Object.class);
+				result = this.restTemplate.exchange(this.federationNode, HttpMethod.POST, this.getBody(query), Object.class);
+				
+				// IMPORTANT:
+				// Call to fuseki can be replaced for the next service, who calls service to get data from certain nodes
+				
+				// result = this.restTemplate.exchange(this.federationNode, HttpMethod.POST,
+				//		this.getBody(query, PAGE_SIZE, "fuseki", NODES), Object.class);
 
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
