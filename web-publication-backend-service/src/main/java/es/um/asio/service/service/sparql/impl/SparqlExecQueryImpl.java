@@ -3,9 +3,6 @@
  */
 package es.um.asio.service.service.sparql.impl;
 
-import java.net.URLEncoder;
-import java.net.http.HttpRequest;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -271,17 +268,4 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		return body;
 	}
 
-	private static HttpRequest.BodyPublisher buildFormDataFromMap(Map<Object, Object> data) {
-		var builder = new StringBuilder();
-		for (Map.Entry<Object, Object> entry : data.entrySet()) {
-			if (builder.length() > 0) {
-				builder.append("&");
-			}
-			builder.append(URLEncoder.encode(entry.getKey().toString(), StandardCharsets.UTF_8));
-			builder.append("=");
-			builder.append(URLEncoder.encode(entry.getValue().toString(), StandardCharsets.UTF_8));
-		}
-		System.out.println(builder.toString());
-		return HttpRequest.BodyPublishers.ofString(builder.toString());
-	}
 }
