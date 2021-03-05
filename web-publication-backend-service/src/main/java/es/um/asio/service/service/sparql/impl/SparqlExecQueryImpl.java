@@ -44,6 +44,19 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	@Value("${app.fusekitrellis.url}")
 	private String fusekiTrellisUrl;
 
+	@Value("${app.federationAll.url}")
+	private String federationUrl;
+
+	@Value("${app.federationNode.url}")
+	private String federationNode;
+
+	@Value("${app.federation.services}")
+	private Boolean federationServices;
+
+	private static final String NODES = "um";
+
+	private static final Integer PAGE_SIZE = 50000;
+
 	@Autowired
 	private QueryBuilder queryBuilder;
 
@@ -97,10 +110,12 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	 * @return the string
 	 */
 	private String selectQuery(final Map<String, String> params) {
-		final String result = String.format(FusekiConstants.QUERY_TEMPLATE_SELECT, params.get(FusekiConstants.SELECT_CHUNK),
-					params.get(FusekiConstants.TYPE_CHUNK), params.get(FusekiConstants.FIELDS_CHUNK), params.get(FusekiConstants.JOIN_CHUNK),
-					params.get(FusekiConstants.FILTERS_CHUNK), params.get(FusekiConstants.GROUP), params.get(FusekiConstants.ORDER),
-					params.get(FusekiConstants.LIMIT), params.get(FusekiConstants.OFFSET));
+		final String result = String.format(FusekiConstants.QUERY_TEMPLATE_SELECT,
+				params.get(FusekiConstants.SELECT_CHUNK), params.get(FusekiConstants.TYPE_CHUNK),
+				params.get(FusekiConstants.FIELDS_CHUNK), params.get(FusekiConstants.JOIN_CHUNK),
+				params.get(FusekiConstants.FILTERS_CHUNK), params.get(FusekiConstants.GROUP),
+				params.get(FusekiConstants.ORDER), params.get(FusekiConstants.LIMIT),
+				params.get(FusekiConstants.OFFSET));
 
 		return result;
 	}
@@ -112,9 +127,10 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	 * @return the string
 	 */
 	private String countQuery(final Map<String, String> params) {
-		final String result = String.format(FusekiConstants.QUERY_TEMPLATE_COUNT, params.get(FusekiConstants.COUNT_CHUNK),
-				params.get(FusekiConstants.TYPE_CHUNK), params.get(FusekiConstants.FIELDS_CHUNK), params.get(FusekiConstants.JOIN_CHUNK),
-				params.get(FusekiConstants.FILTERS_CHUNK), params.get(FusekiConstants.LIMIT), 
+		final String result = String.format(FusekiConstants.QUERY_TEMPLATE_COUNT,
+				params.get(FusekiConstants.COUNT_CHUNK), params.get(FusekiConstants.TYPE_CHUNK),
+				params.get(FusekiConstants.FIELDS_CHUNK), params.get(FusekiConstants.JOIN_CHUNK),
+				params.get(FusekiConstants.FILTERS_CHUNK), params.get(FusekiConstants.LIMIT),
 				params.get(FusekiConstants.OFFSET));
 
 		return result;
@@ -178,14 +194,44 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	 * @param query the query
 	 * @return the response entity
 	 */
+	@Override
 	public ResponseEntity<Object> callFusekiTrellis(final String query, Boolean isFederated) {
 		ResponseEntity<Object> result = null;
-		try {
-			result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.POST, this.getBody(query),
-					Object.class);
+		if (!federationServices) {
+			try {
+				result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.POST, this.getBody(query),
+						Object.class);
+			} catch (final Exception e) {
+				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
+			}
+		} else {
+			ResponseEntity<Object> tempResult ;
+			
+			if (!isFederated) {
+				try {
+					tempResult = this.restTemplate.exchange(this.federationNode, HttpMethod.POST,
+							this.getBody(query, PAGE_SIZE, "fuseki", NODES), Object.class);
 
-		} catch (final Exception e) {
-			this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
+					MultiValueMap<String, String> newHeader = new LinkedMultiValueMap<>();
+					newHeader.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+					result = new ResponseEntity<Object>(tempResult.getBody(), tempResult.getStatusCode());
+				} catch (final Exception e) {
+					this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
+				}
+			} else {
+
+				try {
+
+					tempResult = this.restTemplate.exchange(this.federationUrl, HttpMethod.POST,
+							this.getBody(query, PAGE_SIZE, "fuseki"), Object.class);
+
+					result = new ResponseEntity<Object>(tempResult.getBody(), tempResult.getStatusCode());
+
+				} catch (final Exception e) {
+					this.logger.error("Error retrieving results from federation cause {}", e.getMessage());
+				}
+			}
+			
 		}
 		return result;
 	}
@@ -215,4 +261,30 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 		return body;
 	}
+
+	private HttpEntity<MultiValueMap<String, String>> getBody(final String query, final int pageSize,
+			final String tripleStore) {
+		final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("query", query);
+		params.add("pageSize", Integer.toString(pageSize));
+		params.add("tripleStore", tripleStore);
+
+		final HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, this.getHeaders());
+
+		return body;
+	}
+
+	private HttpEntity<MultiValueMap<String, String>> getBody(final String query, final int pageSize,
+			final String tripleStore, final String nodes) {
+		final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("query", query);
+		params.add("pageSize", Integer.toString(pageSize));
+		params.add("tripleStore", tripleStore);
+		params.add("nodeList", nodes);
+
+		final HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, this.getHeaders());
+
+		return body;
+	}
+
 }
