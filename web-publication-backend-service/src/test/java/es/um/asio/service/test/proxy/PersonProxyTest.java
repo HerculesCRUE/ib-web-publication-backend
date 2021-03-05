@@ -1,17 +1,21 @@
 package es.um.asio.service.test.proxy;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -21,32 +25,18 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import es.um.asio.service.dto.PersonDto;
 import es.um.asio.service.filter.person.PersonFilter;
-import es.um.asio.service.mapper.PersonMapper;
 import es.um.asio.service.mapper.decorator.PersonMapperDecorator;
 import es.um.asio.service.model.FusekiResponse;
-import es.um.asio.service.proxy.person.PersonProxy;
-import es.um.asio.service.proxy.person.impl.PersonProxyImpl;
 import es.um.asio.service.service.person.PersonService;
-import es.um.asio.service.service.person.impl.PersonServiceImpl;
-import es.um.asio.service.service.sparql.SparqlExecQuery;
 
 @RunWith(SpringRunner.class)
 public class PersonProxyTest {
-
-	/**
-	 * Person proxy
-	 */
-	@Autowired
-	private PersonProxy proxy;
 	
 	@Autowired
-	private PersonMapper mapper;
-
-	@Autowired
-	private PersonService service;
+	private PersonMapperDecorator mapper;
 
 	@MockBean
-	private SparqlExecQuery serviceSPARQL;
+	private PersonService service;
 
 	PersonFilter filter;
 
@@ -54,20 +44,11 @@ public class PersonProxyTest {
 
 	@TestConfiguration
 	static class PersonProxyTestConfiguration {
-		@Bean
-		public PersonProxy personProxy() {
-			return new PersonProxyImpl();
-		}
 		
 		@Bean
-		public PersonMapper personMapper() {
+		@Qualifier("delegate")
+		public PersonMapperDecorator personMapper() {
 			return new PersonMapperDecorator();
-		}
-
-		@Bean
-		@Primary
-		public PersonService personService() {
-			return new PersonServiceImpl();
 		}
 	}
 
@@ -87,38 +68,51 @@ public class PersonProxyTest {
 			String head = "\"head\": {\r\n"
 					+ "    \"vars\": [ \"x\" , \"name\" , \"ini\" , \"fin\" , \"id\" , \"tipo\" ]\r\n" + "  }";
 
-			String result = "\"results\": {\r\n" + "    \"bindings\": [\r\n" + "      {\r\n"
-					+ "        \"x\": { \"type\": \"uri\" , \"value\": \"http://hercules.org/um/es-ES/rec/Person/9a115815-4dfa-32ca-9dbd-0694a4e9bdc8\" } ,\r\n"
-					+ "        \"id\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"52\" } ,\r\n"
-					+ "        \"title\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"TITLE\" } ,\r\n"
-					+ "        \"birthDate\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" } ,\r\n"
-					+ "        \"description\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" } ,\r\n"
-					+ "        \"firstName\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" }\r\n"
-					+ "        \"gender\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" } ,\r\n"
-					+ "        \"hasContactInfo\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" } ,\r\n"
-					+ "        \"homepage\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" } ,\r\n"
-					+ "        \"image\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" } ,\r\n"
-					+ "        \"name\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" } ,\r\n"
-					+ "        \"nickname\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" } ,\r\n"
-					+ "        \"personalMailBox\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" } ,\r\n"
-					+ "        \"researchLine\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" } ,\r\n"
-					+ "        \"surname\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" } ,\r\n"
-					+ "        \"taxId\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" } ,\r\n"
-					+ "      }";
-
+			Map<String, List<Map<String, Map<String, String>>>> resultMap = new HashMap<>();
+			
+			resultMap.put("bindings", new ArrayList<Map<String, Map<String, String>>>());
+			
+			Map<String, Map<String, String>> bindings = new HashMap<>();
+			bindings.put("id", this.propertyMap("literal", "es", "52"));
+			bindings.put("title", this.propertyMap("literal", "es", "title"));
+			bindings.put("birthDate", this.propertyMap("literal", "es", ""));
+			bindings.put("description", this.propertyMap("literal", "es", ""));
+			bindings.put("firstName", this.propertyMap("literal", "es", ""));
+			bindings.put("gender", this.propertyMap("literal", "es", ""));
+			bindings.put("hasContactInfo", this.propertyMap("literal", "es", ""));
+			bindings.put("homepage", this.propertyMap("literal", "es", ""));
+			bindings.put("image", this.propertyMap("literal", "es", ""));
+			bindings.put("name", this.propertyMap("literal", "es", ""));
+			bindings.put("nickname", this.propertyMap("literal", "es", ""));
+			bindings.put("personalMaiBox", this.propertyMap("literal", "es", ""));
+			bindings.put("researchLine", this.propertyMap("literal", "es", ""));
+			bindings.put("surname", this.propertyMap("literal", "es", ""));
+			bindings.put("taxId", this.propertyMap("literal", "es", ""));
+			
+			resultMap.get("bindings").add(bindings);
+			
 			fuseki.setHead(head);
-			fuseki.setResults(result);
+			fuseki.setResults(resultMap);
 			contentResult.add(fuseki);
 			Page<FusekiResponse> page = new PageImpl<>(contentResult, pageable, contentResult.size());
 			
-			return this.mapper.convertPageFusekiResponseToDto(page);
+			return page;
 		});
 	}
 
 	@Test
 	public void proxyTest() {
-		Page<PersonDto> page = proxy.findPaginated(filter, pageable);
+		Page<PersonDto> page = this.mapper.convertPageFusekiResponseToDto(this.service.findPaginated(filter, pageable));
 
-		// assertNotNull(page);
+		assertNotNull(page);
+	}
+	
+	private Map<String, String> propertyMap(String type, String lang, String value) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("type", type);
+		map.put("xml:lang", lang);
+		map.put("value", value);
+		
+		return map; 
 	}
 }

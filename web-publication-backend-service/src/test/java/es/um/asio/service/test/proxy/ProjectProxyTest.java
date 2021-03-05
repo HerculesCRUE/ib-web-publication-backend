@@ -1,17 +1,21 @@
 package es.um.asio.service.test.proxy;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -21,31 +25,18 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import es.um.asio.service.dto.ProjectDto;
 import es.um.asio.service.filter.project.ProjectFilter;
-import es.um.asio.service.mapper.ProjectMapper;
 import es.um.asio.service.mapper.decorator.ProjectMapperDecorator;
 import es.um.asio.service.model.FusekiResponse;
-import es.um.asio.service.proxy.project.ProjectProxy;
-import es.um.asio.service.proxy.project.impl.ProjectProxyImpl;
 import es.um.asio.service.service.project.ProjectService;
-import es.um.asio.service.service.project.impl.ProjectServiceImpl;
-import es.um.asio.service.service.sparql.SparqlExecQuery;
 
 @RunWith(SpringRunner.class)
 public class ProjectProxyTest {
-	/**
-	 * Project proxy
-	 */
-	@Autowired
-	private ProjectProxy proxy;
 	
 	@Autowired
-	private ProjectMapper mapper;
-
-	@Autowired
-	private ProjectService service;
+	private ProjectMapperDecorator mapper;
 
 	@MockBean
-	private SparqlExecQuery serviceSPARQL;
+	private ProjectService service;
 
 	ProjectFilter filter;
 
@@ -53,20 +44,11 @@ public class ProjectProxyTest {
 
 	@TestConfiguration
 	static class ProjectProxyTestConfiguration {
-		@Bean
-		public ProjectProxy projectProxy() {
-			return new ProjectProxyImpl();
-		}
 		
 		@Bean
-		public ProjectMapper projectMapper() {
+		@Qualifier("delegate")
+		public ProjectMapperDecorator projectMapper() {
 			return new ProjectMapperDecorator();
-		}
-
-		@Bean
-		@Primary
-		public ProjectService projectService() {
-			return new ProjectServiceImpl();
 		}
 	}
 
@@ -86,34 +68,47 @@ public class ProjectProxyTest {
 			String head = "\"head\": {\r\n"
 					+ "    \"vars\": [ \"x\" , \"name\" , \"ini\" , \"fin\" , \"id\" , \"tipo\" ]\r\n" + "  }";
 
-			String result = "\"results\": {\r\n" + "    \"bindings\": [\r\n" + "      {\r\n"
-					+ "        \"x\": { \"type\": \"uri\" , \"value\": \"http://hercules.org/um/es-ES/rec/Person/9a115815-4dfa-32ca-9dbd-0694a4e9bdc8\" } ,\r\n"
-					+ "        \"id\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"52\" } ,\r\n"
-					+ "        \"title\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"NAME\" } ,\r\n"
-					+ "        \"abbreviation\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" } ,\r\n"
-					+ "        \"description\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" } ,\r\n"
-					+ "        \"endDate\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"\" }\r\n"
-					+ "        \"foreseenJustificationDate\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"52\" } ,\r\n"
-					+ "        \"keyword\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"52\" } ,\r\n"
-					+ "        \"modality\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"52\" } ,\r\n"
-					+ "        \"needsEthicalValidation\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"52\" } ,\r\n"
-					+ "        \"startDate\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"52\" } ,\r\n"
-					+ "        \"status\": { \"type\": \"literal\" , \"xml:lang\": \"es\" , \"value\": \"52\" } ,\r\n"
-					+ "      }";
-
+			Map<String, List<Map<String, Map<String, String>>>> resultMap = new HashMap<>();
+			
+			resultMap.put("bindings", new ArrayList<Map<String, Map<String, String>>>());
+			
+			Map<String, Map<String, String>> bindings = new HashMap<>();
+			bindings.put("id", this.propertyMap("literal", "es", "52"));
+			bindings.put("title", this.propertyMap("literal", "es", "title"));
+			bindings.put("abbreviation", this.propertyMap("literal", "es", ""));
+			bindings.put("description", this.propertyMap("literal", "es", ""));
+			bindings.put("endDate", this.propertyMap("literal", "es", ""));
+			bindings.put("foreseenJustificationDate", this.propertyMap("literal", "es", ""));
+			bindings.put("keyword", this.propertyMap("literal", "es", ""));
+			bindings.put("modality", this.propertyMap("literal", "es", ""));
+			bindings.put("needsEthicalValidation", this.propertyMap("literal", "es", ""));
+			bindings.put("startPage", this.propertyMap("literal", "es", ""));
+			bindings.put("status", this.propertyMap("literal", "es", ""));
+			
+			resultMap.get("bindings").add(bindings);
+			
 			fuseki.setHead(head);
-			fuseki.setResults(result);
+			fuseki.setResults(resultMap);
 			contentResult.add(fuseki);
 			Page<FusekiResponse> page = new PageImpl<>(contentResult, pageable, contentResult.size());
 			
-			return this.mapper.convertPageFusekiResponseToDto(page);
+			return page;
 		});
 	}
 
 	@Test
 	public void proxyTest() {
-		Page<ProjectDto> page = proxy.findPaginated(filter, pageable);
+		Page<ProjectDto> page = this.mapper.convertPageFusekiResponseToDto(this.service.findPaginated(filter, pageable));
 
-		// assertNotNull(page);
+		assertNotNull(page);
+	}
+	
+	private Map<String, String> propertyMap(String type, String lang, String value) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("type", type);
+		map.put("xml:lang", lang);
+		map.put("value", value);
+		
+		return map; 
 	}
 }
