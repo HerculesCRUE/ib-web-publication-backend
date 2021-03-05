@@ -1,10 +1,15 @@
 ---
 app:
+  # When is true, SPARQL query results are getted from federation services, else these information are getted from fuseki
+  federation:
+    services: false
   # trellis
   fusekitrellis:
     url: http://localhost:3030/trellis/sparql
+  # Service who get Sparql query results from all nodes
   federationAll:
     url: http://localhost:9328/federation/nodes/all
+  # Service who get Sparql query results from certain nodes
   federationNode:
     url: http://localhost:9328/federation/nodes/list
   # CORS

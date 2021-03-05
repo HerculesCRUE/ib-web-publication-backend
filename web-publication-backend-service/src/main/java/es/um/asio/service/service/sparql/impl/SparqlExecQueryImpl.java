@@ -46,14 +46,17 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 	@Value("${app.federationAll.url}")
 	private String federationUrl;
-	
+
 	@Value("${app.federationNode.url}")
 	private String federationNode;
-	
+
+	@Value("${app.federation.services}")
+	private Boolean federationServices;
+
 	private static final String NODES = "um";
 
 	private static final Integer PAGE_SIZE = 50000;
-	
+
 	@Autowired
 	private QueryBuilder queryBuilder;
 
@@ -194,28 +197,31 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	@Override
 	public ResponseEntity<Object> callFusekiTrellis(final String query, Boolean isFederated) {
 		ResponseEntity<Object> result = null;
-		if (!isFederated) {
+		if (!federationServices) {
 			try {
-				result = this.restTemplate.exchange(this.federationNode, HttpMethod.POST, this.getBody(query), Object.class);
-				
-				// IMPORTANT:
-				// Call to fuseki can be replaced for the next service, who calls service to get data from certain nodes
-				
-				// result = this.restTemplate.exchange(this.federationNode, HttpMethod.POST,
-				//		this.getBody(query, PAGE_SIZE, "fuseki", NODES), Object.class);
-
+				result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.POST, this.getBody(query),
+						Object.class);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
 			}
 		} else {
+			if (!isFederated) {
+				try {
+					result = this.restTemplate.exchange(this.federationNode, HttpMethod.POST,
+							this.getBody(query, PAGE_SIZE, "fuseki", NODES), Object.class);
+				} catch (final Exception e) {
+					this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
+				}
+			} else {
 
-			try {
+				try {
 
-				result = this.restTemplate.exchange(this.federationUrl, HttpMethod.POST,
-						this.getBody(query, PAGE_SIZE, "fuseki"), Object.class);
+					result = this.restTemplate.exchange(this.federationUrl, HttpMethod.POST,
+							this.getBody(query, PAGE_SIZE, "fuseki"), Object.class);
 
-			} catch (final Exception e) {
-				this.logger.error("Error retrieving results from federation cause {}", e.getMessage());
+				} catch (final Exception e) {
+					this.logger.error("Error retrieving results from federation cause {}", e.getMessage());
+				}
 			}
 		}
 		return result;
@@ -258,7 +264,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 		return body;
 	}
-	
+
 	private HttpEntity<MultiValueMap<String, String>> getBody(final String query, final int pageSize,
 			final String tripleStore, final String nodes) {
 		final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
