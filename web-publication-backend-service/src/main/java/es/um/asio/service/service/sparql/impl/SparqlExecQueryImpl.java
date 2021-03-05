@@ -212,20 +212,17 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 					tempResult = this.restTemplate.exchange(this.federationNode, HttpMethod.POST,
 							this.getBody(query, PAGE_SIZE, "fuseki", NODES), Object.class);
 
-					MultiValueMap<String, String> newHeader = new LinkedMultiValueMap<>();
-					newHeader.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-					result = new ResponseEntity<Object>(tempResult.getBody(), tempResult.getStatusCode());
+					result = createResult(tempResult);
 				} catch (final Exception e) {
 					this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
 				}
 			} else {
 
 				try {
-
 					tempResult = this.restTemplate.exchange(this.federationUrl, HttpMethod.POST,
 							this.getBody(query, PAGE_SIZE, "fuseki"), Object.class);
 
-					result = new ResponseEntity<Object>(tempResult.getBody(), tempResult.getStatusCode());
+					result = createResult(tempResult);
 
 				} catch (final Exception e) {
 					this.logger.error("Error retrieving results from federation cause {}", e.getMessage());
@@ -234,6 +231,13 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 			
 		}
 		return result;
+	}
+
+	private ResponseEntity<Object> createResult(ResponseEntity<Object> tempResult) {
+		ResponseEntity<Object> result;
+		MultiValueMap<String, String> newHeader = new LinkedMultiValueMap<>();
+		newHeader.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+		return new ResponseEntity<Object>(tempResult.getBody(),newHeader, tempResult.getStatusCode());
 	}
 
 	/**
