@@ -205,10 +205,16 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
 			}
 		} else {
+			ResponseEntity<Object> tempResult ;
+			
 			if (!isFederated) {
 				try {
-					result = this.restTemplate.exchange(this.federationNode, HttpMethod.POST,
+					tempResult = this.restTemplate.exchange(this.federationNode, HttpMethod.POST,
 							this.getBody(query, PAGE_SIZE, "fuseki", NODES), Object.class);
+
+					MultiValueMap<String, String> newHeader = new LinkedMultiValueMap<>();
+					newHeader.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+					result = new ResponseEntity<Object>(tempResult.getBody(), tempResult.getStatusCode());
 				} catch (final Exception e) {
 					this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
 				}
@@ -216,13 +222,16 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 				try {
 
-					result = this.restTemplate.exchange(this.federationUrl, HttpMethod.POST,
+					tempResult = this.restTemplate.exchange(this.federationUrl, HttpMethod.POST,
 							this.getBody(query, PAGE_SIZE, "fuseki"), Object.class);
+
+					result = new ResponseEntity<Object>(tempResult.getBody(), tempResult.getStatusCode());
 
 				} catch (final Exception e) {
 					this.logger.error("Error retrieving results from federation cause {}", e.getMessage());
 				}
 			}
+			
 		}
 		return result;
 	}
