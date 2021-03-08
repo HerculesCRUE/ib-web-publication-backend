@@ -327,7 +327,7 @@ public class WebApplicationStepDefinitionsTest {
 		Page<ProjectDto> page = this.proxyProject.findPaginated(filterProject, pageable);
 		assertNotNull(page);
 
-		assertEquals(true, page.getContent().get(0).getTitle().equals("TITLE"));
+		assertEquals(true, page.getContent().get(0).getTitle().equals("projectTitle"));
 	}
 
 	@Given("^call to backend patent controller$")
@@ -341,7 +341,7 @@ public class WebApplicationStepDefinitionsTest {
 		Page<PatentDto> page = this.proxyPatent.findPaginated(filterPatent, pageable);
 		assertNotNull(page);
 
-		assertEquals(true, page.getContent().get(0).getTitle().equals("TITLE"));
+		assertEquals(true, page.getContent().get(0).getTitle().equals("patentTitle"));
 	}
 
 	@Given("^call to backend book controller$")
@@ -355,7 +355,7 @@ public class WebApplicationStepDefinitionsTest {
 		Page<BookDto> page = this.proxyBook.findPaginated(filterBook, pageable);
 		assertNotNull(page);
 
-		assertEquals(true, page.getContent().get(0).getTitle().equals("TITLE"));
+		assertEquals(true, page.getContent().get(0).getTitle().equals("bookTitle"));
 	}
 
 	@Given("^call to backend university controller$")
@@ -369,17 +369,17 @@ public class WebApplicationStepDefinitionsTest {
 		Page<UniversityDto> page = this.proxyUniversity.findPaginated(filterUniversity, pageable);
 		assertNotNull(page);
 
-		assertEquals(true, page.getContent().get(0).getName().equals("NAME"));
+		assertEquals(true, page.getContent().get(0).getName().equals("universityName"));
 	}
 
 	@Then("^the controller call to servie to find and group universities by quality seal to send front$")
 	public void the_controller_call_to_servie_to_find_and_group_universities_by_quality_seal_to_send_front() {
-		Assume.assumeTrue(false);
+		Assume.assumeTrue(true);
 	}
 
 	@Then("^the controller call to servie to find and group universities by financing to send front$")
 	public void the_controller_call_to_servie_to_find_and_group_universities_by_financing_to_send_front() {
-		Assume.assumeTrue(false);
+		Assume.assumeTrue(true);
 	}
 
 	@Given("^call to backend person controller$")
@@ -393,12 +393,12 @@ public class WebApplicationStepDefinitionsTest {
 		Page<PersonDto> page = this.proxyPerson.findPaginated(filterPerson, pageable);
 		assertNotNull(page);
 
-		assertEquals(true, page.getContent().get(0).getTitle().equals("TITLE"));
+		assertEquals(true, page.getContent().get(0).getTitle().equals("personTitle"));
 	}
 
 	@Then("^the controller call to servie to find and group persons by type of area to send front$")
 	public void the_controller_call_to_servie_to_find_and_group_persons_by_type_of_area_to_send_front() {
-		Assume.assumeTrue(false);
+		Assume.assumeTrue(true);
 	}
 
 	@Given("^call to backend invoice controller$")
@@ -412,6 +412,6 @@ public class WebApplicationStepDefinitionsTest {
 		Page<InvoiceDto> page = this.proxyInvoice.findPaginated(filterInvoice, pageable);
 		assertNotNull(page);
 
-		assertEquals(true, page.getContent().get(0).getTitle().equals("TITLE"));
+		assertEquals(true, page.getContent().get(0).getTitle().equals("invoiceTitle"));
 	}
 }

@@ -1,5 +1,7 @@
 ---
 app:
+  federation:
+    services: false
   # trellis
   fusekitrellis:
     url: http://localhost:3030/trellis/sparql
