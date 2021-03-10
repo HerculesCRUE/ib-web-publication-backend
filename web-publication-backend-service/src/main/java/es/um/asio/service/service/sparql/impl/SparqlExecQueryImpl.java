@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
+import es.um.asio.service.model.SimpleQuery;
 import es.um.asio.service.service.sparql.QueryBuilder;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
 import es.um.asio.service.util.FusekiConstants;
@@ -92,7 +93,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 			final Map<String, String> params = this.queryBuilder.queryChunks(page.getEntity(), page.getPage());
 			params.put(FusekiConstants.FILTERS_CHUNK, page.getFilters());
 
-			contentResult = this.getElements(this.selectQuery(params));
+			contentResult = this.getElements(this.selectPaginatedQuery(params));
 			totalElements = this.getTotalElements(this.countQuery(params));
 		} catch (final Exception e) {
 			this.logger.error("Error building the page {}", page);
@@ -102,6 +103,24 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 		return result;
 	}
+	
+	@Override
+	public FusekiResponse run(final SimpleQuery query) {
+
+		List<FusekiResponse> contentResult = new ArrayList<>();
+
+		try {
+			// we retrieve the params in order to build the query later
+			final Map<String, String> params = this.queryBuilder.queryChunks(query.getEntity());
+			params.put(FusekiConstants.FILTERS_CHUNK, query.getFilters());
+
+			contentResult = this.getElements(this.selectSimpleQuery(params));
+		} catch (final Exception e) {
+			this.logger.error("Error building the page {}", query);
+		}
+
+		return (contentResult.size() > 0)? null : contentResult.get(0);
+	}
 
 	/**
 	 * Select query.
@@ -109,7 +128,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	 * @param params the params
 	 * @return the string
 	 */
-	private String selectQuery(final Map<String, String> params) {
+	private String selectPaginatedQuery(final Map<String, String> params) {
 		final String result = String.format(FusekiConstants.QUERY_TEMPLATE_SELECT,
 				params.get(FusekiConstants.SELECT_CHUNK), params.get(FusekiConstants.TYPE_CHUNK),
 				params.get(FusekiConstants.FIELDS_CHUNK), params.get(FusekiConstants.JOIN_CHUNK),
@@ -119,6 +138,17 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 		return result;
 	}
+	
+	private String selectSimpleQuery(final Map<String, String> params) {
+		final String result = String.format(FusekiConstants.QUERY__SIMPLE_TEMPLATE_SELECT,
+				params.get(FusekiConstants.SELECT_CHUNK), params.get(FusekiConstants.TYPE_CHUNK),
+				params.get(FusekiConstants.FIELDS_CHUNK), params.get(FusekiConstants.JOIN_CHUNK),
+				params.get(FusekiConstants.FILTERS_CHUNK));
+
+		return result;
+	}
+	
+	
 
 	/**
 	 * Count query.

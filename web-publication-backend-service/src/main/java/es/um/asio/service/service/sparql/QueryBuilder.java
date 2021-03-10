@@ -9,4 +9,6 @@ import es.um.asio.service.model.Entity;
 public interface QueryBuilder {
 
 	Map<String, String> queryChunks(Entity entity, Pageable pageable);
+	
+	Map<String, String> queryChunks(Entity entity);
 }

@@ -29,4 +29,11 @@ public class DocumentProxyImpl implements DocumentProxy {
 		return this.mapper.convertPageFusekiResponseToDto(this.service.findPaginated(filter, pageable));
 	}
 
+	@Override
+	public DocumentDto find(String id, String type) {
+		return this.mapper.convertFusekiObjectToDto(this.service.find(id, type));
+	}
+	
+	
+
 }

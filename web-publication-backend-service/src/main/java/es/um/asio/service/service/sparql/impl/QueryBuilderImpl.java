@@ -42,6 +42,27 @@ public class QueryBuilderImpl implements QueryBuilder {
 				
 		return map;
 	}
+	
+	@Override
+	public Map<String, String> queryChunks(Entity entity) {
+		
+		String selectChunk = this.selectChunk(entity.getFields());
+		String typeChunk = this.typeChunk(entity.getEntity(), entity.getTypes());
+		String fieldsChunk = this.fieldsChunk(entity.getFields());
+		String group = this.groupChunk(entity.getGroup());
+		String join = this.joinChunk(entity.getJoin());
+		
+		Map<String, String> map = new HashMap<>();
+		map.put(FusekiConstants.SELECT_CHUNK, selectChunk);
+		map.put(FusekiConstants.COUNT_CHUNK, FusekiConstants.COUNT_CHUNK_TEMPLATE);
+		map.put(FusekiConstants.TYPE_CHUNK, typeChunk);
+		map.put(FusekiConstants.FIELDS_CHUNK, fieldsChunk);
+		map.put(FusekiConstants.GROUP, group);
+		map.put(FusekiConstants.JOIN_CHUNK, join);
+				
+		return map;
+	}
+
 
 	
 	private String selectChunk(List<String> fields) {

@@ -1,10 +1,13 @@
 package es.um.asio.back.controller.document;
 
+import java.util.Base64;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,8 +32,15 @@ public class DocumentController {
 
 
 	@GetMapping(DocumentController.Mappings.SEARCH)
-	public Page<DocumentDto> searchProyects(final DocumentFilter filter, final Pageable pageable) {
+	public Page<DocumentDto> searchDocuments(final DocumentFilter filter, final Pageable pageable) {
 		return this.proxy.findPaginated(filter, pageable);
+	}
+	
+	@GetMapping(DocumentController.Mappings.GET)
+	public DocumentDto findDocument(@PathVariable("id") final String id, @PathVariable("type") final String type) {
+		byte[] decodedBytes = Base64.getDecoder().decode(type);
+		String decodedString = new String(decodedBytes);
+		return this.proxy.find(id,decodedString);
 	}
 	
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -44,5 +54,10 @@ public class DocumentController {
 		 * Mapping for search.
 		 */
 		protected static final String SEARCH = "/search";
+
+		/**
+         * Mapping for get.
+         */
+        protected static final String GET = "/{id}/{type}";
 	}
 }

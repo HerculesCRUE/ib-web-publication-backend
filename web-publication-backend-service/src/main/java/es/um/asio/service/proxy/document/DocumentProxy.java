@@ -16,4 +16,13 @@ public interface DocumentProxy {
 	 * @return Page<DocumentDto>
 	 */
 	Page<DocumentDto> findPaginated(DocumentFilter filter, Pageable pageable);
+	
+	/**
+	 * Obtiene un documento
+	 * 
+	 * @param id
+	 * @param type
+	 * @return DocumentDto
+	 */
+	DocumentDto find(String id, String type);
 }

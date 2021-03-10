@@ -17,6 +17,15 @@ public interface DocumentService {
 	 * @return the page
 	 */
 	Page<FusekiResponse> findPaginated(DocumentFilter filter, Pageable pageable);
+	
+	/**
+	 * Find.
+	 *
+	 * @param id the id
+	 * @param type the type
+	 * @return the fuseki response
+	 */
+	FusekiResponse find(String id, String type);
 
 	/**
 	 * Retrieve entity.
@@ -25,6 +34,29 @@ public interface DocumentService {
 	 * @return the entity
 	 */
 	Entity retrieveEntity(DocumentFilter filter);
+	
+	/**
+	 * Retrieve entity.
+	 *
+	 * @param type the type
+	 * @return the entity
+	 */
+	Entity retrieveEntity(String type);
 
+	/**
+	 * Filters chunk.
+	 *
+	 * @param filter the filter
+	 * @return the string
+	 */
 	String filtersChunk(DocumentFilter filter);
+	
+	/**
+	 * Filters chunk.
+	 *
+	 * @param id the id
+	 * @return the string
+	 */
+	String filtersChunk(String id);
+	
 }

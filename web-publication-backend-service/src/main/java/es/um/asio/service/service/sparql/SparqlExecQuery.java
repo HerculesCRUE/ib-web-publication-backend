@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
+import es.um.asio.service.model.SimpleQuery;
 
 public interface SparqlExecQuery {
 
@@ -15,6 +16,14 @@ public interface SparqlExecQuery {
 	 * @return the page
 	 */
 	Page<FusekiResponse> run(PageableQuery page);
+	
+	/**
+	 * Run.
+	 *
+	 * @param query the query
+	 * @return the fuseki response
+	 */
+	FusekiResponse run(final SimpleQuery query);
 	
 	/**
 	 * Call fuseki trellis.

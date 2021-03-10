@@ -1,5 +1,6 @@
 package es.um.asio.service.service.document.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import es.um.asio.service.filter.document.DocumentFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
+import es.um.asio.service.model.SimpleQuery;
 import es.um.asio.service.service.article.impl.ArticleServiceImpl;
 import es.um.asio.service.service.document.DocumentService;
 import es.um.asio.service.service.impl.FusekiService;
@@ -39,6 +41,15 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntity(filter), filtersChunk(filter), pageable);
 
 		return serviceSPARQL.run(pageableQuery);
+	}
+	
+	@Override
+	public FusekiResponse find(String id, String type) {
+		logger.info("Searching document with id: {} type: {}", id, type);
+
+		SimpleQuery query = new SimpleQuery(this.retrieveEntity(type), filtersChunk(id));
+
+		return serviceSPARQL.run(query);
 	}
 
 	@Override
@@ -82,6 +93,17 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 		
 		return strBuilder.toString();
 	}
+	
+	@Override
+	public String filtersChunk(String id) {
+		StringBuilder strBuilder = new StringBuilder();
+				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append(id);
+				strBuilder.append("\"");
+				strBuilder.append(") . ");
+		
+		return strBuilder.toString();
+	}
 
 	@Override
 	public Entity retrieveEntity(DocumentFilter filter) {
@@ -91,9 +113,19 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 		
 		return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
 	}
+	
+	@Override
+	public Entity retrieveEntity(String type) {
+		List<String> types = new ArrayList<String>();
+		String[] splitType = type.split("/");
+		types.add(splitType[splitType.length-1]);
+		
+		return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
+	}
 
 	@Override
 	public Entity retrieveEntity() {
 		throw new NotImplementedException("retrieveEntity: Not implemented method");
 	}
+	
 }
