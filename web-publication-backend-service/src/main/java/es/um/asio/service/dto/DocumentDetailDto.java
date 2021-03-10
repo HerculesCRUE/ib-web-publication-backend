@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class DocumentDetailDto extends DocumentDto{
+public class DocumentDetailDto extends DocumentDto {
 	
 	/**
 	 * The author
