@@ -1,5 +1,7 @@
 package es.um.asio.service.service.sparql;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
@@ -23,7 +25,7 @@ public interface SparqlExecQuery {
 	 * @param query the query
 	 * @return the fuseki response
 	 */
-	FusekiResponse run(final SimpleQuery query);
+	List<Object> run(final SimpleQuery query);
 	
 	/**
 	 * Call fuseki trellis.

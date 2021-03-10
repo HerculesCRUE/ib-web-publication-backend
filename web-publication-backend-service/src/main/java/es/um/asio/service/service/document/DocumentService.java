@@ -1,5 +1,7 @@
 package es.um.asio.service.service.document;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -25,7 +27,7 @@ public interface DocumentService {
 	 * @param type the type
 	 * @return the fuseki response
 	 */
-	FusekiResponse find(String id, String type);
+	List<Object> find(String id, String type);
 
 	/**
 	 * Retrieve entity.

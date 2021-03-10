@@ -44,7 +44,7 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 	}
 	
 	@Override
-	public FusekiResponse find(String id, String type) {
+	public List<Object> find(String id, String type) {
 		logger.info("Searching document with id: {} type: {}", id, type);
 
 		SimpleQuery query = new SimpleQuery(this.retrieveEntity(type), filtersChunk(id));

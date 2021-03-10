@@ -105,7 +105,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	}
 	
 	@Override
-	public FusekiResponse run(final SimpleQuery query) {
+	public List<Object> run(final SimpleQuery query) {
 
 		List<FusekiResponse> contentResult = new ArrayList<>();
 
@@ -118,8 +118,12 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		} catch (final Exception e) {
 			this.logger.error("Error building the page {}", query);
 		}
-
-		return (contentResult.size() > 0)? null : contentResult.get(0);
+		
+		FusekiResponse fusekiResponse = (contentResult.size() > 0)? contentResult.get(0) : new FusekiResponse();
+		
+		Map<String, Object> mapResults = (Map<String, Object>) fusekiResponse.getResults();
+		
+		return (List<Object>) mapResults.get("bindings");
 	}
 
 	/**
