@@ -3,6 +3,7 @@ package es.um.asio.service.proxy.document;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import es.um.asio.service.dto.DocumentDetailDto;
 import es.um.asio.service.dto.DocumentDto;
 import es.um.asio.service.filter.document.DocumentFilter;
 
@@ -24,5 +25,5 @@ public interface DocumentProxy {
 	 * @param type
 	 * @return DocumentDto
 	 */
-	DocumentDto find(String id, String type);
+	DocumentDetailDto find(String id, String type);
 }

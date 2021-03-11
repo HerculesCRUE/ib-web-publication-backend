@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.um.asio.service.dto.DocumentDetailDto;
 import es.um.asio.service.dto.DocumentDto;
 import es.um.asio.service.filter.document.DocumentFilter;
 import es.um.asio.service.proxy.document.DocumentProxy;
@@ -37,7 +38,7 @@ public class DocumentController {
 	}
 	
 	@GetMapping(DocumentController.Mappings.GET)
-	public DocumentDto findDocument(@PathVariable("id") final String id, @PathVariable("type") final String type) {
+	public DocumentDetailDto findDocument(@PathVariable("id") final String id, @PathVariable("type") final String type) {
 		byte[] decodedBytes = Base64.getDecoder().decode(type);
 		String decodedString = new String(decodedBytes);
 		return this.proxy.find(id,decodedString);

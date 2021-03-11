@@ -33,7 +33,7 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(DocumentFilter filter, Pageable pageable) {
 		logger.info("Searching documents with filter: {} page: {}", filter, pageable);
@@ -42,7 +42,7 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 
 		return serviceSPARQL.run(pageableQuery);
 	}
-	
+
 	@Override
 	public List<Object> find(String id, String type) {
 		logger.info("Searching document with id: {} type: {}", id, type);
@@ -55,7 +55,7 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 	@Override
 	public String filtersChunk(DocumentFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDate())) {
 				strBuilder.append("FILTER (?date = \"");
@@ -73,7 +73,7 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 				strBuilder.append(filter.getTitle());
 				strBuilder.append("\", \"i\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDateFrom())) {
 				strBuilder.append("FILTER (?date >= \"");
 				strBuilder.append(filter.getDateFrom());
@@ -81,7 +81,7 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDateTo())) {
 				strBuilder.append("FILTER (?date <= \"");
 				strBuilder.append(filter.getDateTo());
@@ -90,42 +90,54 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 				strBuilder.append(") . ");
 			}
 		}
-		
-		return strBuilder.toString();
-	}
-	
-	@Override
-	public String filtersChunk(String id) {
-		StringBuilder strBuilder = new StringBuilder();
-				strBuilder.append("FILTER (?id = \"");
-				strBuilder.append(id);
-				strBuilder.append("\"");
-				strBuilder.append(") . ");
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
-	public Entity retrieveEntity(DocumentFilter filter) {
-		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? 
-				Arrays.asList(filter.getTypes().split(",")) : 
-				Arrays.asList("Article", "Book");
-		
-		return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
+	public String filtersChunk(String id) {
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append("FILTER ( regex(?id, \"");
+		strBuilder.append(id);
+		strBuilder.append("\", \"i\")) . ");
+
+		return strBuilder.toString();
 	}
-	
+
+	/**
+	 * Retrieve the document entity.
+	 *
+	 * @param filter the filter
+	 * @return the entity
+	 */
+	@Override
+	public Entity retrieveEntity(DocumentFilter filter) {
+		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
+				: Arrays.asList("Article", "Book");
+
+		return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title",
+				"nowhere:type");
+	}
+
+	/**
+	 * Retrieve document detail entity.
+	 *
+	 * @param type the type
+	 * @return the entity
+	 */
 	@Override
 	public Entity retrieveEntity(String type) {
 		List<String> types = new ArrayList<String>();
 		String[] splitType = type.split("/");
-		types.add(splitType[splitType.length-1]);
-		
-		return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
+		types.add(splitType[splitType.length - 1]);
+
+		return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title",
+				"nowhere:type", "correspondingAuthor", "freetextKeyword", "correspondingOrganization", "abstract", "authorList");
 	}
 
 	@Override
 	public Entity retrieveEntity() {
 		throw new NotImplementedException("retrieveEntity: Not implemented method");
 	}
-	
+
 }

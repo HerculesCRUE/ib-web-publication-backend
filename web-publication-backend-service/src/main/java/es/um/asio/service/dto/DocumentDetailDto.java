@@ -15,12 +15,12 @@ public class DocumentDetailDto extends DocumentDto {
 	/**
 	 * The author
 	 */
-	private String author;
+	private String correspondingAuthor;
 	
 	/**
 	 * The keyword (Palabra clave)
 	 */
-	private String keyword;
+	private String freetextKeyword;
 	
 	/**
 	 * The corresponding organization. 
@@ -28,8 +28,8 @@ public class DocumentDetailDto extends DocumentDto {
 	private String correspondingOrganization;
 	
 	/** The Abstract. */
-	private String Abstract;
+	private String _abstract;
 	
 	/** The List of authors. */
-	private List<String> ListOfAuthors;
+	private List<String> authorList;
 }
