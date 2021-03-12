@@ -52,4 +52,19 @@ management:
       
 ## In case of configure web endpoints, remove it or change port number
 server:
-  port: 8787      
+  port: 8787
+
+#Keycloak Configuration  
+keycloak:
+  auth-server-url: http://localhost:8443/auth
+  realm: umasio
+  resource: login-app
+  security-constraints:
+  - auth-roles:
+    - app-login
+  use-resource-role-mappings: true
+  public-client: true
+  credentials:
+    secret: ec90abb7-0d00-4e73-ba9d-bcd4de4b47d0
+  principal-attribute: preferred_username
+  enabled: true      

@@ -61,6 +61,9 @@
 		<com.google.guava.version>28.2-jre</com.google.guava.version>
 
 		<org.hibernate.hibernate-jpamodelgen.version>5.4.10.Final</org.hibernate.hibernate-jpamodelgen.version>
+		
+		
+		<fuseki-security.version.version>1.0-SNAPSHOT</fuseki-security.version.version>
 	</properties>
 
 	<dependencyManagement>
@@ -147,6 +150,13 @@
 				<groupId>org.springframework.security.oauth</groupId>
 				<artifactId>spring-security-oauth2</artifactId>
 				<version>${org.springframework.security.oauth.version}</version>
+			</dependency>
+			
+			<!-- UM ASIO - dependencies -->
+			<dependency>
+				<groupId>es.um.asio</groupId>
+				<artifactId>fuseki-security</artifactId>
+				<version>${fuseki-security.version}</version>
 			</dependency>
 
 		</dependencies>

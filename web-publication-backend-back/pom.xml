@@ -16,7 +16,6 @@
 	<name>UM - ASIO - web-publication-backend-back</name>
 	<description>UM - ASIO - web-publication-backend-back</description>
 
-
 	<properties>
 		<artifact.packaging>war</artifact.packaging>
 		<cucumber.version>6.4.0</cucumber.version>
@@ -41,6 +40,16 @@
 			<version>${web-publication-backend-swagger.version}</version>
 		</dependency>
 		<!-- end UM ASIO - dependencies -->
+		
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.keycloak</groupId>
+		    <artifactId>keycloak-spring-boot-starter</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
@@ -123,6 +132,18 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
+	<dependencyManagement>
+	    <dependencies>
+	        <dependency>
+	            <groupId>org.keycloak.bom</groupId>
+	            <artifactId>keycloak-adapter-bom</artifactId>
+	            <version>11.0.2</version>
+	            <type>pom</type>
+	            <scope>import</scope>
+	        </dependency>
+	    </dependencies>
+	</dependencyManagement>
 
 	<profiles>
 		<profile>
