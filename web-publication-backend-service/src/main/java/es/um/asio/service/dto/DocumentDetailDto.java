@@ -1,7 +1,5 @@
 package es.um.asio.service.dto;
 
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,23 +11,42 @@ import lombok.Setter;
 public class DocumentDetailDto extends DocumentDto {
 	
 	/**
-	 * The author
+	 * The id
 	 */
-	private String correspondingAuthor;
+	private String id;
 	
 	/**
-	 * The keyword (Palabra clave)
+	 * The title
 	 */
-	private String freetextKeyword;
+	private String title;
+
+	/**
+	 * The date
+	 */
+	private String date;
 	
 	/**
-	 * The corresponding organization. 
+	 * The doi
 	 */
-	private String correspondingOrganization;
+	private String doi;
 	
-	/** The Abstract. */
-	private String _abstract;
+	/**
+	 * The endPage
+	 */
+	private String endPage;
 	
-	/** The List of authors. */
-	private List<String> authorList;
+	/**
+	 * The publishedIn
+	 */
+	private String publishedIn;
+	
+	/**
+	 * The startPage
+	 */
+	private String startPage;
+	
+	/**
+	 * The type
+	 */
+	private String type;
 }
