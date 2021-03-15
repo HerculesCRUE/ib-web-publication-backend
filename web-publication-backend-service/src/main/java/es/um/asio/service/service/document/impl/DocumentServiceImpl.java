@@ -118,8 +118,7 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
 				: Arrays.asList("Article", "Book");
 
-		return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title",
-				"nowhere:type");
+		return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
 	}
 
 	/**
@@ -134,8 +133,14 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 		String[] splitType = type.split("/");
 		types.add(splitType[splitType.length - 1]);
 
-		return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title",
-				"nowhere:type");
+		if (type.equals("Article")) {
+			return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
+		} else if (type.equals("Book"))  {
+			return new Entity("Documento", types, "date", "doi", "edition", "endPage", "iccn", "id", "placeOfPublication", "publishedIn", 
+					"startPage", "summary", "title", "nowhere:type");
+		} else {
+			return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
+		}
 	}
 
 	@Override

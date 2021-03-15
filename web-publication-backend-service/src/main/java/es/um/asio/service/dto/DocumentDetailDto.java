@@ -31,9 +31,24 @@ public class DocumentDetailDto extends DocumentDto {
 	private String doi;
 	
 	/**
+	 * The edition
+	 */
+	private String edition;
+	
+	/**
 	 * The endPage
 	 */
 	private String endPage;
+	
+	/**
+	 * The iccn
+	 */
+	private String iccn;
+	
+	/**
+	 * The placeOfPublication
+	 */
+	private String placeOfPublication;
 	
 	/**
 	 * The publishedIn
@@ -49,4 +64,9 @@ public class DocumentDetailDto extends DocumentDto {
 	 * The type
 	 */
 	private String type;
+	
+	/**
+	 * The summary
+	 */
+	private String summary;
 }
