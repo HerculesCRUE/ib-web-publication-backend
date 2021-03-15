@@ -1,4 +1,4 @@
-package es.um.asio.back.controller.keycloack;
+package es.um.asio.back.controller.keycloak;
 
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.representations.AccessToken;
@@ -12,19 +12,31 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @RestController
-@RequestMapping(KeycloackController.Mappings.BASE)
-public class KeycloackController {
+@RequestMapping(KeycloakController.Mappings.BASE)
+public class KeycloakController {
 
-	@GetMapping(KeycloackController.Mappings.IS_LOGIN)
+	@GetMapping(KeycloakController.Mappings.IS_LOGIN)
 	public boolean islogin() {
 		AccessToken accessToken = getAccessToken();
-		return accessToken.isActive();
+
+		if (accessToken != null) {
+			return accessToken.isActive();
+		} else {
+			return false;
+		}
+
 	}
 
 	private AccessToken getAccessToken() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		KeycloakPrincipal keycloakPrincipal = (KeycloakPrincipal) authentication.getPrincipal();
-		return keycloakPrincipal.getKeycloakSecurityContext().getToken();
+		KeycloakPrincipal keycloakPrincipal = null;
+		if (authentication.getPrincipal() instanceof KeycloakPrincipal) {
+			keycloakPrincipal = (KeycloakPrincipal) authentication.getPrincipal();
+			return keycloakPrincipal.getKeycloakSecurityContext().getToken();
+		} else {
+			return null;
+		}
+
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -32,7 +44,7 @@ public class KeycloackController {
 		/**
 		 * Controller request mapping.
 		 */
-		protected static final String BASE = "/keycloack";
+		protected static final String BASE = "/keycloak";
 
 		/**
 		 * Mapping for isLogin.
