@@ -23,16 +23,39 @@ public class PersonController {
 
 	@Autowired
 	private PersonProxy proxy;
-	
+
 	@Value("${app.fusekitrellis.url}")
 	private String fusekiTrellisUrl;
 
+	private String mockJson = "{\r\n" + "    \"legendData\": [\r\n" + "        \"Verificación 1\",\r\n"
+			+ "        \"Acreditación 1\",\r\n" + "        \"Acreditación de las dimensiones adicionales 1\",\r\n"
+			+ "        \"Certificación del sistema de garantía interna de la calidad (SGIC) de centro 1\",\r\n"
+			+ "        \"Centro acreditado institucionalmente 1\"\r\n" + "    ],\r\n" + "    \"seriesData\": [\r\n"
+			+ "        {\r\n" + "            \"name\": \"Verificación 1\",\r\n"
+			+ "            \"value\": 3936420535\r\n" + "        },\r\n" + "        {\r\n"
+			+ "            \"name\": \"Acreditación 1\",\r\n" + "            \"value\": 2548317238\r\n"
+			+ "        },\r\n" + "        {\r\n"
+			+ "            \"name\": \"Acreditación de las dimensiones adicionales 1\",\r\n"
+			+ "            \"value\": 495368615\r\n" + "        },\r\n" + "        {\r\n"
+			+ "            \"name\": \"Certificación del sistema de garantía interna de la calidad (SGIC) de centro 1\",\r\n"
+			+ "            \"value\": 2728792142\r\n" + "        },\r\n" + "        {\r\n"
+			+ "            \"name\": \"Centro acreditado institucionalmente 1\",\r\n"
+			+ "            \"value\": 240079264\r\n" + "        }\r\n" + "    ],\r\n" + "    \"selected\": {\r\n"
+			+ "        \"Verificación 1\": true,\r\n" + "        \"Acreditación 1\": true,\r\n"
+			+ "        \"Acreditación de las dimensiones adicionales 1\": true,\r\n"
+			+ "        \"Certificación del sistema de garantía interna de la calidad (SGIC) de centro 1\": true,\r\n"
+			+ "        \"Centro acreditado institucionalmente 1\": true\r\n" + "    }\r\n" + "}";
 
 	@GetMapping(PersonController.Mappings.SEARCH)
 	public Page<PersonDto> searchProyects(final PersonFilter filter, final Pageable pageable) {
 		return this.proxy.findPaginated(filter, pageable);
 	}
-	
+
+	@GetMapping(PersonController.Mappings.AREA)
+	public String area() {
+		return this.mockJson;
+	}
+
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	static final class Mappings {
 		/**
@@ -44,5 +67,10 @@ public class PersonController {
 		 * Mapping for search.
 		 */
 		protected static final String SEARCH = "/search";
+
+		/**
+		 * Graphics area.
+		 */
+		protected static final String AREA = "/area";
 	}
 }
