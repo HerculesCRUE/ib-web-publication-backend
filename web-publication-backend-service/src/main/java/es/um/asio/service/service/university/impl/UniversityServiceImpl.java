@@ -65,7 +65,7 @@ public class UniversityServiceImpl extends FusekiService<UniversityFilter> imple
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Universidad", "id", "name");
+		return new Entity("University", "id", "name");
 	}
 
 }
