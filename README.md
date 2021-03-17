@@ -59,6 +59,7 @@ Será preciso configurar las siguientes variables de entorno cuando se instale e
 | Variable                | Descripción         | Valor por defecto                    |
 | ----------------------- | ------------------- | ------------------------------------ |
 | `APP_FUSEKITRELLIS_URL` | Url endpoint sparql | http://localhost:3030/trellis/sparql |
+| `APP_FEDERATION_SERVICES` | Si es *true* indica que se van a usar los servicios implementados en el proyecto federation. Si es *false* indica que se llama directamente a fuseki. | false |
 | `APP_FEDERATIONALL_URL` | Url endpoint sparql consulta federada | http://localhost:9328/federation/nodes/all |
 | `APP_FEDERATIONNODE_URL` | Url endpoint sparql consulta federada node | http://localhost:9328/federation/nodes/listl |
 | `KEYCLOAK_AUTH_SERVER_URL` | Url endpoint KEYCLOAK | http://localhost:8443/auth |
