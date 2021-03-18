@@ -4,6 +4,8 @@
 package es.um.asio.service.service.sparql.impl;
 
 import java.net.URI;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -27,6 +29,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.UriTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -243,15 +246,26 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		ResponseEntity<Object> result = null;
 		if (!federationServices) {
 			try {
-				StringBuilder builder = new StringBuilder(this.fusekiTrellisUrl + "?query=" + query);
-				URI uri = UriComponentsBuilder.fromUriString(this.fusekiTrellisUrl)
-		            .queryParam("query", query)
-		            .build()
-		            .toUri();
+//				StringBuilder builder = new StringBuilder(this.fusekiTrellisUrl + "?query=" + query);
+//				URI uri = UriComponentsBuilder.fromUriString(this.fusekiTrellisUrl)
+//		            .queryParam("query", URLEncoder.encode(query, "UTF-8"))
+//		            .build()
+//		            .toUri();
 				
-				this.logger.info("Final call {}", uri.toURL().toString());
+				UriComponentsBuilder builder = null;
+			      builder = UriComponentsBuilder.fromUriString(this.fusekiTrellisUrl)
+			          .queryParam("query", URLEncoder.encode(query, "UTF-8"));
 				
-				result = this.restTemplate.exchange(uri, HttpMethod.GET, null, Object.class);
+//				String url = "{fusekiUrl}?query={query}";
+//				URI expanded = new UriTemplate(url).expand(this.fusekiTrellisUrl, query); // this is what RestTemplate uses 
+//				url = URLDecoder.decode(expanded.toString(), "UTF-8"); // java.net class
+//
+//				this.logger.info("Final call {}", url);
+//				url = URLEncoder.encode(expanded.toString(), "UTF-8"); // java.net class
+//				
+//				this.logger.info("Final call {}", url);
+				
+				result = this.restTemplate.exchange(builder.build(true).toUri(), HttpMethod.GET, null, Object.class);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
 			}
