@@ -245,7 +245,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 				StringBuilder builder = new StringBuilder(this.fusekiTrellisUrl + "?query=" + query);
 				URI uri = URI.create(builder.toString());
 				
-				this.logger.info("Final call {}", uri.toString());
+				this.logger.info("Final call {}", uri.toASCIIString());
 				result = this.restTemplate.exchange(uri.toASCIIString(), HttpMethod.GET, null, Object.class);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
