@@ -94,6 +94,8 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 			// we retrieve the params in order to build the query later
 			final Map<String, String> params = this.queryBuilder.queryChunks(page.getEntity(), page.getPage());
 			params.put(FusekiConstants.FILTERS_CHUNK, page.getFilters());
+			
+			this.logger.info("Calling query: {}", this.selectPaginatedQuery(params));
 
 			contentResult = this.getElements(this.selectPaginatedQuery(params));
 			totalElements = this.getTotalElements(this.countQuery(params));
