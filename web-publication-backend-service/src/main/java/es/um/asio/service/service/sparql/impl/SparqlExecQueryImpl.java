@@ -246,26 +246,15 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		ResponseEntity<Object> result = null;
 		if (!federationServices) {
 			try {
-//				StringBuilder builder = new StringBuilder(this.fusekiTrellisUrl + "?query=" + query);
-//				URI uri = UriComponentsBuilder.fromUriString(this.fusekiTrellisUrl)
-//		            .queryParam("query", URLEncoder.encode(query, "UTF-8"))
-//		            .build()
-//		            .toUri();
+
+				URI uri = UriComponentsBuilder.fromUriString(this.fusekiTrellisUrl)
+		            .queryParam("query", query)
+		            .build()
+		            .toUri();
 				
-				UriComponentsBuilder builder = null;
-			      builder = UriComponentsBuilder.fromUriString(this.fusekiTrellisUrl)
-			          .queryParam("query", URLEncoder.encode(query, "UTF-8"));
+				this.logger.info("Final call {}", uri.toURL().toString());
 				
-//				String url = "{fusekiUrl}?query={query}";
-//				URI expanded = new UriTemplate(url).expand(this.fusekiTrellisUrl, query); // this is what RestTemplate uses 
-//				url = URLDecoder.decode(expanded.toString(), "UTF-8"); // java.net class
-//
-//				this.logger.info("Final call {}", url);
-//				url = URLEncoder.encode(expanded.toString(), "UTF-8"); // java.net class
-//				
-//				this.logger.info("Final call {}", url);
-				
-				result = this.restTemplate.exchange(builder.build(true).toUri(), HttpMethod.GET, null, Object.class);
+				result = this.restTemplate.exchange(uri, HttpMethod.GET, null, Object.class);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
 			}
