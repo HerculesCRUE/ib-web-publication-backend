@@ -99,6 +99,8 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 			contentResult = this.getElements(this.selectPaginatedQuery(params));
 			totalElements = this.getTotalElements(this.countQuery(params));
+			
+			this.logger.info("Total: {}", totalElements);
 		} catch (final Exception e) {
 			this.logger.error("Error building the page {}", page);
 		}
