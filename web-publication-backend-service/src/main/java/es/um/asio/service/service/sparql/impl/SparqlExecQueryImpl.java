@@ -239,6 +239,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		ResponseEntity<Object> result = null;
 		if (!federationServices) {
 			try {
+				this.logger.info("Final call {}", this.fusekiTrellisUrl + "?query=" + this.getBody(query));
 				result = this.restTemplate.exchange(this.fusekiTrellisUrl + "?query=" + this.getBody(query), HttpMethod.GET, null, Object.class);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
