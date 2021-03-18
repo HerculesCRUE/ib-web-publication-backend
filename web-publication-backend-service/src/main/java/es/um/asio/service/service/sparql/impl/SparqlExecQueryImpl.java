@@ -4,8 +4,8 @@
 package es.um.asio.service.service.sparql.impl;
 
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,10 +21,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -241,10 +243,15 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		ResponseEntity<Object> result = null;
 		if (!federationServices) {
 			try {
-				Map<String, String> uriParams = new HashMap<String, String>();
-				uriParams.put("query", query);
+				StringBuilder builder = new StringBuilder(this.fusekiTrellisUrl + "?query=" + query);
+				URI uri = UriComponentsBuilder.fromUriString(this.fusekiTrellisUrl)
+		            .queryParam("query", query)
+		            .build()
+		            .toUri();
 				
-				result = this.restTemplate.getForEntity(this.fusekiTrellisUrl, Object.class, uriParams);
+				this.logger.info("Final call {}", uri.toURL().toString());
+				
+				result = this.restTemplate.exchange(uri, HttpMethod.GET, null, Object.class);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
 			}
