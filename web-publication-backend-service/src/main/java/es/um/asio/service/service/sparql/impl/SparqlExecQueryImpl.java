@@ -4,9 +4,8 @@
 package es.um.asio.service.service.sparql.impl;
 
 import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -242,11 +241,10 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		ResponseEntity<Object> result = null;
 		if (!federationServices) {
 			try {
-				StringBuilder builder = new StringBuilder(this.fusekiTrellisUrl + "?query=" + query);
-				URI uri = URI.create(builder.toString());
+				Map<String, String> uriParams = new HashMap<String, String>();
+				uriParams.put("query", query);
 				
-				this.logger.info("Final call {}", uri.toASCIIString());
-				result = this.restTemplate.exchange(uri.toASCIIString(), HttpMethod.GET, null, Object.class);
+				result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.GET, null, Object.class);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
 			}
