@@ -56,7 +56,7 @@ server:
 
 #Keycloak Configuration  
 keycloak:
-  auth-server-url: http://localhost:8443/auth
+  auth-server-url: https://herculesasioizertis.desa.um.es/auth
   realm: umasio
   resource: login-app
   security-constraints:

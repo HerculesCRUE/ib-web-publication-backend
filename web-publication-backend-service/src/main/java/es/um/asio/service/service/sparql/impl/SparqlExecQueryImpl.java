@@ -87,6 +87,8 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		Page<FusekiResponse> result = null;
 		List<FusekiResponse> contentResult = new ArrayList<>();
 		Integer totalElements = 0;
+		
+		this.logger.info("Calling fuseki: {}", this.fusekiTrellisUrl);
 
 		try {
 			// we retrieve the params in order to build the query later
