@@ -1,0 +1,79 @@
+package es.um.asio.back.controller.event;
+
+import java.util.Base64;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import es.um.asio.service.dto.EventDetailDto;
+//import es.um.asio.service.dto.EventDto;
+//import es.um.asio.service.filter.document.EventFilter;
+//import es.um.asio.service.proxy.document.EventProxy;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+/**
+ * Event controller.
+ */
+@RestController
+@RequestMapping(EventController.Mappings.BASE)
+public class EventController {
+//
+//	@Autowired
+//	private EventProxy proxy;
+	
+	@Value("${app.fusekitrellis.url}")
+	private String fusekiTrellisUrl;
+	
+
+
+//	@GetMapping(EventController.Mappings.SEARCH)
+//	public Page<EventDto> searchEvents(final EventFilter filter, final Pageable pageable) {
+//		return this.proxy.findPaginated(filter, pageable);
+//	}
+	
+	@GetMapping(EventController.Mappings.GET)
+	public EventDetailDto findEvent(@PathVariable("id") final String id, @PathVariable("type") final String type) {
+		return createMockDetailDto();
+	}
+	
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	static final class Mappings {
+		/**
+		 * Controller request mapping.
+		 */
+		protected static final String BASE = "/event";
+
+		/**
+		 * Mapping for search.
+		 */
+		protected static final String SEARCH = "/search";
+
+		/**
+         * Mapping for get.
+         */
+        protected static final String GET = "/{id}/{type}";
+	}
+	
+	
+	private EventDetailDto createMockDetailDto() {
+		EventDetailDto mock = new EventDetailDto();
+		mock.setId("123");
+		mock.setAbbreviation("IV COSEWE");
+		mock.setContactInformation("contact@cosewe.es");
+		mock.setDate("09-01-2014 9:00");
+		mock.setDescription("Cuarto congreso sobre semántica web de España");
+		mock.setLocality("Murcia");
+		mock.setLocatedIn("Universidad de Murcia");
+		mock.setPresents("El avance de la semántica en España");
+		mock.setTitle("IV congreso sobre semántica web de España");
+		
+		return mock;
+	}
+}
