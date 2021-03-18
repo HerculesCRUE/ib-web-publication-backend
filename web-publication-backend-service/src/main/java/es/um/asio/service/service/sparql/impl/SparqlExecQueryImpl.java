@@ -4,10 +4,9 @@
 package es.um.asio.service.service.sparql.impl;
 
 import java.net.URI;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,13 +22,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.util.UriTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -247,6 +244,13 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		if (!federationServices) {
 			try {
 
+				HttpHeaders headers = new HttpHeaders();
+				headers.setAccept(Arrays.asList(MediaType.parseMediaType("application/sparql-results+json"),
+						MediaType.parseMediaType("*/*;q=0.9")));
+				headers.setContentType(MediaType.parseMediaType("application/x-www-form-urlencoded"));
+				
+				HttpEntity<Object> entity = new HttpEntity<>("body", headers);
+				
 				URI uri = UriComponentsBuilder.fromUriString(this.fusekiTrellisUrl)
 		            .queryParam("query", query)
 		            .build()
@@ -254,7 +258,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 				
 				this.logger.info("Final call {}", uri.toURL().toString());
 				
-				result = this.restTemplate.exchange(uri, HttpMethod.GET, null, Object.class);
+				result = this.restTemplate.exchange(uri, HttpMethod.GET, entity, Object.class);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
 			}
