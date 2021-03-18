@@ -244,7 +244,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 				Map<String, String> uriParams = new HashMap<String, String>();
 				uriParams.put("query", query);
 				
-				result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.GET, null, Object.class);
+				result = this.restTemplate.getForEntity(this.fusekiTrellisUrl, Object.class, uriParams);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
 			}
