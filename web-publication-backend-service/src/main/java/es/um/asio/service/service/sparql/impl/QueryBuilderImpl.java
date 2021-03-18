@@ -94,7 +94,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 			
 			for (String type : types) {
 				strBuilder.append(" <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ");
-				strBuilder.append(" <http://hercules.org/um/es-ES/rec/");
+				strBuilder.append(" <https://ldp.herculesasioizertis.desa.um.es/um/es-ES/rec/");
 				strBuilder.append(type);
 				strBuilder.append("> ");
 			}
@@ -104,7 +104,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 		} else {
 			strBuilder.append("?x");
 			strBuilder.append(" <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ");
-			strBuilder.append(" <http://hercules.org/um/es-ES/rec/");
+			strBuilder.append(" <https://ldp.herculesasioizertis.desa.um.es/um/es-ES/rec/");
 			strBuilder.append(entity);
 			strBuilder.append("> . ");
 		}
@@ -125,7 +125,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 				
 				for (int i = 0; i < split.length; i++) {
 					strBuilder.append(i > 0 ? "|" : "");
-					strBuilder.append("<http://hercules.org/um/es-ES/rec/");
+					strBuilder.append("<https://ldp.herculesasioizertis.desa.um.es/um/es-ES/rec/");
 					strBuilder.append(split[i]);
 					strBuilder.append(">");
 				}
@@ -145,7 +145,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 		StringBuilder strBuilder = new StringBuilder();
 		
 		strBuilder.append("?x ");
-		strBuilder.append("<http://hercules.org/um/es-ES/rec/");
+		strBuilder.append("<https://ldp.herculesasioizertis.desa.um.es/um/es-ES/rec/");
 		strBuilder.append(field);
 		strBuilder.append("> ");
 		strBuilder.append("?");
@@ -210,7 +210,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 					fields.append(" ");
 					
 					where.append(model);
-					where.append(" <http://hercules.org/um/es-ES/rec/");
+					where.append(" <https://ldp.herculesasioizertis.desa.um.es/um/es-ES/rec/");
 					where.append(s.getValue());
 					where.append("> ?");
 					where.append(s.getValue());
@@ -227,7 +227,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 				strBuilder.append(fields.toString());
 				strBuilder.append(" WHERE { ");
 				strBuilder.append(model);
-				strBuilder.append(" <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://hercules.org/um/es-ES/rec/");
+				strBuilder.append(" <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://ldp.herculesasioizertis.desa.um.es/um/es-ES/rec/");
 				strBuilder.append(e.getKey());
 				strBuilder.append("> . ");
 				strBuilder.append(where.toString());
