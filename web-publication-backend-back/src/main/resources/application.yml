@@ -32,6 +32,10 @@ app:
   swagger:
     enabled: false
 
+  # Properties
+  properties:
+    url: http://hercules.org
+
 ## Actuator
 management:
   endpoint:

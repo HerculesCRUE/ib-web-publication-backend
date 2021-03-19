@@ -59,7 +59,6 @@
 		<io.springfox.version>2.9.2</io.springfox.version>
 		<org.jsoup.version>1.12.1</org.jsoup.version>
 		<com.google.guava.version>28.2-jre</com.google.guava.version>
-		<org.apache.httpcomponents.version>4.5.13</org.apache.httpcomponents.version>
 
 		<org.hibernate.hibernate-jpamodelgen.version>5.4.10.Final</org.hibernate.hibernate-jpamodelgen.version>
 		
@@ -151,12 +150,6 @@
 				<groupId>org.springframework.security.oauth</groupId>
 				<artifactId>spring-security-oauth2</artifactId>
 				<version>${org.springframework.security.oauth.version}</version>
-			</dependency>
-		
-			<dependency>
-			    <groupId>org.apache.httpcomponents</groupId>
-			    <artifactId>httpclient</artifactId>
-			    <version>${org.apache.httpcomponents.version}</version>
 			</dependency>
 			
 			<!-- UM ASIO - dependencies -->

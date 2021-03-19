@@ -3,22 +3,11 @@
  */
 package es.um.asio.service.service.sparql.impl;
 
-import java.net.URI;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.SSLContext;
-
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +19,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -252,36 +239,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		ResponseEntity<Object> result = null;
 		if (!federationServices) {
 			try {
-				
-				TrustStrategy acceptingTrustStrategy = new TrustStrategy() {
-			        @Override
-			        public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-			            return true;
-			        }
-			    };
-			    SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy).build();
-			    SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
-			    CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
-			    HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-			    requestFactory.setHttpClient(httpClient);
-
-			    this.restTemplate.setRequestFactory(requestFactory);
-			    
-				HttpHeaders headers = new HttpHeaders();
-				headers.setAccept(Arrays.asList(MediaType.parseMediaType("application/sparql-results+json"),
-						MediaType.parseMediaType("*/*;q=0.9")));
-				headers.setContentType(MediaType.parseMediaType("application/x-www-form-urlencoded"));
-				
-				HttpEntity<Object> entity = new HttpEntity<>("body", headers);
-				
-				URI uri = UriComponentsBuilder.fromUriString(this.fusekiTrellisUrl)
-		            .queryParam("query", query)
-		            .build()
-		            .toUri();
-				
-				this.logger.info("Final call {}", uri.toURL().toString());
-				
-				result = this.restTemplate.exchange(uri, HttpMethod.GET, entity, Object.class);
+				result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.POST, this.getBody(query), Object.class);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
 			}
