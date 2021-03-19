@@ -27,19 +27,18 @@ public class ProjectController {
 	@Value("${app.fusekitrellis.url}")
 	private String fusekiTrellisUrl;
 
-	private String mockJson = "[{\r\n" + "    \"name\": 'Ciencias agrícolas y agroalimentarias',\r\n"
-			+ "    \"value\": 10\r\n" + "}, {\r\n" + "    \"name\": 'Agricultura y Bosques',\r\n"
-			+ "    \"value\": 20\r\n" + "}, {\r\n" + "    \"name\": 'Astronomía y astrofísica',\r\n"
-			+ "    \"value\": 15\r\n" + "}, {\r\n" + "    \"name\": 'Biomedicina',\r\n" + "    \"value\": 30\r\n"
-			+ "}, {\r\n" + "    \"name\": 'Economía',\r\n" + "    \"value\": 30\r\n" + "}, {\r\n"
-			+ "    \"name\": 'Ciencia y tecnología ambiental',\r\n" + "    \"value\": 30\r\n" + "}, {\r\n"
-			+ "    \"name\": 'Ciencia y tecnología de los alimentos',\r\n" + "    \"value\": 30\r\n" + "}, {\r\n"
-			+ "    \"name\": 'Física fundamental y de partículas',\r\n" + "    \"value\": 30\r\n" + "}, {\r\n"
-			+ "    \"name\": 'Producción industrial, ingeniería civil e ingeniería para la sociedad',\r\n"
-			+ "    \"value\": 30\r\n" + "}, {\r\n" + "    \"name\": 'Ciencias de la vida',\r\n"
-			+ "    \"value\": 30\r\n" + "}, {\r\n" + "    \"name\": 'Ciencias matemáticas',\r\n"
-			+ "    \"value\": 30\r\n" + "}, {\r\n" + "    \"name\": 'Biología molecular y celular',\r\n"
-			+ "    \"value\": 30}\r\n" + "]";
+	private String mockJson = "[{\"name\": \"Ciencias agrícolas y agroalimentarias\",\"value\": 10},\r\n"
+			+ "			{\"name\": \"Agricultura y Bosques\",\"value\": 20}, \r\n"
+			+ "			{\"name\": \"Astronomía y astrofísica\",\"value\": 15}, \r\n"
+			+ "			{\"name\": \"Biomedicina\",\"value\": 30},\r\n"
+			+ "			{\"name\": \"Economía\",\"value\": 30},\r\n"
+			+ "			{\"name\": \"Ciencia y tecnología ambiental\",\"value\": 30},\r\n"
+			+ "			{\"name\": \"Ciencia y tecnología de los alimentos\",\"value\": 30},\r\n"
+			+ "			{\"name\": \"Física fundamental y de partículas\",\"value\": 30},\r\n"
+			+ "			{\"name\": \"Producción industrial, ingeniería civil e ingeniería para la sociedad\",\"value\": 30},\r\n"
+			+ "			{\"name\": \"Ciencias de la vida\",\"value\": 30},\r\n"
+			+ "			{\"name\": \"Ciencias matemáticas\",\"value\":30},\r\n"
+			+ "			{\"name\": \"Biología molecular y celular\",\"value\": 30}]";
 
 	@GetMapping(ProjectController.Mappings.SEARCH)
 	public Page<ProjectDto> searchProyects(final ProjectFilter filter, final Pageable pageable) {
