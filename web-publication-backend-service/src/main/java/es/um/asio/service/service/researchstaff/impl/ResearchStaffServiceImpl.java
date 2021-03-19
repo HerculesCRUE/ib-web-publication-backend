@@ -3,6 +3,7 @@ package es.um.asio.service.service.researchstaff.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,23 @@ public class ResearchStaffServiceImpl extends FusekiService<ResearchStaffFilter>
 	public String filtersChunk(ResearchStaffFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
 		
+		if (StringUtils.isNotBlank(filter.getName())) {
+			strBuilder.append("FILTER (LANG(?name) = \"");
+			strBuilder.append(filter.getLanguage().substring(1));
+			strBuilder.append("\") . ");
+			strBuilder.append("FILTER ( regex(?name, \"");
+			strBuilder.append(filter.getName());
+			strBuilder.append("\", \"i\")) . ");
+		}
 		
+		if (StringUtils.isNotBlank(filter.getTitle())) {
+			strBuilder.append("FILTER (LANG(?title) = \"");
+			strBuilder.append(filter.getLanguage().substring(1));
+			strBuilder.append("\") . ");
+			strBuilder.append("FILTER ( regex(?title, \"");
+			strBuilder.append(filter.getTitle());
+			strBuilder.append("\", \"i\")) . ");
+		}
 		
 		return strBuilder.toString();
 	}
