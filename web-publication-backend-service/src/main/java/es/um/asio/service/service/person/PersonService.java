@@ -1,5 +1,7 @@
 package es.um.asio.service.service.person;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,6 +19,14 @@ public interface PersonService {
 	 * @return the page
 	 */
 	Page<FusekiResponse> findPaginated(PersonFilter filter, Pageable pageable);
+	
+	/**
+	 * Find.
+	 *
+	 * @param id the id
+	 * @return the fuseki response
+	 */
+	List<Object> find(String id);
 
 	/**
 	 * Retrieve entity.
@@ -25,5 +35,7 @@ public interface PersonService {
 	 */
 	Entity retrieveEntity();
 
+	String filtersChunk(String id);
+	
 	String filtersChunk(PersonFilter filter);
 }

@@ -16,4 +16,12 @@ public interface PersonProxy {
 	 * @return Page<PersonDto>
 	 */
 	Page<PersonDto> findPaginated(PersonFilter filter, Pageable pageable);
+	
+	/**
+	 * Obtiene una persona
+	 * 
+	 * @param id
+	 * @return PersonDto
+	 */
+	PersonDto find(String id);
 }

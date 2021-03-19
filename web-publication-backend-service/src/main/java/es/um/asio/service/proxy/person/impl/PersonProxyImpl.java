@@ -1,5 +1,7 @@
 package es.um.asio.service.proxy.person.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,4 +31,9 @@ public class PersonProxyImpl implements PersonProxy {
 		return this.mapper.convertPageFusekiResponseToDto(this.service.findPaginated(filter, pageable));
 	}
 
+	@Override
+	public PersonDto find(String id) {
+		List<PersonDto> list = this.mapper.convertFusekiResponseToDto(this.service.find(id));
+		return (list.isEmpty())? null : list.get(0);
+	}
 }

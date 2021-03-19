@@ -1,5 +1,7 @@
 package es.um.asio.service.service.person.impl;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,10 +10,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import es.um.asio.abstractions.constants.Constants;
 import es.um.asio.service.filter.person.PersonFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
+import es.um.asio.service.model.SimpleQuery;
 import es.um.asio.service.service.impl.FusekiService;
 import es.um.asio.service.service.person.PersonService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
@@ -34,6 +38,15 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntity(), filtersChunk(filter), pageable);
 
 		return serviceSPARQL.run(pageableQuery);
+	}
+
+	@Override
+	public List<Object> find(String id) {
+		logger.info("Searching document with id: {}", id);
+
+		SimpleQuery query = new SimpleQuery(this.retrieveEntity(), filtersChunk(id));
+
+		return serviceSPARQL.run(query);
 	}
 
 	@Override
@@ -162,6 +175,18 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 			}
 		}
 		
+		return strBuilder.toString();
+	}
+	
+	@Override
+	public String filtersChunk(String id) {
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append("FILTER (?id = \"");
+		strBuilder.append(id);
+		strBuilder.append("\"@");
+		strBuilder.append(Constants.SPANISH_LANGUAGE_SHORT);
+		strBuilder.append(") . ");
+
 		return strBuilder.toString();
 	}
 
