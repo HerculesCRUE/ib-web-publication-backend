@@ -1,4 +1,4 @@
-package es.um.asio.service.service.document.impl;
+package es.um.asio.service.service.event.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,30 +14,29 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import es.um.asio.abstractions.constants.Constants;
-import es.um.asio.service.filter.document.DocumentFilter;
+import es.um.asio.service.filter.event.EventFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
 import es.um.asio.service.model.SimpleQuery;
-import es.um.asio.service.service.article.impl.ArticleServiceImpl;
-import es.um.asio.service.service.document.DocumentService;
+import es.um.asio.service.service.event.EventService;
 import es.um.asio.service.service.impl.FusekiService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
 
 @Service
-public class DocumentServiceImpl extends FusekiService<DocumentFilter> implements DocumentService {
+public class EventServiceImpl extends FusekiService<EventFilter> implements EventService {
 
 	/**
 	 * Logger
 	 */
-	private final Logger logger = LoggerFactory.getLogger(DocumentServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(EventServiceImpl.class);
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
 
 	@Override
-	public Page<FusekiResponse> findPaginated(DocumentFilter filter, Pageable pageable) {
-		logger.info("Searching documents with filter: {} page: {}", filter, pageable);
+	public Page<FusekiResponse> findPaginated(EventFilter filter, Pageable pageable) {
+		logger.info("Searching events with filter: {} page: {}", filter, pageable);
 
 		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntity(filter), filtersChunk(filter), pageable);
 
@@ -46,7 +45,7 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 
 	@Override
 	public List<Object> find(String id, String type) {
-		logger.info("Searching document with id: {} type: {}", id, type);
+		logger.info("Searching event with id: {} type: {}", id, type);
 
 		SimpleQuery query = new SimpleQuery(this.retrieveEntity(type), filtersChunk(id));
 
@@ -54,7 +53,7 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 	}
 
 	@Override
-	public String filtersChunk(DocumentFilter filter) {
+	public String filtersChunk(EventFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
 
 		if (filter != null) {
@@ -108,21 +107,21 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 	}
 
 	/**
-	 * Retrieve the document entity.
+	 * Retrieve the event entity.
 	 *
 	 * @param filter the filter
 	 * @return the entity
 	 */
 	@Override
-	public Entity retrieveEntity(DocumentFilter filter) {
+	public Entity retrieveEntity(EventFilter filter) {
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
-				: Arrays.asList("Article", "Book");
+				: Arrays.asList("Conference", "Exhibit");
 
-		return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
+		return new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
 	}
 
 	/**
-	 * Retrieve document detail entity.
+	 * Retrieve event detail entity.
 	 *
 	 * @param type the type
 	 * @return the entity
@@ -133,13 +132,12 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 		String[] splitType = type.split("/");
 		types.add(splitType[splitType.length - 1]);
 
-		if (type.equals("Article")) {
-			return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
-		} else if (type.equals("Book"))  {
-			return new Entity("Documento", types, "date", "doi", "edition", "endPage", "iccn", "id", "placeOfPublication", "publishedIn", 
-					"startPage", "summary", "title", "nowhere:type");
+		if (type.equals("Conference")) {
+			return new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
+		} else if (type.equals("Exhibit"))  {
+			return new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
 		} else {
-			return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
+			return new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
 		}
 	}
 

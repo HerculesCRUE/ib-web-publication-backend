@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.um.asio.service.dto.EventDetailDto;
-//import es.um.asio.service.dto.EventDto;
-//import es.um.asio.service.filter.document.EventFilter;
-//import es.um.asio.service.proxy.document.EventProxy;
+import es.um.asio.service.dto.EventDto;
+import es.um.asio.service.filter.event.EventFilter;
+import es.um.asio.service.proxy.event.EventProxy;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -24,19 +24,19 @@ import lombok.NoArgsConstructor;
 @RestController
 @RequestMapping(EventController.Mappings.BASE)
 public class EventController {
-//
-//	@Autowired
-//	private EventProxy proxy;
+
+	@Autowired
+	private EventProxy proxy;
 	
 	@Value("${app.fusekitrellis.url}")
 	private String fusekiTrellisUrl;
 	
 
 
-//	@GetMapping(EventController.Mappings.SEARCH)
-//	public Page<EventDto> searchEvents(final EventFilter filter, final Pageable pageable) {
-//		return this.proxy.findPaginated(filter, pageable);
-//	}
+	@GetMapping(EventController.Mappings.SEARCH)
+	public Page<EventDto> searchEvents(final EventFilter filter, final Pageable pageable) {
+		return this.proxy.findPaginated(filter, pageable);
+	}
 	
 	@GetMapping(EventController.Mappings.GET)
 	public EventDetailDto findEvent(@PathVariable("id") final String id, @PathVariable("type") final String type) {

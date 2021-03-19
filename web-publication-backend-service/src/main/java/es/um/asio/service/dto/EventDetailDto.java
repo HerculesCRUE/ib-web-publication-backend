@@ -19,6 +19,8 @@ public class EventDetailDto {
 	/** The title. */
 	private String title;
 	
+	private String type;
+	
 	/** The abbreviation. */
 	private String abbreviation;
 	
