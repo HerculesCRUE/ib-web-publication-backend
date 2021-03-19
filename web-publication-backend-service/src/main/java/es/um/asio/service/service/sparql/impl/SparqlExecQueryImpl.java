@@ -4,12 +4,19 @@
 package es.um.asio.service.service.sparql.impl;
 
 import java.net.URI;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -243,6 +250,32 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		ResponseEntity<Object> result = null;
 		if (!federationServices) {
 			try {
+				
+				TrustManager[] trustAllCerts = new TrustManager[] {
+					new X509TrustManager() {
+			            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+			                return null;
+			            }
+
+			            public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+			            public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+			        }
+		        };
+
+		        // Install the all-trusting trust manager
+		        SSLContext sc = SSLContext.getInstance("SSL");
+		        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+		        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+		        // Create all-trusting host name verifier
+		        HostnameVerifier allHostsValid = new HostnameVerifier() {
+		            public boolean verify(String hostname, SSLSession session) {
+		                return true;
+		            }
+		        };
+
+		        // Install the all-trusting host verifier
+		        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
 
 				HttpHeaders headers = new HttpHeaders();
 				headers.setAccept(Arrays.asList(MediaType.parseMediaType("application/sparql-results+json"),
