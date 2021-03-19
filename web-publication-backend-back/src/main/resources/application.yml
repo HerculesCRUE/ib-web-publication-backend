@@ -71,4 +71,5 @@ keycloak:
   credentials:
     secret: ec90abb7-0d00-4e73-ba9d-bcd4de4b47d0
   principal-attribute: preferred_username
-  enabled: true      
+  enabled: true
+  cors: true
