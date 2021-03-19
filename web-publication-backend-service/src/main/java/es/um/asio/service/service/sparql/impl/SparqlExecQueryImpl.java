@@ -4,6 +4,7 @@
 package es.um.asio.service.service.sparql.impl;
 
 import java.net.URI;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,13 +12,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -251,32 +253,20 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		if (!federationServices) {
 			try {
 				
-				TrustManager[] trustAllCerts = new TrustManager[] {
-					new X509TrustManager() {
-			            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-			                return null;
-			            }
-
-			            public void checkClientTrusted(X509Certificate[] certs, String authType) {}
-			            public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+				TrustStrategy acceptingTrustStrategy = new TrustStrategy() {
+			        @Override
+			        public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+			            return true;
 			        }
-		        };
+			    };
+			    SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy).build();
+			    SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
+			    CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
+			    HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+			    requestFactory.setHttpClient(httpClient);
 
-		        // Install the all-trusting trust manager
-		        SSLContext sc = SSLContext.getInstance("SSL");
-		        sc.init(null, trustAllCerts, new java.security.SecureRandom());
-		        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
-		        // Create all-trusting host name verifier
-		        HostnameVerifier allHostsValid = new HostnameVerifier() {
-		            public boolean verify(String hostname, SSLSession session) {
-		                return true;
-		            }
-		        };
-
-		        // Install the all-trusting host verifier
-		        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-
+			    this.restTemplate.setRequestFactory(requestFactory);
+			    
 				HttpHeaders headers = new HttpHeaders();
 				headers.setAccept(Arrays.asList(MediaType.parseMediaType("application/sparql-results+json"),
 						MediaType.parseMediaType("*/*;q=0.9")));
