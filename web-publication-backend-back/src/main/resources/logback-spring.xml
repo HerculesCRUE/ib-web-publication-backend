@@ -46,8 +46,9 @@
     	<logger name="es.um.asio" level="INFO"/>
     	<logger name="org.springframework.web" level="INFO"/>
     	<logger name="org.hibernate" level="INFO"/>
+    	<logger name="org.springframework.security" info="TRACE"/>
     	
-    	<root level="INFO">
+    	<root level="TRACE">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="GELF"/>
         </root>
