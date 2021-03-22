@@ -121,6 +121,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 			params.put(FusekiConstants.FILTERS_CHUNK, query.getFilters());
 
 			contentResult = this.getElements(this.selectSimpleQuery(params));
+			this.logger.info("Calling query: {}", this.selectSimpleQuery(params));
 		} catch (final Exception e) {
 			this.logger.error("Error building the page {}", query);
 		}

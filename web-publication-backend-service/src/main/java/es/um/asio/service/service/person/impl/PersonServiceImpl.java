@@ -42,7 +42,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 
 	@Override
 	public List<Object> find(String id) {
-		logger.info("Searching document with id: {}", id);
+		logger.info("Searching person with id: {}", id);
 
 		SimpleQuery query = new SimpleQuery(this.retrieveEntity(), filtersChunk(id));
 
@@ -193,7 +193,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 	@Override
 	public Entity retrieveEntity() {
 		return new Entity("Person", "birthDate", "description", "firstName", "gender", "hasContactInfo", "homepage", "id", "image", "name", "nickname", 
-				"personalMailBox", "researchLine", "surname", "taxId", "title");
+				"personalMaibox", "researchLine", "surname", "taxId", "title");
 	}
 
 }
