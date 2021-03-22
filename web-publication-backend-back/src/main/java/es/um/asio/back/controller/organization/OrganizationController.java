@@ -1,5 +1,7 @@
 package es.um.asio.back.controller.organization;
 
+import java.util.Base64;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -38,6 +40,9 @@ public class OrganizationController {
 	
 	@GetMapping(OrganizationController.Mappings.GET)
 	public OrganizationDetailDto findOrganization(@PathVariable("id") final String id, @PathVariable("type") final String type) {
+		byte[] decodedBytes = Base64.getDecoder().decode(type);
+		String decodedString = new String(decodedBytes);
+//		return this.proxy.find(id,decodedString);
 		return createMockDetailDto();
 	}
 	
