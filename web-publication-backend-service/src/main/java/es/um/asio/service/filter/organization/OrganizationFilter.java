@@ -22,42 +22,47 @@ public class OrganizationFilter extends Filter {
 	 * The id
 	 */
 	private String id;
-	
+
 	/**
 	 * The title
 	 */
 	private String title;
-	
+
+	/**
+	 * The types
+	 */
+	private String types;
+
 	/**
 	 * The abbreviation
 	 */
 	private String abbreviation;
-	
+
 	/**
 	 * The description
 	 */
 	private String description;
-	
+
 	/**
 	 * The endDate
 	 */
 	private String endDate;
-	
+
 	/**
 	 * The homepage
 	 */
 	private String homepage;
-	
+
 	/**
 	 * The isStartup
 	 */
 	private String isStartup;
-	
+
 	/**
 	 * The publicCompany
 	 */
 	private String publicCompany;
-	
+
 	/**
 	 * The startDate
 	 */

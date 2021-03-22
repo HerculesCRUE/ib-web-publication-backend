@@ -1,5 +1,7 @@
 package es.um.asio.service.service.organization;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -26,4 +28,12 @@ public interface OrganizationService {
 	Entity retrieveEntity();
 
 	String filtersChunk(OrganizationFilter filter);
+
+	String filtersChunk(String id);
+
+	List<Object> find(String id, String type);
+
+	Entity retrieveEntity(String type);
+
+	Entity retrieveEntity(OrganizationFilter filter);
 }
