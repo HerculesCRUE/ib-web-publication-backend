@@ -153,7 +153,7 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 				: Arrays.asList("Organization", "University");
 
 		return new Entity("Organization", types, "abbreviation", "description", "endDate", "homepage", "id",
-				"isStartup", "publicCompany", "startDate", "title");
+				"isStartup", "publicCompany", "startDate", "title", "nowhere:type");
 	}
 
 	@Override

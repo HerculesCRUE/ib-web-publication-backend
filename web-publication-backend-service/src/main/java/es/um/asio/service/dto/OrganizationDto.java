@@ -54,4 +54,7 @@ public class OrganizationDto {
 	 * The startDate
 	 */
 	private String startDate;
+	
+	/** The type. */
+	private String type;
 }
