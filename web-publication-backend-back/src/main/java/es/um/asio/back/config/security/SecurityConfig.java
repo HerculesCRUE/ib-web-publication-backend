@@ -47,8 +47,6 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		super.configure(http);
-
-		http.requiresChannel().antMatchers("/sso**").requiresSecure();
 		
 		http.csrf().disable().authorizeRequests().antMatchers("/trellis/sparqlfeder").hasAnyRole(Roles.ROLE_ADMIN)
 				.antMatchers("/trellis/sparql").hasAnyRole(Roles.ROLE_ADMIN, Roles.ROLE_USER).anyRequest().permitAll();

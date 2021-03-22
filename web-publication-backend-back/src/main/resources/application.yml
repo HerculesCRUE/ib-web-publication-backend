@@ -57,10 +57,10 @@ management:
 ## In case of configure web endpoints, remove it or change port number
 server:
   port: 8787
-  server:
-    tomcat:
-      remote-ip-header: x-forwarded-for
-      protocol-header: x-forwarded-proto
+  use-forward-headers: true
+  tomcat:
+    remote-ip-header: x-forwarded-for
+    protocol-header: x-forwarded-proto
 
 #Keycloak Configuration  
 keycloak:
