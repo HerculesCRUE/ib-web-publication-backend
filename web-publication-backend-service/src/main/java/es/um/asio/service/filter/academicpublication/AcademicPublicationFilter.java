@@ -44,4 +44,7 @@ public class AcademicPublicationFilter extends Filter {
 	 * The year to
 	 */
 	private String dateTo;
+	
+	/** The directed by. */
+	private String directedBy;
 }
