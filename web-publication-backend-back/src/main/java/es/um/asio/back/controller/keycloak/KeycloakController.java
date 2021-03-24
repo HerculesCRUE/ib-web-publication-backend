@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.um.asio.back.config.security.Roles;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +28,38 @@ public class KeycloakController {
 
 	}
 
+	/**
+	 * Method isAdmin
+	 * 
+	 * @return true/false for get rol Admin for token access
+	 */
+	@GetMapping(KeycloakController.Mappings.IS_ADMIN)
+	public boolean isAdmin() {
+		AccessToken accessToken = getAccessToken();
+
+		boolean isAdmin = false;
+		for (String per : accessToken.getRealmAccess().getRoles()) {
+			if (Roles.ROLE_ADMIN.equals(per)) {
+				isAdmin = true;
+			}
+		}
+		return isAdmin;
+	}
+
+	@GetMapping(KeycloakController.Mappings.GET_NAME)
+	public String getName() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		KeycloakPrincipal keycloakPrincipal = null;
+
+		if (authentication.getPrincipal() instanceof KeycloakPrincipal) {
+			keycloakPrincipal = (KeycloakPrincipal) authentication.getPrincipal();
+			return keycloakPrincipal.getName();
+		}
+
+		return null;
+	}
+
 	private AccessToken getAccessToken() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		KeycloakPrincipal keycloakPrincipal = null;
@@ -41,6 +74,14 @@ public class KeycloakController {
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	static final class Mappings {
+
+		protected static final String GET_NAME = "/getName";
+
+		/**
+		 * Mapping for isAdmin.
+		 */
+		protected static final String IS_ADMIN = "/isAdmin";
+
 		/**
 		 * Controller request mapping.
 		 */
