@@ -49,4 +49,9 @@ public class DocumentFilter extends Filter {
 	 * The year to
 	 */
 	private String dateTo;
+	
+	/**
+	 * The year to
+	 */
+	private String authorId;
 }

@@ -2,7 +2,9 @@ package es.um.asio.service.service.document.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
@@ -118,7 +120,19 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
 				: Arrays.asList("Article", "Book");
 
-		return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
+		Entity entity = new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
+		
+		if (filter.getAuthorId()!=null && !filter.getAuthorId().isEmpty()) {
+			// TODO set external ids
+//			Map<String, Map<String, String>> join = new HashMap<>();
+//			
+//			join.put("Research-Group", new HashMap<>());
+//			join.get("Research-Group").put("x", "pers");
+//			
+//			entity.setJoin(join);
+		}
+		
+		return entity;
 	}
 
 	/**
