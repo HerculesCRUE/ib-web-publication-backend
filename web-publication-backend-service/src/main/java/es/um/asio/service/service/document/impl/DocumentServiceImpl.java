@@ -21,6 +21,7 @@ import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
 import es.um.asio.service.model.SimpleQuery;
+import es.um.asio.service.model.Subentity;
 import es.um.asio.service.service.article.impl.ArticleServiceImpl;
 import es.um.asio.service.service.document.DocumentService;
 import es.um.asio.service.service.impl.FusekiService;
@@ -122,14 +123,21 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 
 		Entity entity = new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
 		
+		// Add data to subentity atributes and filters
 		if (filter.getAuthorId()!=null && !filter.getAuthorId().isEmpty()) {
-			// TODO set external ids
-//			Map<String, Map<String, String>> join = new HashMap<>();
-//			
-//			join.put("Research-Group", new HashMap<>());
-//			join.get("Research-Group").put("x", "pers");
-//			
-//			entity.setJoin(join);
+			List<Subentity> subentities = new ArrayList<Subentity>();
+			// Extra fields
+			String fieldName = "pers";
+//			List<String> fields = new ArrayList<String>();
+//			fields.add("id");
+//			entity.getFields().add(fieldName+"Id");
+			Subentity subentity = new Subentity();
+			subentity.setFieldName(fieldName);
+			Map<String, String> filters = new HashMap<>();
+			filters.put("id", filter.getAuthorId());
+			subentity.setFilters(filters);
+			subentities.add(subentity);
+			entity.setSubentities(subentities);
 		}
 		
 		return entity;

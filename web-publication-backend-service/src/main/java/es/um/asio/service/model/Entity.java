@@ -14,25 +14,32 @@ import lombok.ToString;
 /**
  * The Class Entity.
  */
+
+
 @Getter
 @Setter
 @ToString(includeFieldNames = true)
 @EqualsAndHashCode
 public class Entity implements Serializable {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -969930909950320919L;
 	
 	/** The fields. */
 	private List<String> fields;
 	
-	/** The types */
+	/**  The types. */
 	private List<String> types;
 	
-	/** The group */
+	/**  The group. */
 	private List<String> group;
 	
-	/** The join map */
+	/**  The join map. */
 	private Map<String, Map<String, String>> join;
+	
+
+	/** The subentities. */
+	private List<Subentity> subentities;
 	
 	/** The entity. */
 	private String entity;
