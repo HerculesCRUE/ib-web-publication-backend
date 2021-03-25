@@ -1,7 +1,10 @@
 package es.um.asio.service.service.statistcs.impl;
 
+import org.springframework.stereotype.Service;
+
 import es.um.asio.service.service.statistcs.StatisticsService;
 
+@Service
 public class StatisticsServiceImpl implements StatisticsService {
 
 	@Override
