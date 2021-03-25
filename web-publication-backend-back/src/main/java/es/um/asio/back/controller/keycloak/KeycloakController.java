@@ -2,6 +2,7 @@ package es.um.asio.back.controller.keycloak;
 
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.representations.AccessToken;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,9 @@ import lombok.NoArgsConstructor;
 @RestController
 @RequestMapping(KeycloakController.Mappings.BASE)
 public class KeycloakController {
+
+	@Value("${keycloak.resource}")
+	private String resource;
 
 	@GetMapping(KeycloakController.Mappings.IS_LOGIN)
 	public boolean islogin() {
@@ -38,7 +42,8 @@ public class KeycloakController {
 		AccessToken accessToken = getAccessToken();
 
 		boolean isAdmin = false;
-		for (String per : accessToken.getRealmAccess().getRoles()) {
+
+		for (String per : accessToken.getResourceAccess(resource).getRoles()) {
 			if (Roles.ROLE_ADMIN.equals(per)) {
 				isAdmin = true;
 			}
