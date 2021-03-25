@@ -1,7 +1,10 @@
 package es.um.asio.service.service.academicpublication.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +19,7 @@ import es.um.asio.service.filter.academicpublication.AcademicPublicationFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
+import es.um.asio.service.model.Subentity;
 import es.um.asio.service.service.academicpublication.AcademicPublicationService;
 import es.um.asio.service.service.article.impl.ArticleServiceImpl;
 import es.um.asio.service.service.impl.FusekiService;
@@ -92,8 +96,27 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 				Arrays.asList(filter.getTypes().split(",")) : 
 				Arrays.asList("Doctoral-Thesis", "Master-Thesis");
 		
-		return new Entity("AcademicPublication", types, "abbreviation", "date", "doi", "endPage", "id", "placeOfPublication", "publishedIn", "startPage", "summary", 
+		Entity entity = new Entity("AcademicPublication", types, "abbreviation", "date", "doi", "endPage", "id", "placeOfPublication", "publishedIn", "startPage", "summary", 
 				"title,name", "nowhere:type");
+		
+		// Add data to subentity atributes and filters
+		if (filter.getDirectedBy()!=null && !filter.getDirectedBy().isEmpty()) {
+			List<Subentity> subentities = new ArrayList<Subentity>();
+			// Extra fields
+			String fieldName = "pers";
+//			List<String> fields = new ArrayList<String>();
+//			fields.add("id");
+//			entity.getFields().add(fieldName+"Id");
+			Subentity subentity = new Subentity();
+			subentity.setFieldName(fieldName);
+			Map<String, String> filters = new HashMap<>();
+			filters.put("id", filter.getDirectedBy());
+			subentity.setFilters(filters);
+			subentities.add(subentity);
+			entity.setSubentities(subentities);
+		}
+		
+		return entity;
 	}
 
 	@Override
