@@ -47,4 +47,9 @@ public class EventFilter extends Filter {
 	 * The year to
 	 */
 	private String dateTo;
+	
+
+
+	/** The participant id. */
+	private String participantId;
 }
