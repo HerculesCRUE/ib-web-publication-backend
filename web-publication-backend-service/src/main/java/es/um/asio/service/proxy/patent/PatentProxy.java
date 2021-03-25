@@ -21,4 +21,6 @@ public interface PatentProxy {
 	 */
 	Page<PatentDto> findPaginated(PatentFilter filter, Pageable pageable);
 
+	String getArea();
+
 }

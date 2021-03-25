@@ -20,4 +20,6 @@ public interface ProjectProxy {
 	 * @return Page<ProjectDto>
 	 */
 	Page<ProjectDto> findPaginated(ProjectFilter filter, Pageable pageable);
+
+	String getArea();
 }

@@ -20,13 +20,18 @@ public class PatentProxyImpl implements PatentProxy {
 
 	@Autowired
 	private PatentService service;
-	
+
 	@Autowired
 	private PatentMapper mapper;
 
 	@Override
 	public Page<PatentDto> findPaginated(PatentFilter filter, Pageable pageable) {
 		return this.mapper.convertPageFusekiResponseToDto(this.service.findPaginated(filter, pageable));
+	}
+
+	@Override
+	public String getArea() {
+		return this.service.getArea();
 	}
 
 }

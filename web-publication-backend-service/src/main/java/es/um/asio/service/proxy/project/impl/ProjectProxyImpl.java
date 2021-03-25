@@ -20,7 +20,7 @@ public class ProjectProxyImpl implements ProjectProxy {
 
 	@Autowired
 	private ProjectService service;
-	
+
 	@Autowired
 	private ProjectMapper mapper;
 
@@ -28,6 +28,11 @@ public class ProjectProxyImpl implements ProjectProxy {
 	public Page<ProjectDto> findPaginated(ProjectFilter filter, Pageable pageable) {
 		return this.mapper.convertPageFusekiResponseToDto(this.service.findPaginated(filter, pageable));
 
+	}
+
+	@Override
+	public String getArea() {
+		return this.service.getArea();
 	}
 
 }

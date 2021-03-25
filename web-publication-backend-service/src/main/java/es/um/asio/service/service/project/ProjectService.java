@@ -26,4 +26,6 @@ public interface ProjectService {
 	Entity retrieveEntity();
 
 	String filtersChunk(ProjectFilter filter);
+
+	String getArea();
 }

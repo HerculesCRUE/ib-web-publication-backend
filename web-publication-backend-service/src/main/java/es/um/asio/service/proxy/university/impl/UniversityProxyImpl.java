@@ -20,13 +20,23 @@ public class UniversityProxyImpl implements UniversityProxy {
 
 	@Autowired
 	private UniversityService service;
-	
+
 	@Autowired
 	private UniversityMapper mapper;
-	
+
 	@Override
 	public Page<UniversityDto> findPaginated(UniversityFilter filter, Pageable pageable) {
 		return this.mapper.convertPageFusekiResponseToDto(this.service.findPaginated(filter, pageable));
+	}
+
+	@Override
+	public String getQualitySeal() {
+		return this.service.getQualitySeal();
+	}
+
+	@Override
+	public String getFinancing() {
+		return this.service.getFinancing();
 	}
 
 }

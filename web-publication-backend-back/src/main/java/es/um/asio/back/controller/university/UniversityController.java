@@ -27,25 +27,6 @@ public class UniversityController {
 	@Value("${app.fusekitrellis.url}")
 	private String fusekiTrellisUrl;
 
-	private String mockJson = "{\r\n" + "    \"legendData\": [\r\n" + "        \"Verificación 1\",\r\n"
-			+ "        \"Acreditación 1\",\r\n" + "        \"Acreditación de las dimensiones adicionales 1\",\r\n"
-			+ "        \"Certificación de garantía interna de calidad (SGIC) 1\",\r\n"
-			+ "        \"Centro acreditado institucionalmente 1\"\r\n" + "    ],\r\n" + "    \"seriesData\": [\r\n"
-			+ "        {\r\n" + "            \"name\": \"Verificación 1\",\r\n"
-			+ "            \"value\": 3936420535\r\n" + "        },\r\n" + "        {\r\n"
-			+ "            \"name\": \"Acreditación 1\",\r\n" + "            \"value\": 2548317238\r\n"
-			+ "        },\r\n" + "        {\r\n"
-			+ "            \"name\": \"Acreditación de las dimensiones adicionales 1\",\r\n"
-			+ "            \"value\": 495368615\r\n" + "        },\r\n" + "        {\r\n"
-			+ "            \"name\": \"Certificación de garantía interna de calidad (SGIC) 1\",\r\n"
-			+ "            \"value\": 2728792142\r\n" + "        },\r\n" + "        {\r\n"
-			+ "            \"name\": \"Centro acreditado institucionalmente 1\",\r\n"
-			+ "            \"value\": 240079264\r\n" + "        }\r\n" + "    ],\r\n" + "    \"selected\": {\r\n"
-			+ "        \"Verificación 1\": true,\r\n" + "        \"Acreditación 1\": true,\r\n"
-			+ "        \"Acreditación de las dimensiones adicionales 1\": true,\r\n"
-			+ "        \"Certificación de garantía interna de calidad (SGIC) 1\": true,\r\n"
-			+ "        \"Centro acreditado institucionalmente 1\": true\r\n" + "    }\r\n" + "}";
-
 	@GetMapping(UniversityController.Mappings.SEARCH)
 	public Page<UniversityDto> searchProyects(final UniversityFilter filter, final Pageable pageable) {
 		return this.proxy.findPaginated(filter, pageable);
@@ -53,12 +34,12 @@ public class UniversityController {
 
 	@GetMapping(UniversityController.Mappings.QUALITY_SEAL)
 	public String qualitySeal() {
-		return this.mockJson;
+		return this.proxy.getQualitySeal();
 	}
 
 	@GetMapping(UniversityController.Mappings.FINANCING)
 	public String financing() {
-		return this.mockJson;
+		return this.proxy.getFinancing();
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)

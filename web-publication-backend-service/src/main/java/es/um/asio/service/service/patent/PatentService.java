@@ -29,4 +29,6 @@ public interface PatentService {
 	Entity retrieveEntity();
 
 	String filtersChunk(PatentFilter filter);
+
+	String getArea();
 }

@@ -16,4 +16,8 @@ public interface UniversityProxy {
 	 * @return Page<UniversityDto>
 	 */
 	Page<UniversityDto> findPaginated(UniversityFilter filter, Pageable pageable);
+
+	String getQualitySeal();
+
+	String getFinancing();
 }

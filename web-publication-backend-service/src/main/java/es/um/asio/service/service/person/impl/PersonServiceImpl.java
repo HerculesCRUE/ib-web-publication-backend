@@ -30,7 +30,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(PersonFilter filter, Pageable pageable) {
 		logger.info("Searching persons with filter: {} page: {}", filter, pageable);
@@ -52,7 +52,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 	@Override
 	public String filtersChunk(PersonFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getBirthDate())) {
 				strBuilder.append("FILTER (?birthDate = \"");
@@ -61,7 +61,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDescription())) {
 				strBuilder.append("FILTER (?description = \"");
 				strBuilder.append(filter.getDescription());
@@ -69,7 +69,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getFirstName())) {
 				strBuilder.append("FILTER (?firstName = \"");
 				strBuilder.append(filter.getFirstName());
@@ -77,7 +77,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getGender())) {
 				strBuilder.append("FILTER (?gender = \"");
 				strBuilder.append(filter.getGender());
@@ -85,7 +85,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getHasContactInfo())) {
 				strBuilder.append("FILTER (?hasContactInfo = \"");
 				strBuilder.append(filter.getHasContactInfo());
@@ -93,7 +93,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getHomepage())) {
 				strBuilder.append("FILTER (?homepage = \"");
 				strBuilder.append(filter.getHomepage());
@@ -101,7 +101,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
 				strBuilder.append("FILTER (?id = \"");
 				strBuilder.append(filter.getId());
@@ -109,7 +109,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getImage())) {
 				strBuilder.append("FILTER (?image = \"");
 				strBuilder.append(filter.getImage());
@@ -117,7 +117,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getName())) {
 				strBuilder.append("FILTER (?name = \"");
 				strBuilder.append(filter.getName());
@@ -125,7 +125,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getNickname())) {
 				strBuilder.append("FILTER (?nickname = \"");
 				strBuilder.append(filter.getNickname());
@@ -133,7 +133,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getPersonalMaibox())) {
 				strBuilder.append("FILTER (?personalMaibox = \"");
 				strBuilder.append(filter.getPersonalMaibox());
@@ -141,7 +141,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getResearchLine())) {
 				strBuilder.append("FILTER (?researchLine = \"");
 				strBuilder.append(filter.getResearchLine());
@@ -149,7 +149,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getSurname())) {
 				strBuilder.append("FILTER (?surname = \"");
 				strBuilder.append(filter.getSurname());
@@ -157,7 +157,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getTaxId())) {
 				strBuilder.append("FILTER (?taxId = \"");
 				strBuilder.append(filter.getTaxId());
@@ -165,7 +165,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getTitle())) {
 				strBuilder.append("FILTER (?title = \"");
 				strBuilder.append(filter.getTitle());
@@ -174,10 +174,10 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 				strBuilder.append(") . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
-	
+
 	@Override
 	public String filtersChunk(String id) {
 		StringBuilder strBuilder = new StringBuilder();
@@ -192,8 +192,31 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Person", "birthDate", "description", "firstName", "gender", "hasContactInfo", "homepage", "id", "image", "name", "nickname", 
-				"personalMaibox", "researchLine", "surname", "taxId", "title");
+		return new Entity("Person", "birthDate", "description", "firstName", "gender", "hasContactInfo", "homepage",
+				"id", "image", "name", "nickname", "personalMaibox", "researchLine", "surname", "taxId", "title");
+	}
+
+	@Override
+	public String getArea() {
+		// TODO SPARQL
+		return "{\r\n" + "    \"legendData\": [\r\n" + "        \"Verificación 1\",\r\n"
+				+ "        \"Acreditación 1\",\r\n" + "        \"Acreditación de las dimensiones adicionales 1\",\r\n"
+				+ "        \"Certificación de garantía interna de calidad (SGIC) 1\",\r\n"
+				+ "        \"Centro acreditado institucionalmente 1\"\r\n" + "    ],\r\n" + "    \"seriesData\": [\r\n"
+				+ "        {\r\n" + "            \"name\": \"Verificación 1\",\r\n"
+				+ "            \"value\": 3936420535\r\n" + "        },\r\n" + "        {\r\n"
+				+ "            \"name\": \"Acreditación 1\",\r\n" + "            \"value\": 2548317238\r\n"
+				+ "        },\r\n" + "        {\r\n"
+				+ "            \"name\": \"Acreditación de las dimensiones adicionales 1\",\r\n"
+				+ "            \"value\": 495368615\r\n" + "        },\r\n" + "        {\r\n"
+				+ "            \"name\": \"Certificación de garantía interna de calidad (SGIC) 1\",\r\n"
+				+ "            \"value\": 2728792142\r\n" + "        },\r\n" + "        {\r\n"
+				+ "            \"name\": \"Centro acreditado institucionalmente 1\",\r\n"
+				+ "            \"value\": 240079264\r\n" + "        }\r\n" + "    ],\r\n" + "    \"selected\": {\r\n"
+				+ "        \"Verificación 1\": true,\r\n" + "        \"Acreditación 1\": true,\r\n"
+				+ "        \"Acreditación de las dimensiones adicionales 1\": true,\r\n"
+				+ "        \"Certificación de garantía interna de calidad (SGIC) 1\": true,\r\n"
+				+ "        \"Centro acreditado institucionalmente 1\": true\r\n" + "    }\r\n" + "}";
 	}
 
 }

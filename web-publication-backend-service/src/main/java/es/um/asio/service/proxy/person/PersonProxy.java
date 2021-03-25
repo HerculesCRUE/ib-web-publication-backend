@@ -7,7 +7,7 @@ import es.um.asio.service.dto.PersonDto;
 import es.um.asio.service.filter.person.PersonFilter;
 
 public interface PersonProxy {
-	
+
 	/**
 	 * Método de búsqueda
 	 * 
@@ -16,7 +16,7 @@ public interface PersonProxy {
 	 * @return Page<PersonDto>
 	 */
 	Page<PersonDto> findPaginated(PersonFilter filter, Pageable pageable);
-	
+
 	/**
 	 * Obtiene una persona
 	 * 
@@ -24,4 +24,6 @@ public interface PersonProxy {
 	 * @return PersonDto
 	 */
 	PersonDto find(String id);
+
+	String getArea();
 }

@@ -26,4 +26,8 @@ public interface UniversityService {
 	Entity retrieveEntity();
 
 	String filtersChunk(UniversityFilter filter);
+
+	String getQualitySeal();
+
+	String getFinancing();
 }

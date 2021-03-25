@@ -19,7 +19,7 @@ public interface PersonService {
 	 * @return the page
 	 */
 	Page<FusekiResponse> findPaginated(PersonFilter filter, Pageable pageable);
-	
+
 	/**
 	 * Find.
 	 *
@@ -36,6 +36,8 @@ public interface PersonService {
 	Entity retrieveEntity();
 
 	String filtersChunk(String id);
-	
+
 	String filtersChunk(PersonFilter filter);
+
+	String getArea();
 }

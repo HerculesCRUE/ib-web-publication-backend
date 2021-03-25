@@ -22,10 +22,10 @@ public class PersonProxyImpl implements PersonProxy {
 
 	@Autowired
 	private PersonService service;
-	
+
 	@Autowired
 	private PersonMapper mapper;
-	
+
 	@Override
 	public Page<PersonDto> findPaginated(PersonFilter filter, Pageable pageable) {
 		return this.mapper.convertPageFusekiResponseToDto(this.service.findPaginated(filter, pageable));
@@ -34,6 +34,11 @@ public class PersonProxyImpl implements PersonProxy {
 	@Override
 	public PersonDto find(String id) {
 		List<PersonDto> list = this.mapper.convertFusekiResponseToDto(this.service.find(id));
-		return (list.isEmpty())? null : list.get(0);
+		return (list.isEmpty()) ? null : list.get(0);
+	}
+
+	@Override
+	public String getArea() {
+		return this.service.getArea();
 	}
 }

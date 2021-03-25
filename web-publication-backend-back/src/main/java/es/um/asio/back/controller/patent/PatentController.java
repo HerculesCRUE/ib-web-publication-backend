@@ -29,30 +29,11 @@ public class PatentController {
 	@Value("${app.fusekitrellis.url}")
 	private String fusekiTrellisUrl;
 
-	private String mockJson = "{\r\n" + "    \"legendData\": [\r\n" + "        \"Verificación 1\",\r\n"
-			+ "        \"Acreditación 1\",\r\n" + "        \"Acreditación de las dimensiones adicionales 1\",\r\n"
-			+ "        \"Certificación de garantía interna de calidad (SGIC) 1\",\r\n"
-			+ "        \"Centro acreditado institucionalmente 1\"\r\n" + "    ],\r\n" + "    \"seriesData\": [\r\n"
-			+ "        {\r\n" + "            \"name\": \"Verificación 1\",\r\n"
-			+ "            \"value\": 3936420535\r\n" + "        },\r\n" + "        {\r\n"
-			+ "            \"name\": \"Acreditación 1\",\r\n" + "            \"value\": 2548317238\r\n"
-			+ "        },\r\n" + "        {\r\n"
-			+ "            \"name\": \"Acreditación de las dimensiones adicionales 1\",\r\n"
-			+ "            \"value\": 495368615\r\n" + "        },\r\n" + "        {\r\n"
-			+ "            \"name\": \"Certificación de garantía interna de calidad (SGIC) 1\",\r\n"
-			+ "            \"value\": 2728792142\r\n" + "        },\r\n" + "        {\r\n"
-			+ "            \"name\": \"Centro acreditado institucionalmente 1\",\r\n"
-			+ "            \"value\": 240079264\r\n" + "        }\r\n" + "    ],\r\n" + "    \"selected\": {\r\n"
-			+ "        \"Verificación 1\": true,\r\n" + "        \"Acreditación 1\": true,\r\n"
-			+ "        \"Acreditación de las dimensiones adicionales 1\": true,\r\n"
-			+ "        \"Certificación de garantía interna de calidad (SGIC) 1\": true,\r\n"
-			+ "        \"Centro acreditado institucionalmente 1\": true\r\n" + "    }\r\n" + "}";
-
 	@GetMapping(PatentController.Mappings.SEARCH)
 	public Page<PatentDto> searchProyects(final PatentFilter filter, final Pageable pageable) {
 		return this.proxy.findPaginated(filter, pageable);
 	}
-	
+
 	@GetMapping(PatentController.Mappings.GET)
 	public PatentDetailDto findPatent(@PathVariable("id") final String id) {
 		return createMockDetailDto();
@@ -60,7 +41,7 @@ public class PatentController {
 
 	@GetMapping(PatentController.Mappings.AREA)
 	public String area() {
-		return this.mockJson;
+		return this.proxy.getArea();
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -74,8 +55,7 @@ public class PatentController {
 		 * Mapping for search.
 		 */
 		protected static final String SEARCH = "/search";
-		
-		
+
 		/**
 		 * Mapping for get.
 		 */
@@ -86,16 +66,18 @@ public class PatentController {
 		 */
 		protected static final String AREA = "/area";
 	}
-	
+
 	private PatentDetailDto createMockDetailDto() {
 		PatentDetailDto mock = new PatentDetailDto();
-		mock.setTitle("FUNCIONALIZACIÓN DE PARTÍCULAS MAGNÉTICAS MEDIANTE SUSTITUCIÓN NUCLEOFÍLICA DE HALUROS ORGÁNICOS");
+		mock.setTitle(
+				"FUNCIONALIZACIÓN DE PARTÍCULAS MAGNÉTICAS MEDIANTE SUSTITUCIÓN NUCLEOFÍLICA DE HALUROS ORGÁNICOS");
 		mock.setDateIssued("2016-04-06");
 		mock.setEndDate("2016-05-06");
 		mock.setId("123");
 		mock.setKeyword("magnetismo");
 		mock.setStartDate("2015-04-06");
-		mock.setSummary("FUNCIONALIZACIÓN DE PARTÍCULAS MAGNÉTICAS MEDIANTE SUSTITUCIÓN NUCLEOFÍLICA DE HALUROS ORGÁNICOS");
+		mock.setSummary(
+				"FUNCIONALIZACIÓN DE PARTÍCULAS MAGNÉTICAS MEDIANTE SUSTITUCIÓN NUCLEOFÍLICA DE HALUROS ORGÁNICOS");
 		return mock;
 	}
 

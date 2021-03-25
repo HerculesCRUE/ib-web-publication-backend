@@ -37,7 +37,7 @@ public class PatentServiceImpl implements PatentService {
 
 	public String filtersChunk(PatentFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDateIssued())) {
 				strBuilder.append("FILTER (?dateIssued = \"");
@@ -46,7 +46,7 @@ public class PatentServiceImpl implements PatentService {
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDoi())) {
 				strBuilder.append("FILTER (?doi = \"");
 				strBuilder.append(filter.getDoi());
@@ -54,7 +54,7 @@ public class PatentServiceImpl implements PatentService {
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getEndDate())) {
 				strBuilder.append("FILTER (?endDate = \"");
 				strBuilder.append(filter.getEndDate());
@@ -62,7 +62,7 @@ public class PatentServiceImpl implements PatentService {
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getEndPage())) {
 				strBuilder.append("FILTER (?endPage = \"");
 				strBuilder.append(filter.getEndPage());
@@ -78,7 +78,7 @@ public class PatentServiceImpl implements PatentService {
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getKeyword())) {
 				strBuilder.append("FILTER (?keyword = \"");
 				strBuilder.append(filter.getKeyword());
@@ -86,7 +86,7 @@ public class PatentServiceImpl implements PatentService {
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getMode())) {
 				strBuilder.append("FILTER (?mode = \"");
 				strBuilder.append(filter.getMode());
@@ -94,7 +94,7 @@ public class PatentServiceImpl implements PatentService {
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getStartDate())) {
 				strBuilder.append("FILTER (?StartDate = \"");
 				strBuilder.append(filter.getStartDate());
@@ -102,7 +102,7 @@ public class PatentServiceImpl implements PatentService {
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getStartPage())) {
 				strBuilder.append("FILTER (?startPage = \"");
 				strBuilder.append(filter.getStartPage());
@@ -110,7 +110,7 @@ public class PatentServiceImpl implements PatentService {
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getSummary())) {
 				strBuilder.append("FILTER (LANG(?summary) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
@@ -134,7 +134,32 @@ public class PatentServiceImpl implements PatentService {
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Patent", "dateIssued", "doi", "endDate", "endPage", "id", "keyword", "mode", "startDate", "startPage", "title");
+		return new Entity("Patent", "dateIssued", "doi", "endDate", "endPage", "id", "keyword", "mode", "startDate",
+				"startPage", "title");
+	}
+
+	@Override
+	public String getArea() {
+		// TODO SPARQL
+		// return serviceSPARQL.run(query);
+		return "{\r\n" + "    \"legendData\": [\r\n" + "        \"Verificación 1\",\r\n"
+				+ "        \"Acreditación 1\",\r\n" + "        \"Acreditación de las dimensiones adicionales 1\",\r\n"
+				+ "        \"Certificación de garantía interna de calidad (SGIC) 1\",\r\n"
+				+ "        \"Centro acreditado institucionalmente 1\"\r\n" + "    ],\r\n" + "    \"seriesData\": [\r\n"
+				+ "        {\r\n" + "            \"name\": \"Verificación 1\",\r\n"
+				+ "            \"value\": 3936420535\r\n" + "        },\r\n" + "        {\r\n"
+				+ "            \"name\": \"Acreditación 1\",\r\n" + "            \"value\": 2548317238\r\n"
+				+ "        },\r\n" + "        {\r\n"
+				+ "            \"name\": \"Acreditación de las dimensiones adicionales 1\",\r\n"
+				+ "            \"value\": 495368615\r\n" + "        },\r\n" + "        {\r\n"
+				+ "            \"name\": \"Certificación de garantía interna de calidad (SGIC) 1\",\r\n"
+				+ "            \"value\": 2728792142\r\n" + "        },\r\n" + "        {\r\n"
+				+ "            \"name\": \"Centro acreditado institucionalmente 1\",\r\n"
+				+ "            \"value\": 240079264\r\n" + "        }\r\n" + "    ],\r\n" + "    \"selected\": {\r\n"
+				+ "        \"Verificación 1\": true,\r\n" + "        \"Acreditación 1\": true,\r\n"
+				+ "        \"Acreditación de las dimensiones adicionales 1\": true,\r\n"
+				+ "        \"Certificación de garantía interna de calidad (SGIC) 1\": true,\r\n"
+				+ "        \"Centro acreditado institucionalmente 1\": true\r\n" + "    }\r\n" + "}";
 	}
 
 }

@@ -47,7 +47,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDescription())) {
 				strBuilder.append("FILTER (?description = \"");
 				strBuilder.append(filter.getDescription());
@@ -55,7 +55,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getEndDate())) {
 				strBuilder.append("FILTER (?endDate = \"");
 				strBuilder.append(filter.getStartDate());
@@ -63,7 +63,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getForeseenJustificationDate())) {
 				strBuilder.append("FILTER (?foreseenJustificationDate = \"");
 				strBuilder.append(filter.getForeseenJustificationDate());
@@ -79,7 +79,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getKeyword())) {
 				strBuilder.append("FILTER (?keyword = \"");
 				strBuilder.append(filter.getKeyword());
@@ -87,7 +87,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getModality())) {
 				strBuilder.append("FILTER (?modality = \"");
 				strBuilder.append(filter.getModality());
@@ -95,7 +95,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getNeedsEthicalValidation())) {
 				strBuilder.append("FILTER (?needsEthicalValidation = \"");
 				strBuilder.append(filter.getNeedsEthicalValidation());
@@ -103,7 +103,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getStartDate())) {
 				strBuilder.append("FILTER (?startDate = \"");
 				strBuilder.append(filter.getStartDate());
@@ -111,7 +111,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getStatus())) {
 				strBuilder.append("FILTER (?status = \"");
 				strBuilder.append(filter.getStatus());
@@ -134,8 +134,25 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	}
 
 	public Entity retrieveEntity() {
-		return new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id", "keyword", "modality", 
-				"needsEthicalValidation", "startDate", "status", "title");
+		return new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id",
+				"keyword", "modality", "needsEthicalValidation", "startDate", "status", "title");
+	}
+
+	@Override
+	public String getArea() {
+		// TODO SPARQL DTO
+		return "[{\"name\": \"Ciencias agrícolas y agroalimentarias\",\"value\": 10},\r\n"
+				+ "			{\"name\": \"Agricultura y Bosques\",\"value\": 20}, \r\n"
+				+ "			{\"name\": \"Astronomía y astrofísica\",\"value\": 15}, \r\n"
+				+ "			{\"name\": \"Biomedicina\",\"value\": 30},\r\n"
+				+ "			{\"name\": \"Economía\",\"value\": 30},\r\n"
+				+ "			{\"name\": \"Ciencia y tecnología ambiental\",\"value\": 30},\r\n"
+				+ "			{\"name\": \"Ciencia y tecnología de los alimentos\",\"value\": 30},\r\n"
+				+ "			{\"name\": \"Física fundamental y de partículas\",\"value\": 30},\r\n"
+				+ "			{\"name\": \"Producción industrial, ingeniería civil e ingeniería para la sociedad\",\"value\": 30},\r\n"
+				+ "			{\"name\": \"Ciencias de la vida\",\"value\": 30},\r\n"
+				+ "			{\"name\": \"Ciencias matemáticas\",\"value\":30},\r\n"
+				+ "			{\"name\": \"Biología molecular y celular\",\"value\": 30}]";
 	}
 
 }
