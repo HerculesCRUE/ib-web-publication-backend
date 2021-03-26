@@ -31,8 +31,8 @@ public class ProjectProxyImpl implements ProjectProxy {
 	}
 
 	@Override
-	public String getArea() {
-		return this.service.getArea();
+	public String getbyInvestigation() {
+		return this.service.getbyInvestigation();
 	}
 
 }

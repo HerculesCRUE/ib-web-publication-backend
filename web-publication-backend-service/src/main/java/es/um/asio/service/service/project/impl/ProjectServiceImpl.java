@@ -139,7 +139,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	}
 
 	@Override
-	public String getArea() {
+	public String getbyInvestigation() {
 		// TODO SPARQL DTO
 		return "[{\"name\": \"Ciencias agrícolas y agroalimentarias\",\"value\": 10},\r\n"
 				+ "			{\"name\": \"Agricultura y Bosques\",\"value\": 20}, \r\n"

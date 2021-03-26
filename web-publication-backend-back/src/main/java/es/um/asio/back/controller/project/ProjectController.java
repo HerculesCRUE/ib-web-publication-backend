@@ -33,8 +33,8 @@ public class ProjectController {
 	}
 
 	@GetMapping(ProjectController.Mappings.INVESTIGATION)
-	public String area() {
-		return this.proxy.getArea();
+	public String getbyInvestigation() {
+		return this.proxy.getbyInvestigation();
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)

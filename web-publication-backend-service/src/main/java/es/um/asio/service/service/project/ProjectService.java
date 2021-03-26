@@ -27,5 +27,5 @@ public interface ProjectService {
 
 	String filtersChunk(ProjectFilter filter);
 
-	String getArea();
+	String getbyInvestigation();
 }

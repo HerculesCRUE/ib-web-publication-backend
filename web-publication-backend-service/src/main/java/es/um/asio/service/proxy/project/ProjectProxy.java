@@ -21,5 +21,5 @@ public interface ProjectProxy {
 	 */
 	Page<ProjectDto> findPaginated(ProjectFilter filter, Pageable pageable);
 
-	String getArea();
+	String getbyInvestigation();
 }
