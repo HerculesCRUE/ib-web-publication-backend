@@ -55,6 +55,11 @@ public class ProjectDto {
 	 */
 	private String needsEthicalValidation;
 	
+	/**
+	 * The projectClassification
+	 */
+	private String projectClassification;
+	
 	/** 
 	 * The startDate 
 	 */

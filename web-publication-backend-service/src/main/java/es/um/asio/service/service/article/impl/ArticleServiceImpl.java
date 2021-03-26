@@ -97,6 +97,15 @@ public class ArticleServiceImpl extends FusekiService<ArticleFilter> implements 
 				strBuilder.append(filter.getTitle());
 				strBuilder.append("\", \"i\")) . ");
 			}
+
+			if (StringUtils.isNotBlank(filter.getSummary())) {
+				strBuilder.append("FILTER (LANG(?summary) = \"");
+				strBuilder.append(filter.getLanguage().substring(1));
+				strBuilder.append("\") . ");
+				strBuilder.append("FILTER ( regex(?summary, \"");
+				strBuilder.append(filter.getSummary());
+				strBuilder.append("\", \"i\")) . ");
+			}
 			
 			if (StringUtils.isNotBlank(filter.getDateFrom())) {
 				strBuilder.append("FILTER (?date >= \"");
@@ -120,7 +129,7 @@ public class ArticleServiceImpl extends FusekiService<ArticleFilter> implements 
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Article", "date", "doi", "endPage", "id", "publishedIn", "startPage", "title");
+		return new Entity("Article", "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "summary");
 	}
 
 }

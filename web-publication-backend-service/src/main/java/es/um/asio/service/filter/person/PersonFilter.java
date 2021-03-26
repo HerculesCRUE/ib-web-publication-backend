@@ -79,6 +79,11 @@ public class PersonFilter extends Filter {
 	private String researchLine;
 	
 	/**
+	 * The subjectArea
+	 */
+	private String subjectArea;
+	
+	/**
 	 * The surname
 	 */
 	private String surname;

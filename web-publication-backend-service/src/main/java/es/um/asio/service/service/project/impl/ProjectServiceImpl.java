@@ -135,7 +135,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 
 	public Entity retrieveEntity() {
 		return new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id",
-				"keyword", "modality", "needsEthicalValidation", "startDate", "status", "title");
+				"keyword", "modality", "needsEthicalValidation", "projectClassification", "startDate", "status", "title");
 	}
 
 	@Override

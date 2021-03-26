@@ -243,7 +243,7 @@ public class WebApplicationStepDefinitionsTest {
 
 		// UNIVERSITY
 		filterUniversity = new UniversityFilter();
-		filterUniversity.setName("NAME");
+		filterUniversity.setTitle("NAME");
 		filterUniversity.setLanguage("es");
 		// Mock proxy
 		Mockito.when(this.proxyUniversity.findPaginated(filterUniversity, pageable)).thenAnswer(invocation -> {
@@ -252,7 +252,7 @@ public class WebApplicationStepDefinitionsTest {
 
 			UniversityDto university = new UniversityDto();
 			university.setId("universityId");
-			university.setName("universityName");
+			university.setTitle("universityName");
 			
 			contentResult.add(university);
 			Page<UniversityDto> page = new PageImpl<>(contentResult, pageable, contentResult.size());
@@ -369,7 +369,7 @@ public class WebApplicationStepDefinitionsTest {
 		Page<UniversityDto> page = this.proxyUniversity.findPaginated(filterUniversity, pageable);
 		assertNotNull(page);
 
-		assertEquals(true, page.getContent().get(0).getName().equals("universityName"));
+		assertEquals(true, page.getContent().get(0).getTitle().equals("universityName"));
 	}
 
 	@Then("^the controller call to servie to find and group universities by quality seal to send front$")

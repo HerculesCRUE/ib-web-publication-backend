@@ -113,7 +113,7 @@ public class ExhibitServiceImpl extends FusekiService<ExhibitFilter> implements 
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Exhibit", "abbreviation", "contactInformation", "date", "description", "id", "locality", "locatedIn", "title");
+		return new Entity("Exhibit", "abbreviation", "contactInformation", "date", "description", "id", "locality", "locatedIn", "title", "participatedBy");
 	}
 
 }

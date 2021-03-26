@@ -51,6 +51,16 @@ public class PatentDto {
 	private String mode;
 	
 	/**
+	 * The pageEnd
+	 */
+	private String pageEnd;
+	
+	/**
+	 * The pageStart
+	 */
+	private String pageStart;
+	
+	/**
 	 * The startDate
 	 */
 	private String startDate;

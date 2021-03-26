@@ -39,11 +39,6 @@ public class ResearchGroupFilter extends Filter {
 	private String excellenceLabel;
 	
 	/**
-	 * The homepage
-	 */
-	private String homepage;
-	
-	/**
 	 * The id
 	 */
 	private String id;

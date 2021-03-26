@@ -76,6 +76,11 @@ public class PersonDto {
 	private String researchLine;
 	
 	/**
+	 * The subjectArea
+	 */
+	private String subjectArea;
+	
+	/**
 	 * The surname
 	 */
 	private String surname;

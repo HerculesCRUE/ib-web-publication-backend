@@ -41,12 +41,12 @@ public class ResearchGroupDto {
 	private String excellenceLabel;
 	
 	/**
-	 * The homepage
-	 */
-	private String homepage;
-	
-	/**
 	 * The startDate
 	 */
 	private String startDate;
+	
+	/**
+	 * The ScientificDomain (uppercase S)
+	 */
+	private String ScientificDomain;
 }

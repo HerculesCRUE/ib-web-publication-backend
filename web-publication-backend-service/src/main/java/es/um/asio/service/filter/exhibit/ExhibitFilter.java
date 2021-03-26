@@ -57,4 +57,9 @@ public class ExhibitFilter extends Filter {
 	 * The title
 	 */
 	private String title;
+	
+	/**
+	 * The participatedBy
+	 */
+	private String participatedBy;
 }

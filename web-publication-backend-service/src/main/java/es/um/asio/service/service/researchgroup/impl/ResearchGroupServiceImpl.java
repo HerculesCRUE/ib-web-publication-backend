@@ -73,14 +73,6 @@ public class ResearchGroupServiceImpl extends FusekiService<ResearchGroupFilter>
 				strBuilder.append(") . ");
 			}
 			
-			if (StringUtils.isNotBlank(filter.getHomepage())) {
-				strBuilder.append("FILTER (?homepage = \"");
-				strBuilder.append(filter.getHomepage());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
-			}
-			
 			if (StringUtils.isNotBlank(filter.getId())) {
 				strBuilder.append("FILTER (?id = \"");
 				strBuilder.append(filter.getId());
@@ -112,7 +104,7 @@ public class ResearchGroupServiceImpl extends FusekiService<ResearchGroupFilter>
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("GrupoInvestigacion", "abbreviation", "description", "endDate", "excellenceLabel", "homepage", "id", "startDate", "topic");
+		return new Entity("GrupoInvestigacion", "abbreviation", "description", "endDate", "excellenceLabel", "id", "startDate", "title");
 	}
 
 }

@@ -42,4 +42,14 @@ public class ProjectContractFilter extends Filter {
 	 * The summary
 	 */
 	private String summary;
+	
+	/**
+	 * The Publication (uppercase P)
+	 */
+	private String publication;
+	
+	/**
+	 * The SubjectArea (uppercase S)
+	 */
+	private String subjectArea;
 }

@@ -58,7 +58,7 @@ public class UniversityProxyTest {
 
 		filter.setId("1");
 		filter.setLanguage("es");
-		filter.setName("University Test");
+		filter.setTitle("University Test");
 
 		pageable = PageRequest.of(1, 5, Sort.by("ASC"));
 		FusekiResponse fuseki = new FusekiResponse();

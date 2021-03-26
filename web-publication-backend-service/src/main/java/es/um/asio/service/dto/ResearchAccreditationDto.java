@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The class ArticleDto
+ * The class ResearchAccreditationDto
  */
 @Getter
 @Setter

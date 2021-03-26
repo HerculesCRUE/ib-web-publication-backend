@@ -49,4 +49,9 @@ public class ExhibitDto {
 	 * The locatedIn
 	 */
 	private String locatedIn;
+	
+	/**
+	 * The participatedBy
+	 */
+	private String participatedBy;
 }

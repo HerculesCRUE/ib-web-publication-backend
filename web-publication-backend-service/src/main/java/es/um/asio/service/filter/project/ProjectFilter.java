@@ -55,6 +55,11 @@ public class ProjectFilter extends Filter {
 	 */
 	private String needsEthicalValidation;
 	
+	/**
+	 * The projectClassification
+	 */
+	private String projectClassification;
+	
 	/** 
 	 * The startDate 
 	 */

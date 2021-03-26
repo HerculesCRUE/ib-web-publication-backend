@@ -88,6 +88,6 @@ public class EditorRoleServiceImpl extends FusekiService<EditorRoleFilter> imple
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("EditorRole", "date", "dedication", "dedicationPercentage", "description", "id");
+		return new Entity("EditorRole", "date", "dedication", "dedicationPercentage", "description", "id", "hasKnowledgeArea");
 	}
 }

@@ -42,4 +42,9 @@ public class EditorRoleFilter extends Filter {
 	 * The id
 	 */
 	private String description;
+	
+	/**
+	 * The hasKnowledgeArea
+	 */
+	private String hasKnowledgeArea;
 }

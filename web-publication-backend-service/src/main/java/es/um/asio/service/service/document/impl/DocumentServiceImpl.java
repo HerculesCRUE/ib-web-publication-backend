@@ -156,7 +156,7 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 		types.add(splitType[splitType.length - 1]);
 
 		if (type.equals("Article")) {
-			return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
+			return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "summary", "nowhere:type");
 		} else if (type.equals("Book"))  {
 			return new Entity("Documento", types, "date", "doi", "edition", "endPage", "iccn", "id", "placeOfPublication", "publishedIn", 
 					"startPage", "summary", "title", "nowhere:type");

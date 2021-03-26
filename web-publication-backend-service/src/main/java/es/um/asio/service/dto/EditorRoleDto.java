@@ -16,22 +16,27 @@ public class EditorRoleDto {
 	private String id;
 	
 	/**
-	 * The id
+	 * The date
 	 */
 	private String date;
 	
 	/**
-	 * The id
+	 * The dedication
 	 */
 	private String dedication;
 	
 	/**
-	 * The id
+	 * The dedicationPercentage
 	 */
 	private String dedicationPercentage;
 	
 	/**
-	 * The id
+	 * The description
 	 */
 	private String description;
+	
+	/**
+	 * The hasKnowledgeArea
+	 */
+	private String hasKnowledgeArea;
 }

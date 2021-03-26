@@ -23,7 +23,12 @@ public class UniversityFilter extends Filter {
 	private String id;
 	
 	/**
-	 * The name
+	 * The title
 	 */
-	private String name;
+	private String title;
+	
+	/**
+	 * The university
+	 */
+	private String university;
 }

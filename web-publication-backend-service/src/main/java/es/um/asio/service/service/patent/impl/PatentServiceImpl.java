@@ -134,7 +134,7 @@ public class PatentServiceImpl implements PatentService {
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Patent", "dateIssued", "doi", "endDate", "endPage", "id", "keyword", "mode", "startDate",
+		return new Entity("Patent", "dateIssued", "doi", "endDate", "endPage", "id", "keyword", "mode", "pageEnd", "pageStart", "startDate",
 				"startPage", "title");
 	}
 

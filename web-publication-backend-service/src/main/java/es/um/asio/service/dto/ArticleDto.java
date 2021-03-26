@@ -44,4 +44,9 @@ public class ArticleDto {
 	 * The startPage
 	 */
 	private String startPage;
+	
+	/**
+	 * The summary
+	 */
+	private String sunmary;
 }

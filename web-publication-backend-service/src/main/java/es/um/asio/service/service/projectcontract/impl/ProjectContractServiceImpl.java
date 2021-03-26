@@ -88,6 +88,6 @@ public class ProjectContractServiceImpl extends FusekiService<ProjectContractFil
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("ProjectContract", "attachment", "endDate", "id", "startDate", "summary");
+		return new Entity("ProjectContract", "attachment", "endDate", "id", "startDate", "summary", "Publication", "SubjectArea");
 	}
 }

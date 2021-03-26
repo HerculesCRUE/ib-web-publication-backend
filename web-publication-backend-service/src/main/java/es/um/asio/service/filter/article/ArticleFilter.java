@@ -49,6 +49,11 @@ public class ArticleFilter extends Filter {
 	private String startPage;
 	
 	/**
+	 * The summary
+	 */
+	private String summary;
+	
+	/**
 	 * The title
 	 */
 	private String title;

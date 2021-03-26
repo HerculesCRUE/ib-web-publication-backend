@@ -50,12 +50,21 @@ public class UniversityServiceImpl extends FusekiService<UniversityFilter> imple
 				strBuilder.append(") . ");
 			}
 
-			if (StringUtils.isNotBlank(filter.getName())) {
-				strBuilder.append("FILTER (LANG(?name) = \"");
+			if (StringUtils.isNotBlank(filter.getTitle())) {
+				strBuilder.append("FILTER (LANG(?title) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
 				strBuilder.append("\") . ");
 				strBuilder.append("FILTER ( regex(?name, \"");
-				strBuilder.append(filter.getName());
+				strBuilder.append(filter.getTitle());
+				strBuilder.append("\", \"i\")) . ");
+			}
+			
+			if (StringUtils.isNotBlank(filter.getUniversity())) {
+				strBuilder.append("FILTER (LANG(?university) = \"");
+				strBuilder.append(filter.getLanguage().substring(1));
+				strBuilder.append("\") . ");
+				strBuilder.append("FILTER ( regex(?university, \"");
+				strBuilder.append(filter.getUniversity());
 				strBuilder.append("\", \"i\")) . ");
 			}
 		}
@@ -65,7 +74,7 @@ public class UniversityServiceImpl extends FusekiService<UniversityFilter> imple
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("University", "id", "name");
+		return new Entity("University", "id", "title", "university");
 	}
 
 	@Override
