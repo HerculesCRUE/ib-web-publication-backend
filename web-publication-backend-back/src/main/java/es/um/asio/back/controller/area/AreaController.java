@@ -22,7 +22,7 @@ public class AreaController {
 		return this.proxy.getAreaWithYear(filter);
 	}
 
-	@GetMapping(AreaController.Mappings.YEAR_AREA)
+	@GetMapping(AreaController.Mappings.PROJECT_AREA)
 	public String getAreasWithMoreProjects(final AreaFilter filter) {
 		return this.proxy.getAreasWithMoreProjects(filter);
 	}
@@ -39,5 +39,10 @@ public class AreaController {
 		 * Mapping for search.
 		 */
 		protected static final String YEAR_AREA = "/yearArea";
+
+		/**
+		 * Mapping for search.
+		 */
+		protected static final String PROJECT_AREA = "/projectArea";
 	}
 }
