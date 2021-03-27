@@ -40,7 +40,9 @@ public class EventController {
 	
 	@GetMapping(EventController.Mappings.GET)
 	public EventDetailDto findEvent(@PathVariable("id") final String id, @PathVariable("type") final String type) {
-		return createMockDetailDto();
+		byte[] decodedBytes = Base64.getDecoder().decode(type);
+		String decodedString = new String(decodedBytes);
+		return this.proxy.find(id, decodedString);
 	}
 	
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
