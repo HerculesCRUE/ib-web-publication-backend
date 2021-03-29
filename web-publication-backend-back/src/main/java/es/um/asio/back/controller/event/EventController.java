@@ -63,19 +63,4 @@ public class EventController {
         protected static final String GET = "/{id}/{type}";
 	}
 	
-	
-	private EventDetailDto createMockDetailDto() {
-		EventDetailDto mock = new EventDetailDto();
-		mock.setId("123");
-		mock.setAbbreviation("IV COSEWE");
-		mock.setContactInformation("contact@cosewe.es");
-		mock.setDate("09-01-2014 9:00");
-		mock.setDescription("Cuarto congreso sobre semántica web de España");
-		mock.setLocality("Murcia");
-		mock.setLocatedIn("Universidad de Murcia");
-		mock.setPresents("El avance de la semántica en España");
-		mock.setTitle("IV congreso sobre semántica web de España");
-		
-		return mock;
-	}
 }
