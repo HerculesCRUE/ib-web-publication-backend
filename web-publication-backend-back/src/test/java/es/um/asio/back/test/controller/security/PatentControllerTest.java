@@ -59,7 +59,7 @@ public class PatentControllerTest {
 			patent.setDateIssued("patentDateIssued");
 			patent.setDoi("patentDoi");
 			patent.setEndDate("patentEndDate");
-			patent.setEndPage("patentEndPage");
+			patent.setPageEnd("patentPageEnd");
 			patent.setKeyword("patentKeyword");
 			patent.setMode("patentMode");
 			patent.setStartDate("patentStartDate");

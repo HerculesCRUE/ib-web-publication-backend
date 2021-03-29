@@ -36,11 +36,6 @@ public class PatentDto {
 	private String endDate;
 	
 	/**
-	 * The endPage
-	 */
-	private String endPage;
-	
-	/**
 	 * The keyword
 	 */
 	private String keyword;

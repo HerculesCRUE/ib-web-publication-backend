@@ -75,7 +75,7 @@ public class PatentDetailDto {
 	private String endDate;
 	
 	/** The endPage. */
-	private String endPage;
+	private String pageEnd;
 	
 	/** The keyword. */
 	private String keyword;
@@ -87,7 +87,7 @@ public class PatentDetailDto {
 	private String startDate;
 	
 	/** The startPage. */
-	private String startPage;
+	private String pageStart;
 	
 	/** The summary. */
 	private String summary;

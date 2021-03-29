@@ -36,7 +36,7 @@ public class PatentController {
 
 	@GetMapping(PatentController.Mappings.GET)
 	public PatentDetailDto findPatent(@PathVariable("id") final String id) {
-		return createMockDetailDto();
+		return this.proxy.find(id);
 	}
 
 	@GetMapping(PatentController.Mappings.AREA)

@@ -3,6 +3,8 @@ package es.um.asio.service.proxy.patent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import es.um.asio.service.dto.DocumentDetailDto;
+import es.um.asio.service.dto.PatentDetailDto;
 import es.um.asio.service.dto.PatentDto;
 import es.um.asio.service.filter.patent.PatentFilter;
 
@@ -20,6 +22,8 @@ public interface PatentProxy {
 	 * @return Page<PatentDto>
 	 */
 	Page<PatentDto> findPaginated(PatentFilter filter, Pageable pageable);
+	
+	PatentDetailDto find(String id);
 
 	String getArea();
 
