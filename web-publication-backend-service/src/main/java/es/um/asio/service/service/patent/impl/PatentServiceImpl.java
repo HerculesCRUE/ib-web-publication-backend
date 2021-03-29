@@ -43,7 +43,7 @@ public class PatentServiceImpl implements PatentService {
 
 	@Override
 	public List<Object> find(String id) {
-		logger.info("Searching document with id: {} type: {}", id);
+		logger.info("Searching patent with id: {} type: {}", id);
 
 		SimpleQuery query = new SimpleQuery(this.retrieveDetailEntity(), filtersChunk(id));
 

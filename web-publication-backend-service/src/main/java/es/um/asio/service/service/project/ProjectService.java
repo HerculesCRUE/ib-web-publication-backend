@@ -1,5 +1,7 @@
 package es.um.asio.service.service.project;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,6 +19,15 @@ public interface ProjectService {
 	 * @return the page
 	 */
 	Page<FusekiResponse> findPaginated(ProjectFilter filter, Pageable pageable);
+	
+	
+	/**
+	 * Find.
+	 *
+	 * @param id the id
+	 * @return the list
+	 */
+	List<Object> find(String id);
 
 	/**
 	 * Retrieve entity.
@@ -24,8 +35,29 @@ public interface ProjectService {
 	 * @return the entity
 	 */
 	Entity retrieveEntity();
+	
+	/**
+	 * Retrieve detail entity.
+	 *
+	 * @return the entity
+	 */
+	Entity retrieveDetailEntity();
 
+	/**
+	 * Filters chunk.
+	 *
+	 * @param filter the filter
+	 * @return the string
+	 */
 	String filtersChunk(ProjectFilter filter);
+	
+	/**
+	 * Filters chunk.
+	 *
+	 * @param id the id
+	 * @return the string
+	 */
+	String filtersChunk(String id);
 
 	String getbyInvestigation();
 }

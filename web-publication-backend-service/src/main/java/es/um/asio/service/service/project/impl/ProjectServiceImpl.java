@@ -1,5 +1,7 @@
 package es.um.asio.service.service.project.impl;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,10 +10,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import es.um.asio.abstractions.constants.Constants;
 import es.um.asio.service.filter.project.ProjectFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
+import es.um.asio.service.model.SimpleQuery;
 import es.um.asio.service.service.impl.FusekiService;
 import es.um.asio.service.service.project.ProjectService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
@@ -35,6 +39,16 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 
 		return serviceSPARQL.run(pageableQuery);
 
+	}
+	
+
+	@Override
+	public List<Object> find(String id) {
+		logger.info("Searching project with id: {} type: {}", id);
+
+		SimpleQuery query = new SimpleQuery(this.retrieveDetailEntity(), filtersChunk(id));
+
+		return serviceSPARQL.run(query);
 	}
 
 	public String filtersChunk(ProjectFilter filter) {
@@ -132,8 +146,25 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		}
 		return strBuilder.toString();
 	}
+	
+	@Override
+	public String filtersChunk(String id) {
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append("FILTER (?id = \"");
+		strBuilder.append(id);
+		strBuilder.append("\"@");
+		strBuilder.append(Constants.SPANISH_LANGUAGE_SHORT);
+		strBuilder.append(") . ");
+
+		return strBuilder.toString();
+	}
 
 	public Entity retrieveEntity() {
+		return new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id",
+				"keyword", "modality", "needsEthicalValidation", "projectClassification", "startDate", "status", "title");
+	}
+	
+	public Entity retrieveDetailEntity() {
 		return new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id",
 				"keyword", "modality", "needsEthicalValidation", "projectClassification", "startDate", "status", "title");
 	}
