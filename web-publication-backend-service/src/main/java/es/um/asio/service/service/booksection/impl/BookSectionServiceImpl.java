@@ -105,6 +105,14 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 				strBuilder.append(filter.getTitle());
 				strBuilder.append("\", \"i\")) . ");
 			}
+			
+			if (StringUtils.isNotBlank(filter.getBookId())) {
+				strBuilder.append("FILTER (?hasPublicationVenueId  = \"");
+				strBuilder.append(filter.getStartPage());
+				strBuilder.append("\"");
+				strBuilder.append(filter.getLanguage());
+				strBuilder.append(") . ");
+			}
 		}
 		
 		return strBuilder.toString();

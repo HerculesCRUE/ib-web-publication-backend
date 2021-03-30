@@ -57,4 +57,9 @@ public class BookSectionFilter extends Filter {
 	 * The title
 	 */
 	private String title;
+	
+	/**
+	 * The bookId
+	 */
+	private String bookId;
 }
