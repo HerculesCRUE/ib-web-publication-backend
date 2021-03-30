@@ -1,10 +1,8 @@
-package es.um.asio.service.service.document.impl;
+package es.um.asio.service.service.otherpublication.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
@@ -16,18 +14,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import es.um.asio.abstractions.constants.Constants;
-import es.um.asio.service.filter.document.DocumentFilter;
+import es.um.asio.service.filter.otherpublication.OtherPublicationFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
 import es.um.asio.service.model.SimpleQuery;
-import es.um.asio.service.model.Subentity;
-import es.um.asio.service.service.document.DocumentService;
+import es.um.asio.service.service.document.impl.DocumentServiceImpl;
 import es.um.asio.service.service.impl.FusekiService;
+import es.um.asio.service.service.otherpublication.OtherPublicationService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
 
 @Service
-public class DocumentServiceImpl extends FusekiService<DocumentFilter> implements DocumentService {
+public class OtherPublicationServiceImpl extends FusekiService<OtherPublicationFilter> implements OtherPublicationService {
 
 	/**
 	 * Logger
@@ -36,10 +34,10 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-
+	
 	@Override
-	public Page<FusekiResponse> findPaginated(DocumentFilter filter, Pageable pageable) {
-		logger.info("Searching documents with filter: {} page: {}", filter, pageable);
+	public Page<FusekiResponse> findPaginated(OtherPublicationFilter filter, Pageable pageable) {
+		logger.info("Searching other publications with filter: {} page: {}", filter, pageable);
 
 		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntity(filter), filtersChunk(filter), pageable);
 
@@ -56,7 +54,19 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 	}
 
 	@Override
-	public String filtersChunk(DocumentFilter filter) {
+	public String filtersChunk(String id) {
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append("FILTER (?id = \"");
+		strBuilder.append(id);
+		strBuilder.append("\"@");
+		strBuilder.append(Constants.SPANISH_LANGUAGE_SHORT);
+		strBuilder.append(") . ");
+
+		return strBuilder.toString();
+	}
+
+	@Override
+	public String filtersChunk(OtherPublicationFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
 
 		if (filter != null) {
@@ -98,69 +108,25 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 	}
 
 	@Override
-	public String filtersChunk(String id) {
-		StringBuilder strBuilder = new StringBuilder();
-		strBuilder.append("FILTER (?id = \"");
-		strBuilder.append(id);
-		strBuilder.append("\"@");
-		strBuilder.append(Constants.SPANISH_LANGUAGE_SHORT);
-		strBuilder.append(") . ");
-
-		return strBuilder.toString();
-	}
-
-	/**
-	 * Retrieve the document entity.
-	 *
-	 * @param filter the filter
-	 * @return the entity
-	 */
-	@Override
-	public Entity retrieveEntity(DocumentFilter filter) {
+	public Entity retrieveEntity(OtherPublicationFilter filter) {
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
-				: Arrays.asList("Article", "Book");
+				: Arrays.asList("Dossier");
 
-		Entity entity = new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
-		
-		// Add data to subentity atributes and filters
-		if (filter.getAuthorId()!=null && !filter.getAuthorId().isEmpty()) {
-			List<Subentity> subentities = new ArrayList<Subentity>();
-			// Extra fields
-			String fieldName = "pers";
-//			List<String> fields = new ArrayList<String>();
-//			fields.add("id");
-//			entity.getFields().add(fieldName+"Id");
-			Subentity subentity = new Subentity();
-			subentity.setFieldName(fieldName);
-			Map<String, String> filters = new HashMap<>();
-			filters.put("id", filter.getAuthorId());
-			subentity.setFilters(filters);
-			subentities.add(subentity);
-			entity.setSubentities(subentities);
-		}
+		Entity entity = new Entity("OtherPublication", types, "id", "title", "date", "description", "ocicnum", "nowhere:type");
 		
 		return entity;
 	}
 
-	/**
-	 * Retrieve document detail entity.
-	 *
-	 * @param type the type
-	 * @return the entity
-	 */
 	@Override
 	public Entity retrieveEntity(String type) {
 		List<String> types = new ArrayList<String>();
 		String[] splitType = type.split("/");
 		types.add(splitType[splitType.length - 1]);
 
-		if (type.equals("Article")) {
-			return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "summary", "nowhere:type");
-		} else if (type.equals("Book"))  {
-			return new Entity("Documento", types, "date", "doi", "edition", "endPage", "iccn", "id", "placeOfPublication", "publishedIn", 
-					"startPage", "summary", "title", "nowhere:type");
+		if (type.equals("Dossier")) {
+			return new Entity("OtherPublication", types, "id", "title", "date", "description", "ocicnum", "nowhere:type");
 		} else {
-			return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
+			return new Entity("OtherPublication", types, "id", "title", "date", "description", "ocicnum", "nowhere:type");
 		}
 	}
 
