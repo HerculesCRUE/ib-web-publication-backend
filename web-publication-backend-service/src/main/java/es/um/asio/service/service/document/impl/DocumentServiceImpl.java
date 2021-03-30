@@ -139,6 +139,23 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 			entity.setSubentities(subentities);
 		}
 		
+		// Add data to subentity atributes and filters
+		if (filter.getOrganizationId()!=null && !filter.getOrganizationId().isEmpty()) {
+			List<Subentity> subentities = new ArrayList<Subentity>();
+			// Extra fields
+			String fieldName = "correspondingOrganization";
+//			List<String> fields = new ArrayList<String>();
+//			fields.add("id");
+//			entity.getFields().add(fieldName+"Id");
+			Subentity subentity = new Subentity();
+			subentity.setFieldName(fieldName);
+			Map<String, String> filters = new HashMap<>();
+			filters.put("id", filter.getOrganizationId());
+			subentity.setFilters(filters);
+			subentities.add(subentity);
+			entity.setSubentities(subentities);
+		}
+		
 		return entity;
 	}
 
