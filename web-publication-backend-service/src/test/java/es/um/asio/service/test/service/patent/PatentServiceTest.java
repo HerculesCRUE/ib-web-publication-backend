@@ -79,7 +79,7 @@ public class PatentServiceTest {
 			return page;
 		});
 		
-		Mockito.when(this.service.retrieveEntity()).thenAnswer(invocation -> {
+		Mockito.when(this.service.retrieveEntity(filter)).thenAnswer(invocation -> {
 			return new Entity("Patent", "dateIssued", "doi", "endDate", "endPage", "id", "keyword", "mode", "startDate", "startPage", "title");
 		});
 	}
@@ -87,7 +87,7 @@ public class PatentServiceTest {
 	@Test
 	public void testEntity() {
 		Entity entity = new Entity("Patent", "dateIssued", "doi", "endDate", "endPage", "id", "keyword", "mode", "startDate", "startPage", "title");
-		Entity entityFromService = this.service.retrieveEntity();
+		Entity entityFromService = this.service.retrieveEntity(filter);
 		
 		assertThat(entityFromService).isEqualTo(entity);
 	}

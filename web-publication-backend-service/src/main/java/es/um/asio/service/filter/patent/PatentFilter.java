@@ -86,4 +86,9 @@ public class PatentFilter extends Filter {
 	 * The author id. 
 	 * */
 	private String authorId;
+	
+	/** 
+	 * The author id. 
+	 * */
+	private String organizationId;
 }

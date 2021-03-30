@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import es.um.asio.service.filter.document.DocumentFilter;
 import es.um.asio.service.filter.patent.PatentFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
@@ -35,7 +36,7 @@ public interface PatentService {
 	 *
 	 * @return the entity
 	 */
-	Entity retrieveEntity();
+	Entity retrieveEntity(PatentFilter filter);
 	
 	/**
 	 * Retrieve detail entity.
