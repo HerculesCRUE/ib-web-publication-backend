@@ -80,7 +80,7 @@ public class ProjectServiceTest {
 			return page;
 		});
 		
-		Mockito.when(this.service.retrieveEntity()).thenAnswer(invocation -> {
+		Mockito.when(this.service.retrieveEntity(filter)).thenAnswer(invocation -> {
 			return new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id", "keyword", "modality", 
 					"needsEthicalValidation", "startDate", "status", "title");
 		});
@@ -91,7 +91,7 @@ public class ProjectServiceTest {
 
 		Entity entity = new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id", "keyword", "modality", 
 				"needsEthicalValidation", "startDate", "status", "title");
-		Entity entityFromService = this.service.retrieveEntity();
+		Entity entityFromService = this.service.retrieveEntity(filter);
 		assertThat(entityFromService).isEqualTo(entity);
 	}
 

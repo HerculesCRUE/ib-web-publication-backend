@@ -9,6 +9,10 @@ import es.um.asio.service.filter.project.ProjectFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 
+
+/**
+ * The Interface ProjectService.
+ */
 public interface ProjectService {
 
 	/**
@@ -29,12 +33,14 @@ public interface ProjectService {
 	 */
 	List<Object> find(String id);
 
+
 	/**
 	 * Retrieve entity.
 	 *
+	 * @param filter the filter
 	 * @return the entity
 	 */
-	Entity retrieveEntity();
+	Entity retrieveEntity(ProjectFilter filter);
 	
 	/**
 	 * Retrieve detail entity.
@@ -59,5 +65,10 @@ public interface ProjectService {
 	 */
 	String filtersChunk(String id);
 
+	/**
+	 * Gets the by investigation.
+	 *
+	 * @return the by investigation
+	 */
 	String getbyInvestigation();
 }

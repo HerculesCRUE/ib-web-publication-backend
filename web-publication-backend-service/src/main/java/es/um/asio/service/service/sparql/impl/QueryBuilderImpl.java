@@ -156,13 +156,41 @@ public class QueryBuilderImpl implements QueryBuilder {
 
 		return strBuilder.toString();
 	}
+	
+	private String buildField(String prefix, String field) {
+		StringBuilder strBuilder = new StringBuilder();
+
+		strBuilder.append("?" + prefix + " ");
+		strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+		strBuilder.append(field);
+		strBuilder.append("> ");
+		strBuilder.append("?");
+		strBuilder.append(prefix + field);
+		strBuilder.append(" . ");
+
+		return strBuilder.toString();
+	}
 
 	private String subfieldsChunk(List<Subentity> subentities) {
 		StringBuilder strBuilder = new StringBuilder();
 
+		strBuilder.append(setDataToSubFieldsChunk(strBuilder, subentities, ""));
+
+		return strBuilder.toString();
+	}
+
+	private StringBuilder setDataToSubFieldsChunk(StringBuilder strBuilder, List<Subentity> subentities,
+			String prefix) {
 		if (subentities != null) {
 			for (Subentity subentity : subentities) {
-				strBuilder.append(buildField(subentity.getFieldName()));
+				String nextPrefix = (prefix.isEmpty())? subentity.getFieldName() : prefix + capitalizeFirstLetter(subentity.getFieldName());
+				if (prefix.isEmpty()) {
+					strBuilder.append(buildField(subentity.getFieldName()));
+				} else {
+					
+					strBuilder.append(buildField(prefix, subentity.getFieldName()));
+					
+				}
 
 				if (subentity.getFields() != null) {
 					for (String field : subentity.getFields()) {
@@ -180,28 +208,30 @@ public class QueryBuilderImpl implements QueryBuilder {
 				if (subentity.getFilters() != null) {
 					StringBuilder strBuilderFilters = new StringBuilder();
 					for (Entry<String, String> filter : subentity.getFilters().entrySet()) {
-						strBuilder.append("?" + subentity.getFieldName() + " ");
+						strBuilder.append("?" + nextPrefix + " ");
 						strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
 						strBuilder.append(filter.getKey());
 						strBuilder.append("> ");
 						strBuilder.append("?");
-						strBuilder.append(subentity.getFieldName() + capitalizeFirstLetter(filter.getKey()));
+						strBuilder.append(nextPrefix + capitalizeFirstLetter(filter.getKey()));
 						strBuilder.append(" . ");
 						strBuilderFilters.append("FILTER ( regex(?");
-						strBuilderFilters.append(subentity.getFieldName() + capitalizeFirstLetter(filter.getKey()));
+						strBuilderFilters.append(nextPrefix + capitalizeFirstLetter(filter.getKey()));
 						strBuilderFilters.append(", \"");
 						strBuilderFilters.append(filter.getValue());
 						strBuilderFilters.append("\")) . ");
 					}
-					
+
 					strBuilder.append(strBuilderFilters);
 
 				}
+				
+				setDataToSubFieldsChunk(strBuilder, subentity.getSubentities(), nextPrefix);
 
 			}
 		}
 
-		return strBuilder.toString();
+		return strBuilder;
 	}
 
 	private String orderChunk(Sort sort) {

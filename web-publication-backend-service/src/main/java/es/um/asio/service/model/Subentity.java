@@ -34,5 +34,8 @@ public class Subentity implements Serializable {
 	//Name of atributes we want to show in query
 	private List<String> fields;
 	
+	/** The subentities. */
+	private List<Subentity> subentities;
+	
 	
 }

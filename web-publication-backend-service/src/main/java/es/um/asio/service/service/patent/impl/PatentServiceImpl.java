@@ -202,9 +202,7 @@ public class PatentServiceImpl implements PatentService {
 			subentities.add(subentity);
 			entity.setSubentities(subentities);
 		}
-		
-		
-		
+				
 		return entity;
 	}
 	

@@ -74,4 +74,7 @@ public class ProjectFilter extends Filter {
 	 * The title 
 	 */
 	private String title;
+	
+	/** The author id. */
+	private String authorId;
 }

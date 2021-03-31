@@ -1,6 +1,9 @@
 package es.um.asio.service.service.project.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -16,6 +19,7 @@ import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
 import es.um.asio.service.model.SimpleQuery;
+import es.um.asio.service.model.Subentity;
 import es.um.asio.service.service.impl.FusekiService;
 import es.um.asio.service.service.project.ProjectService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
@@ -35,7 +39,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	public Page<FusekiResponse> findPaginated(ProjectFilter filter, Pageable pageable) {
 		logger.info("Searching projects with filter: {} page: {}", filter, pageable);
 
-		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntity(), filtersChunk(filter), pageable);
+		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntity(filter), filtersChunk(filter), pageable);
 
 		return serviceSPARQL.run(pageableQuery);
 
@@ -159,9 +163,40 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		return strBuilder.toString();
 	}
 
-	public Entity retrieveEntity() {
-		return new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id",
+	public Entity retrieveEntity(ProjectFilter filter) {
+		Entity entity = new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id",
 				"keyword", "modality", "needsEthicalValidation", "projectClassification", "startDate", "status", "title");
+		
+		// Add data to subentity atributes and filters
+		if (filter.getAuthorId()!=null && !filter.getAuthorId().isEmpty()) {
+			//Get rol
+			List<Subentity> subentities = new ArrayList<Subentity>();
+			// Extra fields
+			String fieldName = "relates";
+//			List<String> fields = new ArrayList<String>();
+//			fields.add("id");
+//			entity.getFields().add(fieldName+"Id");
+			Subentity subentity = new Subentity();
+			subentity.setFieldName(fieldName);
+			
+			// Get person
+			List<Subentity> subSubentities = new ArrayList<Subentity>();
+			// Extra fields
+			String fieldName2 = "RO_0000052";
+			Subentity subSubentity = new Subentity();
+			subSubentity.setFieldName(fieldName2);
+			Map<String, String> filters2 = new HashMap<>();
+			filters2.put("id", filter.getAuthorId());
+			subSubentity.setFilters(filters2);
+			subSubentities.add(subSubentity);
+
+			// Add All
+			subentity.setSubentities(subSubentities);
+			subentities.add(subentity);
+			entity.setSubentities(subentities);
+		}
+		
+		return entity;
 	}
 	
 	public Entity retrieveDetailEntity() {
