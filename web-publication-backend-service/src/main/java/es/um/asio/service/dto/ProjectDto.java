@@ -28,7 +28,7 @@ public class ProjectDto {
 	/**
 	 * The description
 	 */
-	private String description;
+//	private String description;
 	
 	/**
 	 * The endDate
@@ -38,22 +38,22 @@ public class ProjectDto {
 	/**
 	 * The foreseenJustificationDate
 	 */
-	private String foreseenJustificationDate;
+//	private String foreseenJustificationDate;
 	
 	/**
 	 * The keyword
 	 */
-	private String keyword;
+//	private String keyword;
 
 	/**
 	 * The modality
 	 */
-	private String modality;
+//	private String modality;
 	
 	/**
 	 * The needsEthicalValidation
 	 */
-	private String needsEthicalValidation;
+//	private String needsEthicalValidation;
 	
 	/**
 	 * The projectClassification

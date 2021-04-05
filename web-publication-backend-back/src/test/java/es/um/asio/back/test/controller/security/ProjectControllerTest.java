@@ -56,13 +56,13 @@ public class ProjectControllerTest {
 
 			ProjectDto project = new ProjectDto();
 			project.setAbbreviation("projectAbbreviation");
-			project.setDescription("projectDescription");
+//			project.setDescription("projectDescription");
 			project.setEndDate("projectEndDate");
-			project.setForeseenJustificationDate("projectForeseenJustificationDate");
+//			project.setForeseenJustificationDate("projectForeseenJustificationDate");
 			project.setId("projectId");
-			project.setKeyword("projectKeyword");
-			project.setModality("projectModality");
-			project.setNeedsEthicalValidation("projectNeedsEthicalValidation");
+//			project.setKeyword("projectKeyword");
+//			project.setModality("projectModality");
+//			project.setNeedsEthicalValidation("projectNeedsEthicalValidation");
 			project.setStartDate("projectStartDate");
 			project.setStatus("projectStatus");
 			project.setTitle("projectTitle");
