@@ -38,27 +38,27 @@ public class AcademicPublicationDto {
 	/**
 	 * The endPage
 	 */
-	private String endPage;
+//	private String endPage;
 	
 	/**
 	 * The placeOfPublication
 	 */
-	private String placeOfPublication;
+//	private String placeOfPublication;
 	
 	/**
 	 * The publishedIn
 	 */
-	private String publishedIn;
+//	private String publishedIn;
 	
 	/**
 	 * The startPage
 	 */
-	private String startPage;
+//	private String startPage;
 	
 	/**
 	 * The summary
 	 */
-	private String summary;
+//	private String summary;
 	
 	/**
 	 * The type
