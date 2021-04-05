@@ -28,22 +28,22 @@ public class OrganizationDto {
 	/**
 	 * The description
 	 */
-	private String description;
+//	private String description;
 	
 	/**
 	 * The endDate
 	 */
-	private String endDate;
+//	private String endDate;
 	
 	/**
 	 * The homepage
 	 */
-	private String homepage;
+//	private String homepage;
 	
 	/**
 	 * The isStartup
 	 */
-	private String isStartup;
+//	private String isStartup;
 	
 	/**
 	 * The publicCompany
@@ -53,7 +53,7 @@ public class OrganizationDto {
 	/**
 	 * The startDate
 	 */
-	private String startDate;
+//	private String startDate;
 	
 	/** The type. */
 	private String type;
