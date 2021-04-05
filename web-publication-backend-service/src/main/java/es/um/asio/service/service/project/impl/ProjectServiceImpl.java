@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		return serviceSPARQL.run(query);
 	}
 
+	@Override
 	public String filtersChunk(ProjectFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
 		if (filter != null) {
@@ -163,6 +165,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		return strBuilder.toString();
 	}
 
+	@Override
 	public Entity retrieveEntity(ProjectFilter filter) {
 		Entity entity = new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id",
 				"keyword", "modality", "needsEthicalValidation", "projectClassification", "startDate", "status", "title");
@@ -199,6 +202,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		return entity;
 	}
 	
+	@Override
 	public Entity retrieveDetailEntity() {
 		return new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id",
 				"keyword", "modality", "needsEthicalValidation", "projectClassification", "startDate", "status", "title");
@@ -220,5 +224,13 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 				+ "			{\"name\": \"Ciencias matemáticas\",\"value\":30},\r\n"
 				+ "			{\"name\": \"Biología molecular y celular\",\"value\": 30}]";
 	}
+
+
+	@Override
+	public Entity retrieveEntity() {
+
+		throw new NotImplementedException("retrieveEntity: Not implemented method");
+	}
+
 
 }
