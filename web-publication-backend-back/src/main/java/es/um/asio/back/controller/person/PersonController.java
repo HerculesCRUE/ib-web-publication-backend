@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.um.asio.service.dto.PersonDetailDto;
 import es.um.asio.service.dto.PersonDto;
 import es.um.asio.service.filter.person.PersonFilter;
 import es.um.asio.service.proxy.person.PersonProxy;
@@ -39,7 +40,7 @@ public class PersonController {
 	}
 
 	@GetMapping(PersonController.Mappings.GET)
-	public PersonDto findPerson(@PathVariable("id") final String id) {
+	public PersonDetailDto findPerson(@PathVariable("id") final String id) {
 		return this.proxy.find(id);
 	}
 

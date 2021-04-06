@@ -33,17 +33,17 @@ public class DocumentDto {
 	/**
 	 * The endPage
 	 */
-	private String endPage;
+//	private String endPage;
 	
 	/**
 	 * The publishedIn
 	 */
-	private String publishedIn;
+//	private String publishedIn;
 	
 	/**
 	 * The startPage
 	 */
-	private String startPage;
+//	private String startPage;
 	
 	/**
 	 * The type

@@ -218,6 +218,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		return serviceSPARQL.runCount(query);
 	}
 
+<<<<<<< HEAD
 	private Entity retrieveGraphicEntity() {
 		Entity entity = new Entity("Project", "modality");
 		List<String> groups = new ArrayList<>();
@@ -228,6 +229,8 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	}
 
 
+=======
+>>>>>>> branch 'develop' of https://git.izertis.com/universidaddemurcia/semantmurc/web-publication-backend
 
 	@Override
 	public Entity retrieveEntity() {

@@ -40,6 +40,7 @@ public interface ProjectService {
 	Entity retrieveEntity(ProjectFilter filter);
 
 	
+	
 	/**
 	 * Retrieve detail entity.
 	 *
