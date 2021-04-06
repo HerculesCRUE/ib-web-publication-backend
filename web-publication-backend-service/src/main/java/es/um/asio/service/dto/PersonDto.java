@@ -23,17 +23,22 @@ public class PersonDto {
 	/**
 	 * The birthDate
 	 */
-	private String birthDate;
+//	private String birthDate;
 	
 	/**
 	 * The description
 	 */
-	private String description;
+//	private String description;
 	
 	/**
 	 * The firstName
 	 */
 	private String firstName;
+	
+	/**
+	 * The surname
+	 */
+	private String surname;
 	
 	/**
 	 * The gender
@@ -43,22 +48,22 @@ public class PersonDto {
 	/**
 	 * The hasContactInfo
 	 */
-	private String hasContactInfo;
+//	private String hasContactInfo;
 	
 	/**
 	 * The homepage
 	 */
-	private String homepage;
+//	private String homepage;
 	
 	/**
 	 * The image
 	 */
-	private String image;
+//	private String image;
 	
 	/**
 	 * The name
 	 */
-	private String name;
+//	private String name;
 	
 	/**
 	 * The nickname
@@ -68,7 +73,7 @@ public class PersonDto {
 	/**
 	 * The personalMailBox
 	 */
-	private String personalMaibox;
+//	private String personalMaibox;
 	
 	/**
 	 * The researchLine
@@ -80,13 +85,9 @@ public class PersonDto {
 	 */
 	private String subjectArea;
 	
-	/**
-	 * The surname
-	 */
-	private String surname;
 	
 	/**
 	 * The taxId
 	 */
-	private String taxId;
+//	private String taxId;
 }

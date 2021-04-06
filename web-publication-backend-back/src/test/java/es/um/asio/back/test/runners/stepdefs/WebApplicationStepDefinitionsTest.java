@@ -25,6 +25,7 @@ import es.um.asio.back.controller.project.ProjectController;
 import es.um.asio.service.dto.BookDto;
 import es.um.asio.service.dto.InvoiceDto;
 import es.um.asio.service.dto.PatentDto;
+import es.um.asio.service.dto.PersonDetailDto;
 import es.um.asio.service.dto.PersonDto;
 import es.um.asio.service.dto.ProjectDto;
 import es.um.asio.service.dto.UniversityDto;
@@ -269,24 +270,55 @@ public class WebApplicationStepDefinitionsTest {
 			List<PersonDto> contentResult = new ArrayList<>();
 
 			PersonDto person = new PersonDto();
-			person.setBirthDate("personBirthDate");
-			person.setDescription("personDescription");
+//			person.setBirthDate("personBirthDate");
+//			person.setDescription("personDescription");
 			person.setFirstName("personFirstName");
 			person.setGender("personGender");
-			person.setHasContactInfo("personHasContactInfo");
-			person.setHomepage("personHomePage");
+//			person.setHasContactInfo("personHasContactInfo");
+//			person.setHomepage("personHomePage");
 			person.setId("personId");
-			person.setImage("personImage");
-			person.setName("personName");
+//			person.setImage("personImage");
+//			person.setName("personName");
 			person.setNickname("personNickname");
-			person.setPersonalMaibox("personPersonalMaibox");
+//			person.setPersonalMaibox("personPersonalMaibox");
 			person.setResearchLine("personResearchLine");
 			person.setSurname("personSurname");
-			person.setTaxId("personTaxId");
+//			person.setTaxId("personTaxId");
 			person.setTitle("personTitle");
 			
 			contentResult.add(person);
 			Page<PersonDto> page = new PageImpl<>(contentResult, pageable, contentResult.size());
+			return page;
+		});
+		
+		// PERSON DETAIL
+		filterPerson = new PersonFilter();
+		filterPerson.setName("NAME");
+		filterPerson.setLanguage("es");
+		// Mock proxy
+		Mockito.when(this.proxyPerson.find(Mockito.anyString())).thenAnswer(invocation -> {
+
+			List<PersonDetailDto> contentResult = new ArrayList<>();
+
+			PersonDetailDto personDetail = new PersonDetailDto();
+			personDetail.setBirthDate("personBirthDate");
+			personDetail.setDescription("personDescription");
+			personDetail.setFirstName("personFirstName");
+			personDetail.setGender("personGender");
+			personDetail.setHasContactInfo("personHasContactInfo");
+			personDetail.setHomepage("personHomePage");
+			personDetail.setId("personId");
+			personDetail.setImage("personImage");
+			personDetail.setName("personName");
+			personDetail.setNickname("personNickname");
+			personDetail.setPersonalMaibox("personPersonalMaibox");
+			personDetail.setResearchLine("personResearchLine");
+			personDetail.setSurname("personSurname");
+			personDetail.setTaxId("personTaxId");
+			personDetail.setTitle("personTitle");
+			
+			contentResult.add(personDetail);
+			Page<PersonDetailDto> page = new PageImpl<>(contentResult, pageable, contentResult.size());
 			return page;
 		});
 
