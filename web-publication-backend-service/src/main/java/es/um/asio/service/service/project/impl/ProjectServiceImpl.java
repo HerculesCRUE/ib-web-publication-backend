@@ -45,7 +45,6 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		return serviceSPARQL.run(pageableQuery);
 
 	}
-	
 
 	@Override
 	public List<Object> find(String id) {
@@ -199,10 +198,10 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 			subentities.add(subentity);
 			entity.setSubentities(subentities);
 		}
-		
+
 		return entity;
 	}
-	
+
 	@Override
 	public Entity retrieveDetailEntity() {
 		return new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id",
@@ -218,7 +217,6 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		return serviceSPARQL.runCount(query);
 	}
 
-<<<<<<< HEAD
 	private Entity retrieveGraphicEntity() {
 		Entity entity = new Entity("Project", "modality");
 		List<String> groups = new ArrayList<>();
@@ -228,15 +226,10 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		return entity;
 	}
 
-
-=======
->>>>>>> branch 'develop' of https://git.izertis.com/universidaddemurcia/semantmurc/web-publication-backend
-
 	@Override
 	public Entity retrieveEntity() {
 
 		throw new NotImplementedException("retrieveEntity: Not implemented method");
 	}
-
 
 }
