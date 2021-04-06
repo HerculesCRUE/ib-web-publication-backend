@@ -58,12 +58,12 @@ public class PatentControllerTest {
 			patent.setId("patentId");
 			patent.setDateIssued("patentDateIssued");
 			patent.setDoi("patentDoi");
-			patent.setEndDate("patentEndDate");
-			patent.setPageEnd("patentPageEnd");
+//			patent.setEndDate("patentEndDate");
+//			patent.setPageEnd("patentPageEnd");
 			patent.setKeyword("patentKeyword");
 			patent.setMode("patentMode");
-			patent.setStartDate("patentStartDate");
-			patent.setStartPage("patentStartPage");
+//			patent.setStartDate("patentStartDate");
+//			patent.setStartPage("patentStartPage");
 			patent.setTitle("patentTitle");
 			
 			contentResult.add(patent);

@@ -33,7 +33,7 @@ public class PatentDto {
 	/**
 	 * The endDate
 	 */
-	private String endDate;
+//	private String endDate;
 	
 	/**
 	 * The keyword
@@ -48,25 +48,25 @@ public class PatentDto {
 	/**
 	 * The pageEnd
 	 */
-	private String pageEnd;
+//	private String pageEnd;
 	
 	/**
 	 * The pageStart
 	 */
-	private String pageStart;
+//	private String pageStart;
 	
 	/**
 	 * The startDate
 	 */
-	private String startDate;
+//	private String startDate;
 	
 	/**
 	 * The startPage
 	 */
-	private String startPage;
+//	private String startPage;
 	
 	/**
 	 * The summary
 	 */
-	private String summary;
+//	private String summary;
 }
