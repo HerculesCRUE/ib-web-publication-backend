@@ -7,10 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import es.um.asio.service.dto.PatentDetailDto;
+import es.um.asio.service.dto.ProjectByModalityDto;
 import es.um.asio.service.dto.ProjectDetailDto;
 import es.um.asio.service.dto.ProjectDto;
 import es.um.asio.service.filter.project.ProjectFilter;
+import es.um.asio.service.mapper.ProjectByModalityMapper;
 import es.um.asio.service.mapper.ProjectDetailMapper;
 import es.um.asio.service.mapper.ProjectMapper;
 import es.um.asio.service.proxy.project.ProjectProxy;
@@ -28,7 +29,10 @@ public class ProjectProxyImpl implements ProjectProxy {
 
 	@Autowired
 	private ProjectMapper mapper;
-	
+
+	@Autowired
+	private ProjectByModalityMapper projectByModalityMapper;
+
 	@Autowired
 	private ProjectDetailMapper detailMapper;
 
@@ -41,12 +45,14 @@ public class ProjectProxyImpl implements ProjectProxy {
 	@Override
 	public ProjectDetailDto find(String id) {
 		List<ProjectDetailDto> list = this.detailMapper.convertFusekiResponseToDto(this.service.find(id));
-		return (list.isEmpty())? null : list.get(0);
+		return (list.isEmpty()) ? null : list.get(0);
 	}
 
 	@Override
-	public String getbyInvestigation() {
-		return this.service.getbyInvestigation();
+	public List<ProjectByModalityDto> getbyModality() {
+		List<ProjectByModalityDto> list = this.projectByModalityMapper
+				.convertFusekiResponseToDto(this.service.getbyModality());
+		return (list.isEmpty()) ? null : list;
 	}
 
 }

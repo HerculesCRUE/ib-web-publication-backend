@@ -14,13 +14,13 @@ import es.um.asio.service.util.PageImplHelper;
 public class ProjectMapperDecorator extends BaseMapperDecorator<ProjectDto> implements ProjectMapper {
 
 	@Autowired
-    @Qualifier("delegate")
+	@Qualifier("delegate")
 	private ProjectMapper mapper;
-	
+
 	public ProjectMapperDecorator() {
 		this.type = ProjectDto.class;
 	}
-	
+
 	@Override
 	public ProjectDto convertFusekiObjectToDto(Object response) {
 		return super.convertFusekiObjectToDto(response);

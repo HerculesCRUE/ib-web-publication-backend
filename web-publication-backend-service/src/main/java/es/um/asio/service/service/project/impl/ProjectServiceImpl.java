@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		return serviceSPARQL.run(query);
 	}
 
+	@Override
 	public String filtersChunk(ProjectFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
 		if (filter != null) {
@@ -150,7 +152,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		}
 		return strBuilder.toString();
 	}
-	
+
 	@Override
 	public String filtersChunk(String id) {
 		StringBuilder strBuilder = new StringBuilder();
@@ -163,13 +165,15 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		return strBuilder.toString();
 	}
 
+	@Override
 	public Entity retrieveEntity(ProjectFilter filter) {
-		Entity entity = new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id",
-				"keyword", "modality", "needsEthicalValidation", "projectClassification", "startDate", "status", "title");
-		
+		Entity entity = new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate",
+				"id", "keyword", "modality", "needsEthicalValidation", "projectClassification", "startDate", "status",
+				"title");
+
 		// Add data to subentity atributes and filters
-		if (filter.getAuthorId()!=null && !filter.getAuthorId().isEmpty()) {
-			//Get rol
+		if (filter.getAuthorId() != null && !filter.getAuthorId().isEmpty()) {
+			// Get rol
 			List<Subentity> subentities = new ArrayList<Subentity>();
 			// Extra fields
 			String fieldName = "relates";
@@ -178,7 +182,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 //			entity.getFields().add(fieldName+"Id");
 			Subentity subentity = new Subentity();
 			subentity.setFieldName(fieldName);
-			
+
 			// Get person
 			List<Subentity> subSubentities = new ArrayList<Subentity>();
 			// Extra fields
@@ -199,26 +203,37 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		return entity;
 	}
 	
+	@Override
 	public Entity retrieveDetailEntity() {
 		return new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id",
-				"keyword", "modality", "needsEthicalValidation", "projectClassification", "startDate", "status", "title");
+				"keyword", "modality", "needsEthicalValidation", "projectClassification", "startDate", "status",
+				"title");
 	}
 
 	@Override
-	public String getbyInvestigation() {
-		// TODO SPARQL DTO
-		return "[{\"name\": \"Ciencias agrícolas y agroalimentarias\",\"value\": 10},\r\n"
-				+ "			{\"name\": \"Agricultura y Bosques\",\"value\": 20}, \r\n"
-				+ "			{\"name\": \"Astronomía y astrofísica\",\"value\": 15}, \r\n"
-				+ "			{\"name\": \"Biomedicina\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Economía\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Ciencia y tecnología ambiental\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Ciencia y tecnología de los alimentos\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Física fundamental y de partículas\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Producción industrial, ingeniería civil e ingeniería para la sociedad\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Ciencias de la vida\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Ciencias matemáticas\",\"value\":30},\r\n"
-				+ "			{\"name\": \"Biología molecular y celular\",\"value\": 30}]";
+	public List<Object> getbyModality() {
+
+		SimpleQuery query = new SimpleQuery(this.retrieveGraphicEntity(), "");
+
+		return serviceSPARQL.runCount(query);
 	}
+
+	private Entity retrieveGraphicEntity() {
+		Entity entity = new Entity("Project", "modality");
+		List<String> groups = new ArrayList<>();
+		groups.add("modality");
+		entity.setGroup(groups);
+
+		return entity;
+	}
+
+
+
+	@Override
+	public Entity retrieveEntity() {
+
+		throw new NotImplementedException("retrieveEntity: Not implemented method");
+	}
+
 
 }

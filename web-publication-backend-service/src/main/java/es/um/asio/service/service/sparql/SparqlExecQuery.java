@@ -18,7 +18,7 @@ public interface SparqlExecQuery {
 	 * @return the page
 	 */
 	Page<FusekiResponse> run(PageableQuery page);
-	
+
 	/**
 	 * Run.
 	 *
@@ -26,7 +26,7 @@ public interface SparqlExecQuery {
 	 * @return the fuseki response
 	 */
 	List<Object> run(final SimpleQuery query);
-	
+
 	/**
 	 * Call fuseki trellis.
 	 *
@@ -34,6 +34,7 @@ public interface SparqlExecQuery {
 	 * @return the response entity
 	 */
 	ResponseEntity<Object> callFusekiTrellis(String query, Boolean isFederated);
-	
+
+	List<Object> runCount(SimpleQuery query);
 
 }

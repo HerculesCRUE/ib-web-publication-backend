@@ -87,19 +87,19 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		Page<FusekiResponse> result = null;
 		List<FusekiResponse> contentResult = new ArrayList<>();
 		Integer totalElements = 0;
-		
+
 		this.logger.info("Calling fuseki: {}", this.fusekiTrellisUrl);
 
 		try {
 			// we retrieve the params in order to build the query later
 			final Map<String, String> params = this.queryBuilder.queryChunks(page.getEntity(), page.getPage());
 			params.put(FusekiConstants.FILTERS_CHUNK, page.getFilters());
-			
+
 			this.logger.info("Calling query: {}", this.selectPaginatedQuery(params));
 
 			contentResult = this.getElements(this.selectPaginatedQuery(params));
 			totalElements = this.getTotalElements(this.countQuery(params));
-			
+
 			this.logger.info("Total: {}", totalElements);
 		} catch (final Exception e) {
 			this.logger.error("Error building the page {}", page);
@@ -109,7 +109,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 		return result;
 	}
-	
+
 	@Override
 	public List<Object> run(final SimpleQuery query) {
 
@@ -125,11 +125,34 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		} catch (final Exception e) {
 			this.logger.error("Error building the page {}", query);
 		}
-		
-		FusekiResponse fusekiResponse = (contentResult.size() > 0)? contentResult.get(0) : new FusekiResponse();
-		
+
+		FusekiResponse fusekiResponse = (contentResult.size() > 0) ? contentResult.get(0) : new FusekiResponse();
+
 		Map<String, Object> mapResults = (Map<String, Object>) fusekiResponse.getResults();
-		
+
+		return (List<Object>) mapResults.get("bindings");
+	}
+
+	@Override
+	public List<Object> runCount(final SimpleQuery query) {
+
+		List<FusekiResponse> contentResult = new ArrayList<>();
+
+		try {
+			// we retrieve the params in order to build the query later
+			final Map<String, String> params = this.queryBuilder.queryChunks(query.getEntity());
+			params.put(FusekiConstants.FILTERS_CHUNK, query.getFilters());
+
+			contentResult = this.getElements(this.selectSimpleCountQuery(params));
+			this.logger.info("Calling query: {}", this.selectSimpleCountQuery(params));
+		} catch (final Exception e) {
+			this.logger.error("Error building the page {}", query);
+		}
+
+		FusekiResponse fusekiResponse = (contentResult.size() > 0) ? contentResult.get(0) : new FusekiResponse();
+
+		Map<String, Object> mapResults = (Map<String, Object>) fusekiResponse.getResults();
+
 		return (List<Object>) mapResults.get("bindings");
 	}
 
@@ -149,7 +172,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 		return result;
 	}
-	
+
 	private String selectSimpleQuery(final Map<String, String> params) {
 		final String result = String.format(FusekiConstants.QUERY__SIMPLE_TEMPLATE_SELECT,
 				params.get(FusekiConstants.SELECT_CHUNK), params.get(FusekiConstants.TYPE_CHUNK),
@@ -158,8 +181,16 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 		return result;
 	}
-	
-	
+
+	private String selectSimpleCountQuery(final Map<String, String> params) {
+		final String result = String.format(FusekiConstants.QUERY__SIMPLE_COUNT_TEMPLATE_SELECT,
+				params.get(FusekiConstants.SELECT_CHUNK), params.get(FusekiConstants.COUNT_CHUNK),
+				params.get(FusekiConstants.TYPE_CHUNK), params.get(FusekiConstants.FIELDS_CHUNK),
+				params.get(FusekiConstants.JOIN_CHUNK), params.get(FusekiConstants.FILTERS_CHUNK),
+				params.get(FusekiConstants.GROUP));
+
+		return result;
+	}
 
 	/**
 	 * Count query.
@@ -240,13 +271,14 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		ResponseEntity<Object> result = null;
 		if (!federationServices) {
 			try {
-				result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.POST, this.getBody(query), Object.class);
+				result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.POST, this.getBody(query),
+						Object.class);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
 			}
 		} else {
-			ResponseEntity<Object> tempResult ;
-			
+			ResponseEntity<Object> tempResult;
+
 			if (!isFederated) {
 				try {
 					tempResult = this.restTemplate.exchange(this.federationNode, HttpMethod.POST,
@@ -268,7 +300,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 					this.logger.error("Error retrieving results from federation cause {}", e.getMessage());
 				}
 			}
-			
+
 		}
 		return result;
 	}
@@ -277,7 +309,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		ResponseEntity<Object> result;
 		MultiValueMap<String, String> newHeader = new LinkedMultiValueMap<>();
 		newHeader.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-		return new ResponseEntity<Object>(tempResult.getBody(),newHeader, tempResult.getStatusCode());
+		return new ResponseEntity<Object>(tempResult.getBody(), newHeader, tempResult.getStatusCode());
 	}
 
 	/**

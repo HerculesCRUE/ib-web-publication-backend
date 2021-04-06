@@ -1,8 +1,11 @@
 package es.um.asio.service.proxy.project;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import es.um.asio.service.dto.ProjectByModalityDto;
 import es.um.asio.service.dto.ProjectDetailDto;
 import es.um.asio.service.dto.ProjectDto;
 import es.um.asio.service.filter.project.ProjectFilter;
@@ -21,8 +24,8 @@ public interface ProjectProxy {
 	 * @return Page<ProjectDto>
 	 */
 	Page<ProjectDto> findPaginated(ProjectFilter filter, Pageable pageable);
-	
+
 	ProjectDetailDto find(String id);
 
-	String getbyInvestigation();
+	List<ProjectByModalityDto> getbyModality();
 }
