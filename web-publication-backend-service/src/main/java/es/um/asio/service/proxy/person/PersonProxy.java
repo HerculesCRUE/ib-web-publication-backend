@@ -3,6 +3,7 @@ package es.um.asio.service.proxy.person;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import es.um.asio.service.dto.PersonDetailDto;
 import es.um.asio.service.dto.PersonDto;
 import es.um.asio.service.filter.person.PersonFilter;
 
@@ -21,9 +22,9 @@ public interface PersonProxy {
 	 * Obtiene una persona
 	 * 
 	 * @param id
-	 * @return PersonDto
+	 * @return PersonDetailDto
 	 */
-	PersonDto find(String id);
+	PersonDetailDto find(String id);
 
 	String getArea();
 }

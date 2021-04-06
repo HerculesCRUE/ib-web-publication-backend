@@ -7,8 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import es.um.asio.service.dto.PersonDetailDto;
 import es.um.asio.service.dto.PersonDto;
 import es.um.asio.service.filter.person.PersonFilter;
+import es.um.asio.service.mapper.PersonDetailMapper;
 import es.um.asio.service.mapper.PersonMapper;
 import es.um.asio.service.proxy.person.PersonProxy;
 import es.um.asio.service.service.person.PersonService;
@@ -25,6 +27,9 @@ public class PersonProxyImpl implements PersonProxy {
 
 	@Autowired
 	private PersonMapper mapper;
+	
+	@Autowired
+	private PersonDetailMapper detailMapper;
 
 	@Override
 	public Page<PersonDto> findPaginated(PersonFilter filter, Pageable pageable) {
@@ -32,8 +37,8 @@ public class PersonProxyImpl implements PersonProxy {
 	}
 
 	@Override
-	public PersonDto find(String id) {
-		List<PersonDto> list = this.mapper.convertFusekiResponseToDto(this.service.find(id));
+	public PersonDetailDto find(String id) {
+		List<PersonDetailDto> list = this.detailMapper.convertFusekiResponseToDto(this.service.find(id));
 		return (list.isEmpty()) ? null : list.get(0);
 	}
 
