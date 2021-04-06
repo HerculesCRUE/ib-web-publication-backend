@@ -67,6 +67,6 @@ public class ProjectController {
 		/**
 		 * Graphics investigation actions.
 		 */
-		protected static final String BYMODALITY = "/investigation";
+		protected static final String BYMODALITY = "/byModality";
 	}
 }
