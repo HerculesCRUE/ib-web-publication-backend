@@ -92,7 +92,7 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 				Arrays.asList(filter.getTypes().split(",")) : 
 				Arrays.asList("Doctoral-Thesis", "Master-Thesis");
 		
-		Entity entity = new Entity("AcademicPublication", types, "abbreviation", "date", "doi", "id", "placeOfPublication", "summary", 
+		Entity entity = new Entity("AcademicPublication", types, "abbreviation", "date", "doi", "id", 
 				"name", "nowhere:type");
 		
 		// Add data to subentity atributes and filters

@@ -21,6 +21,11 @@ public class AcademicPublicationDto {
 	private String title;
 	
 	/**
+	 * The title
+	 */
+	private String name;
+	
+	/**
 	 * The abbreviation
 	 */
 	private String abbreviation;
