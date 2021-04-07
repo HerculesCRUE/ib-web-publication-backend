@@ -64,15 +64,15 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-
-			if (StringUtils.isNotBlank(filter.getDescription())) {
-				strBuilder.append("FILTER (LANG(?description) = \"");
-				strBuilder.append(filter.getLanguage().substring(1));
-				strBuilder.append("\") . ");
-				strBuilder.append("FILTER ( regex(?description, \"");
-				strBuilder.append(filter.getDescription());
-				strBuilder.append("\", \"i\")) . ");
-			}
+//
+//			if (StringUtils.isNotBlank(filter.getDescription())) {
+//				strBuilder.append("FILTER (LANG(?description) = \"");
+//				strBuilder.append(filter.getLanguage().substring(1));
+//				strBuilder.append("\") . ");
+//				strBuilder.append("FILTER ( regex(?description, \"");
+//				strBuilder.append(filter.getDescription());
+//				strBuilder.append("\", \"i\")) . ");
+//			}
 
 			if (StringUtils.isNotBlank(filter.getEndDate())) {
 				strBuilder.append("FILTER (?dateEnd = \"");
