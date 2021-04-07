@@ -75,7 +75,7 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 			}
 
 			if (StringUtils.isNotBlank(filter.getEndDate())) {
-				strBuilder.append("FILTER (?endDate = \"");
+				strBuilder.append("FILTER (?dateEnd = \"");
 				strBuilder.append(filter.getEndDate());
 				strBuilder.append("\"");
 				strBuilder.append(filter.getLanguage());
@@ -115,7 +115,7 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 			}
 
 			if (StringUtils.isNotBlank(filter.getStartDate())) {
-				strBuilder.append("FILTER (?startDate = \"");
+				strBuilder.append("FILTER (?dateStart = \"");
 				strBuilder.append(filter.getStartDate());
 				strBuilder.append("\"");
 				strBuilder.append(filter.getLanguage());
@@ -152,10 +152,8 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
 				: Arrays.asList("Organization", "University");
 
-		return new Entity("Organization", types, "abbreviation", "description", "endDate", "homepage", "id",
-				"isStartup", "publicCompany", "startDate", "title", "nowhere:type");
+		return new Entity("Organization", types, "abbreviation", "id", "publicCompany", "title", "nowhere:type");
 	}
-
 	@Override
 	public Entity retrieveEntity(String type) {
 		List<String> types = new ArrayList<String>();
@@ -163,11 +161,11 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 		types.add(splitType[splitType.length - 1]);
 
 		if (type.equals("University")) {
-			return new Entity("Organization", types, "abbreviation", "description", "endDate", "homepage", "id",
-					"isStartup", "publicCompany", "startDate", "title", "nowhere:type");
+			return new Entity("Organization", types, "abbreviation", "description", "dateEnd", "homepage", "id",
+					"isStartup", "publicCompany", "dateStart", "title", "nowhere:type");
 		} else {
-			return new Entity("Organization", types, "abbreviation", "description", "endDate", "homepage", "id",
-					"isStartup", "publicCompany", "startDate", "title", "nowhere:type");
+			return new Entity("Organization", types, "abbreviation", "description", "dateEnd", "homepage", "id",
+					"isStartup", "publicCompany", "dateStart", "title", "nowhere:type");
 		}
 	}
 

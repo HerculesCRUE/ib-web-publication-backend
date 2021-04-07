@@ -24,7 +24,7 @@ public class OrganizationDetailDto {
 	private String description;
 
 	/** The endDate. */
-	private String endDate;
+	private String dateEnd;
 
 	/** The homepage. */
 	private String homepage;
@@ -36,7 +36,7 @@ public class OrganizationDetailDto {
 	private String publicCompany;
 
 	/** The startDate. */
-	private String startDate;
+	private String dateStart;
 
 	/** The has knowledge area. */
 	private String hasKnowledgeArea;

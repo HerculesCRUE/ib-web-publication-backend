@@ -18,7 +18,7 @@ public class AcademicPublicationDto {
 	/**
 	 * The title
 	 */
-	private String title;
+//	private String title;
 	
 	/**
 	 * The title
