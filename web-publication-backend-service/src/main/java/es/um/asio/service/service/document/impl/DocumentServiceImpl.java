@@ -120,7 +120,7 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
 				: Arrays.asList("Article", "Book");
 
-		Entity entity = new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
+		Entity entity = new Entity("Documento", types, "date", "doi", "id", "title", "nowhere:type");
 		
 		// Add data to subentity atributes and filters
 		if (filter.getAuthorId()!=null && !filter.getAuthorId().isEmpty()) {

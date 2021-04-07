@@ -59,13 +59,9 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 			}
 
 			if (StringUtils.isNotBlank(filter.getTitle())) {
-				strBuilder.append("FILTER (LANG(?title) = \"");
+				strBuilder.append("FILTER (LANG(?name) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
-				strBuilder.append("\" && LANG(?name) = \"");
-				strBuilder.append(filter.getLanguage().substring(1));
-				strBuilder.append("\" && (regex(?title, \"");
-				strBuilder.append(filter.getTitle());
-				strBuilder.append("\", \"i\") || regex(?name, \"");
+				strBuilder.append("\" && (regex(?name, \"");
 				strBuilder.append(filter.getTitle());
 				strBuilder.append("\", \"i\"))) . ");
 			}
@@ -96,8 +92,8 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 				Arrays.asList(filter.getTypes().split(",")) : 
 				Arrays.asList("Doctoral-Thesis", "Master-Thesis");
 		
-		Entity entity = new Entity("AcademicPublication", types, "abbreviation", "date", "doi", "endPage", "id", "placeOfPublication", "publishedIn", "startPage", "summary", 
-				"title,name", "nowhere:type");
+		Entity entity = new Entity("AcademicPublication", types, "abbreviation", "date", "doi", "id", "placeOfPublication", "summary", 
+				"name", "nowhere:type");
 		
 		// Add data to subentity atributes and filters
 		if (filter.getDirectedBy()!=null && !filter.getDirectedBy().isEmpty()) {
