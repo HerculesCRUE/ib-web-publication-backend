@@ -292,35 +292,32 @@ public class WebApplicationStepDefinitionsTest {
 		});
 		
 		// PERSON DETAIL
-		filterPerson = new PersonFilter();
-		filterPerson.setName("NAME");
-		filterPerson.setLanguage("es");
 		// Mock proxy
-		Mockito.when(this.proxyPerson.find(Mockito.anyString())).thenAnswer(invocation -> {
-
-			List<PersonDetailDto> contentResult = new ArrayList<>();
-
-			PersonDetailDto personDetail = new PersonDetailDto();
-			personDetail.setBirthDate("personBirthDate");
-			personDetail.setDescription("personDescription");
-			personDetail.setFirstName("personFirstName");
-			personDetail.setGender("personGender");
-			personDetail.setHasContactInfo("personHasContactInfo");
-			personDetail.setHomepage("personHomePage");
-			personDetail.setId("personId");
-			personDetail.setImage("personImage");
-			personDetail.setName("personName");
-			personDetail.setNickname("personNickname");
-			personDetail.setPersonalMaibox("personPersonalMaibox");
-			personDetail.setResearchLine("personResearchLine");
-			personDetail.setSurname("personSurname");
-			personDetail.setTaxId("personTaxId");
-			personDetail.setTitle("personTitle");
-			
-			contentResult.add(personDetail);
-			Page<PersonDetailDto> page = new PageImpl<>(contentResult, pageable, contentResult.size());
-			return page;
-		});
+//		Mockito.when(this.proxyPerson.find(Mockito.anyString())).thenAnswer(invocation -> {
+//
+//			List<PersonDetailDto> contentResult = new ArrayList<>();
+//
+//			PersonDetailDto personDetail = new PersonDetailDto();
+//			personDetail.setBirthDate("personBirthDate");
+//			personDetail.setDescription("personDescription");
+//			personDetail.setFirstName("personFirstName");
+//			personDetail.setGender("personGender");
+//			personDetail.setHasContactInfo("personHasContactInfo");
+//			personDetail.setHomepage("personHomePage");
+//			personDetail.setId("personId");
+//			personDetail.setImage("personImage");
+//			personDetail.setName("personName");
+//			personDetail.setNickname("personNickname");
+//			personDetail.setPersonalMaibox("personPersonalMaibox");
+//			personDetail.setResearchLine("personResearchLine");
+//			personDetail.setSurname("personSurname");
+//			personDetail.setTaxId("personTaxId");
+//			personDetail.setTitle("personTitle");
+//			
+//			contentResult.add(personDetail);
+//			Page<PersonDetailDto> page = new PageImpl<>(contentResult, pageable, contentResult.size());
+//			return page;
+//		});
 
 		// INVOICE
 		filterInvoice = new InvoiceFilter();
