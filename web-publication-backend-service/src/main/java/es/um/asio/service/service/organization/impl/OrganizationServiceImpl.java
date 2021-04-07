@@ -152,7 +152,7 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
 				: Arrays.asList("Organization", "University");
 
-		return new Entity("Organization", types, "abbreviation", "id", "publicCompany", "title", "nowhere:type");
+		return new Entity("Organization", types, "abbreviation", "id", "title", "description", "nowhere:type");
 	}
 	@Override
 	public Entity retrieveEntity(String type) {
