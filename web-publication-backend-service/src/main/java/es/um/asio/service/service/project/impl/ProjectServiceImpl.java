@@ -76,8 +76,8 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 			}
 
 			if (StringUtils.isNotBlank(filter.getEndDate())) {
-				strBuilder.append("FILTER (?endDate = \"");
-				strBuilder.append(filter.getStartDate());
+				strBuilder.append("FILTER (?endDate <= \"");
+				strBuilder.append(filter.getEndDate());
 				strBuilder.append("\"");
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
@@ -124,7 +124,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 			}
 
 			if (StringUtils.isNotBlank(filter.getStartDate())) {
-				strBuilder.append("FILTER (?startDate = \"");
+				strBuilder.append("FILTER (?startDate >= \"");
 				strBuilder.append(filter.getStartDate());
 				strBuilder.append("\"");
 				strBuilder.append(filter.getLanguage());
