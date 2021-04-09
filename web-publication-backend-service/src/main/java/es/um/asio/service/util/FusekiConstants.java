@@ -6,7 +6,7 @@ public class FusekiConstants {
 
 	public static final String QUERY__SIMPLE_TEMPLATE_SELECT = "PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> SELECT %s WHERE { %s %s %s %s } ";
 
-	public static final String QUERY__SIMPLE_COUNT_TEMPLATE_SELECT = "PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> SELECT %s %s WHERE { %s %s %s %s } %s";
+	public static final String QUERY__SIMPLE_COUNT_TEMPLATE_SELECT = "PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> SELECT %s %s WHERE { %s %s %s %s } %s ORDER BY DESC (?count) LIMIT 50";
 
 	public static final String QUERY_TEMPLATE_COUNT = "PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> SELECT %s WHERE { %s %s %s %s } ";
 

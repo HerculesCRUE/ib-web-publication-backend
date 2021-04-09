@@ -1,6 +1,5 @@
 package es.um.asio.service.service.patent.impl;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import es.um.asio.abstractions.constants.Constants;
-import es.um.asio.service.filter.document.DocumentFilter;
 import es.um.asio.service.filter.patent.PatentFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
@@ -44,7 +42,6 @@ public class PatentServiceImpl implements PatentService {
 
 		return serviceSPARQL.run(pageableQuery);
 	}
-	
 
 	@Override
 	public List<Object> find(String id) {
@@ -151,7 +148,7 @@ public class PatentServiceImpl implements PatentService {
 		}
 		return strBuilder.toString();
 	}
-	
+
 	@Override
 	public String filtersChunk(String id) {
 		StringBuilder strBuilder = new StringBuilder();
@@ -166,11 +163,11 @@ public class PatentServiceImpl implements PatentService {
 
 	@Override
 	public Entity retrieveEntity(PatentFilter filter) {
-		Entity entity = new Entity("Patent", "dateIssued", "doi", "endDate", "pageEnd", "id", "keyword", "mode", "pageStart", "startDate",
-				"title");
-		
+		Entity entity = new Entity("Patent", "dateIssued", "doi", "endDate", "pageEnd", "id", "keyword", "mode",
+				"pageStart", "startDate", "title");
+
 		// Add data to subentity atributes and filters
-		if (filter.getOrganizationId()!=null && !filter.getOrganizationId().isEmpty()) {
+		if (filter.getOrganizationId() != null && !filter.getOrganizationId().isEmpty()) {
 			List<Subentity> subentities = new ArrayList<Subentity>();
 			// Extra fields
 			String fieldName = "correspondingOrganization";
@@ -185,9 +182,9 @@ public class PatentServiceImpl implements PatentService {
 			subentities.add(subentity);
 			entity.setSubentities(subentities);
 		}
-		
+
 		// Add data to subentity atributes and filters
-		if (filter.getAuthorId()!=null && !filter.getAuthorId().isEmpty()) {
+		if (filter.getAuthorId() != null && !filter.getAuthorId().isEmpty()) {
 			List<Subentity> subentities = new ArrayList<Subentity>();
 			// Extra fields
 			String fieldName = "correspondingAuthor";
@@ -202,10 +199,10 @@ public class PatentServiceImpl implements PatentService {
 			subentities.add(subentity);
 			entity.setSubentities(subentities);
 		}
-				
+
 		return entity;
 	}
-	
+
 	/**
 	 * Retrieve document detail entity.
 	 *
@@ -214,34 +211,26 @@ public class PatentServiceImpl implements PatentService {
 	 */
 	@Override
 	public Entity retrieveDetailEntity() {
-		return new Entity("Patent", "dateIssued", "doi", "endDate", "pageEnd", "id", "keyword", "mode", "pageStart", "startDate",
-				 "title");
+		return new Entity("Patent", "dateIssued", "doi", "endDate", "pageEnd", "id", "keyword", "mode", "pageStart",
+				"startDate", "title");
 
 	}
 
-
 	@Override
-	public String getArea() {
-		// TODO SPARQL
-		// return serviceSPARQL.run(query);
-		return "{\r\n" + "    \"legendData\": [\r\n" + "        \"Verificación 1\",\r\n"
-				+ "        \"Acreditación 1\",\r\n" + "        \"Acreditación de las dimensiones adicionales 1\",\r\n"
-				+ "        \"Certificación de garantía interna de calidad (SGIC) 1\",\r\n"
-				+ "        \"Centro acreditado institucionalmente 1\"\r\n" + "    ],\r\n" + "    \"seriesData\": [\r\n"
-				+ "        {\r\n" + "            \"name\": \"Verificación 1\",\r\n"
-				+ "            \"value\": 3936420535\r\n" + "        },\r\n" + "        {\r\n"
-				+ "            \"name\": \"Acreditación 1\",\r\n" + "            \"value\": 2548317238\r\n"
-				+ "        },\r\n" + "        {\r\n"
-				+ "            \"name\": \"Acreditación de las dimensiones adicionales 1\",\r\n"
-				+ "            \"value\": 495368615\r\n" + "        },\r\n" + "        {\r\n"
-				+ "            \"name\": \"Certificación de garantía interna de calidad (SGIC) 1\",\r\n"
-				+ "            \"value\": 2728792142\r\n" + "        },\r\n" + "        {\r\n"
-				+ "            \"name\": \"Centro acreditado institucionalmente 1\",\r\n"
-				+ "            \"value\": 240079264\r\n" + "        }\r\n" + "    ],\r\n" + "    \"selected\": {\r\n"
-				+ "        \"Verificación 1\": true,\r\n" + "        \"Acreditación 1\": true,\r\n"
-				+ "        \"Acreditación de las dimensiones adicionales 1\": true,\r\n"
-				+ "        \"Certificación de garantía interna de calidad (SGIC) 1\": true,\r\n"
-				+ "        \"Centro acreditado institucionalmente 1\": true\r\n" + "    }\r\n" + "}";
+	public List<Object> getbyOrganization() {
+
+		SimpleQuery query = new SimpleQuery(this.retrieveGraphicEntity(), "");
+
+		return serviceSPARQL.runCount(query);
+	}
+
+	private Entity retrieveGraphicEntity() {
+		Entity entity = new Entity("Patent", "ownerOrganization");
+		List<String> groups = new ArrayList<>();
+		groups.add("ownerOrganization");
+		entity.setGroup(groups);
+
+		return entity;
 	}
 
 }

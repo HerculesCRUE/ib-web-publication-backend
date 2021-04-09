@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import es.um.asio.service.filter.document.DocumentFilter;
 import es.um.asio.service.filter.patent.PatentFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
@@ -22,7 +21,7 @@ public interface PatentService {
 	 * @return the page
 	 */
 	Page<FusekiResponse> findPaginated(PatentFilter filter, Pageable pageable);
-	
+
 	/**
 	 * Find.
 	 *
@@ -37,7 +36,7 @@ public interface PatentService {
 	 * @return the entity
 	 */
 	Entity retrieveEntity(PatentFilter filter);
-	
+
 	/**
 	 * Retrieve detail entity.
 	 *
@@ -52,7 +51,7 @@ public interface PatentService {
 	 * @return the string
 	 */
 	String filtersChunk(PatentFilter filter);
-	
+
 	/**
 	 * Filters chunk.
 	 *
@@ -66,5 +65,5 @@ public interface PatentService {
 	 *
 	 * @return the area
 	 */
-	String getArea();
+	List<Object> getbyOrganization();
 }

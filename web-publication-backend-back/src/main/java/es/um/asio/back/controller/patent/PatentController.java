@@ -1,5 +1,7 @@
 package es.um.asio.back.controller.patent;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.um.asio.service.dto.PatentDetailDto;
 import es.um.asio.service.dto.PatentDto;
+import es.um.asio.service.dto.graphic.PatentByOrganizationDto;
 import es.um.asio.service.filter.patent.PatentFilter;
 import es.um.asio.service.proxy.patent.PatentProxy;
 import lombok.AccessLevel;
@@ -40,8 +43,8 @@ public class PatentController {
 	}
 
 	@GetMapping(PatentController.Mappings.AREA)
-	public String area() {
-		return this.proxy.getArea();
+	public List<PatentByOrganizationDto> getbyOrganization() {
+		return this.proxy.getbyOrganization();
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
