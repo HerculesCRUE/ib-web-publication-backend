@@ -226,6 +226,17 @@ public class PatentServiceImpl implements PatentService {
 
 	private Entity retrieveGraphicEntity() {
 		Entity entity = new Entity("Patent", "ownerOrganization");
+//		List<Subentity> subentities = new ArrayList<Subentity>();
+//		// Extra fields
+//		String fieldName = "ownerOrganization";
+//		Subentity subentity = new Subentity();
+//		subentity.setFieldName(fieldName);
+//		subentities.add(subentity);
+//		List<String> fields = new ArrayList<String>();
+//		fields.add("id");
+//		subentity.setFields(fields);
+//		entity.setSubentities(subentities);
+
 		List<String> groups = new ArrayList<>();
 		groups.add("ownerOrganization");
 		entity.setGroup(groups);

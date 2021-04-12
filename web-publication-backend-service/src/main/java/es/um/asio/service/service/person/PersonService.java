@@ -39,5 +39,5 @@ public interface PersonService {
 
 	String filtersChunk(PersonFilter filter);
 
-	String getArea();
+	List<Object> getArea();
 }

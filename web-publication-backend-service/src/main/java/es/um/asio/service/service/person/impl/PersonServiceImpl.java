@@ -1,5 +1,6 @@
 package es.um.asio.service.service.person.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -193,30 +194,24 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 	@Override
 	public Entity retrieveEntity() {
 		return new Entity("Person", "birthDate", "description", "firstName", "gender", "hasContactInfo", "homepage",
-				"id", "image", "name", "nickname", "personalMaibox", "researchLine", "subjectArea", "surname", "taxId", "title");
+				"id", "image", "name", "nickname", "personalMaibox", "researchLine", "subjectArea", "surname", "taxId",
+				"title");
 	}
 
 	@Override
-	public String getArea() {
-		// TODO SPARQL
-		return "{\r\n" + "    \"legendData\": [\r\n" + "        \"Verificación 1\",\r\n"
-				+ "        \"Acreditación 1\",\r\n" + "        \"Acreditación de las dimensiones adicionales 1\",\r\n"
-				+ "        \"Certificación de garantía interna de calidad (SGIC) 1\",\r\n"
-				+ "        \"Centro acreditado institucionalmente 1\"\r\n" + "    ],\r\n" + "    \"seriesData\": [\r\n"
-				+ "        {\r\n" + "            \"name\": \"Verificación 1\",\r\n"
-				+ "            \"value\": 3936420535\r\n" + "        },\r\n" + "        {\r\n"
-				+ "            \"name\": \"Acreditación 1\",\r\n" + "            \"value\": 2548317238\r\n"
-				+ "        },\r\n" + "        {\r\n"
-				+ "            \"name\": \"Acreditación de las dimensiones adicionales 1\",\r\n"
-				+ "            \"value\": 495368615\r\n" + "        },\r\n" + "        {\r\n"
-				+ "            \"name\": \"Certificación de garantía interna de calidad (SGIC) 1\",\r\n"
-				+ "            \"value\": 2728792142\r\n" + "        },\r\n" + "        {\r\n"
-				+ "            \"name\": \"Centro acreditado institucionalmente 1\",\r\n"
-				+ "            \"value\": 240079264\r\n" + "        }\r\n" + "    ],\r\n" + "    \"selected\": {\r\n"
-				+ "        \"Verificación 1\": true,\r\n" + "        \"Acreditación 1\": true,\r\n"
-				+ "        \"Acreditación de las dimensiones adicionales 1\": true,\r\n"
-				+ "        \"Certificación de garantía interna de calidad (SGIC) 1\": true,\r\n"
-				+ "        \"Centro acreditado institucionalmente 1\": true\r\n" + "    }\r\n" + "}";
+	public List<Object> getArea() {
+		SimpleQuery query = new SimpleQuery(this.retrieveGraphicEntity(), "");
+
+		return serviceSPARQL.runCount(query);
+	}
+
+	private Entity retrieveGraphicEntity() {
+		Entity entity = new Entity("Person", "subjectArea");
+		List<String> groups = new ArrayList<>();
+		groups.add("subjectArea");
+		entity.setGroup(groups);
+
+		return entity;
 	}
 
 }

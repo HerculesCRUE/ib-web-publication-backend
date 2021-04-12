@@ -1,5 +1,7 @@
 package es.um.asio.back.controller.person;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.um.asio.service.dto.PersonDetailDto;
 import es.um.asio.service.dto.PersonDto;
+import es.um.asio.service.dto.graphic.PersonByAreaDto;
 import es.um.asio.service.filter.person.PersonFilter;
 import es.um.asio.service.proxy.person.PersonProxy;
 import lombok.AccessLevel;
@@ -35,7 +38,7 @@ public class PersonController {
 	}
 
 	@GetMapping(PersonController.Mappings.AREA)
-	public String area() {
+	public List<PersonByAreaDto> area() {
 		return this.proxy.getArea();
 	}
 

@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import es.um.asio.service.dto.PersonDetailDto;
 import es.um.asio.service.dto.PersonDto;
+import es.um.asio.service.dto.graphic.PersonByAreaDto;
 import es.um.asio.service.filter.person.PersonFilter;
+import es.um.asio.service.mapper.PersonByAreaMapper;
 import es.um.asio.service.mapper.PersonDetailMapper;
 import es.um.asio.service.mapper.PersonMapper;
 import es.um.asio.service.proxy.person.PersonProxy;
@@ -27,9 +29,12 @@ public class PersonProxyImpl implements PersonProxy {
 
 	@Autowired
 	private PersonMapper mapper;
-	
+
 	@Autowired
 	private PersonDetailMapper detailMapper;
+
+	@Autowired
+	private PersonByAreaMapper personByAreaMapper;
 
 	@Override
 	public Page<PersonDto> findPaginated(PersonFilter filter, Pageable pageable) {
@@ -43,7 +48,8 @@ public class PersonProxyImpl implements PersonProxy {
 	}
 
 	@Override
-	public String getArea() {
-		return this.service.getArea();
+	public List<PersonByAreaDto> getArea() {
+		List<PersonByAreaDto> list = this.personByAreaMapper.convertFusekiResponseToDto(this.service.getArea());
+		return (list.isEmpty()) ? null : list;
 	}
 }
