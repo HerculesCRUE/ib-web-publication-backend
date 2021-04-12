@@ -164,7 +164,7 @@ public class PatentServiceImpl implements PatentService {
 	@Override
 	public Entity retrieveEntity(PatentFilter filter) {
 		Entity entity = new Entity("Patent", "dateIssued", "doi", "endDate", "pageEnd", "id", "keyword", "mode",
-				"pageStart", "startDate", "title");
+				"pageStart", "startDate", "title", "summary");
 
 		// Add data to subentity atributes and filters
 		if (filter.getOrganizationId() != null && !filter.getOrganizationId().isEmpty()) {
@@ -212,7 +212,7 @@ public class PatentServiceImpl implements PatentService {
 	@Override
 	public Entity retrieveDetailEntity() {
 		return new Entity("Patent", "dateIssued", "doi", "endDate", "pageEnd", "id", "keyword", "mode", "pageStart",
-				"startDate", "title");
+				"startDate", "title", "summary");
 
 	}
 

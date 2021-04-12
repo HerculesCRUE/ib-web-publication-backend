@@ -25,13 +25,25 @@ public class OrganizationDto {
 	 */
 	private String abbreviation;
 	
-	/** The description. */
+	/**
+	 * The dateEnd
+	 */
+	private String dateEnd;
+	
+	/**
+	 * The dateStart
+	 */
+	private String dateStart;
+	
+	/** 
+	 * The description. 
+	 */
 	private String description;
 	
 	/**
-	 * The endDate
+	 * The keyword
 	 */
-//	private String endDate;
+	private String keyword;
 	
 	/**
 	 * The homepage
@@ -52,11 +64,9 @@ public class OrganizationDto {
 	 * The startDate
 	 */
 //	private String startDate;
-	/**
-	 * The keyword
-	 */
-//	private String keyword;
 	
-	/** The type. */
+	/** 
+	 * The type. 
+	 */
 	private String type;
 }

@@ -46,11 +46,6 @@ public class InternshipDto {
 	private String locatedIn;
 	
 	/**
-	 * The participatedBy
-	 */
-	private String participatedBy;
-	
-	/**
 	 * The startDate
 	 */
 	private String startDate;

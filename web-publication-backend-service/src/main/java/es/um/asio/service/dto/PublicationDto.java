@@ -4,26 +4,27 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The Class PatentDto.
+ * The class PublicationDto
  */
 @Getter
 @Setter
-public class PatentDto {
+public class PublicationDto {
 	
 	/**
 	 * The id
 	 */
 	private String id;
-	
+
 	/**
 	 * The title
 	 */
 	private String title;
-
+	
 	/**
-	 * The dateIssued
+	 * The date
 	 */
-	private String dateIssued;
+	private String date;
+
 	
 	/**
 	 * The doi
@@ -31,37 +32,23 @@ public class PatentDto {
 	private String doi;
 	
 	/**
-	 * The endDate
-	 */
-	private String endDate;
-	
-	/**
 	 * The keyword
 	 */
 	private String keyword;
 	
 	/**
-	 * The mode
+	 * The summary
 	 */
-	private String mode;
+	private String summary;
 	
 	/**
-	 * The pageEnd
+	 * The pageEnd (starts with P)
 	 */
 	private String pageEnd;
 	
 	/**
-	 * The pageStart
+	 * The pageStart (starts with P)
 	 */
 	private String pageStart;
-	
-	/**
-	 * The startDate
-	 */
-	private String startDate;
-	
-	/**
-	 * The summary
-	 */
-	private String summary;
+
 }

@@ -9,6 +9,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ConferenceKeywordDto {
+	
+	/**
+	 * The id
+	 */
+	private String id;
 
 	/**
 	 * The keyword

@@ -11,6 +11,11 @@ import lombok.Setter;
 public class ArticleKeywordDto {
 
 	/**
+	 * The id
+	 */
+	private String id;
+	
+	/**
 	 * The keyword
 	 */
 	private String keyword;

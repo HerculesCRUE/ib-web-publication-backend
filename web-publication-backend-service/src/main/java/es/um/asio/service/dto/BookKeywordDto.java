@@ -9,6 +9,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookKeywordDto {
+	
+	/**
+	 * The id
+	 */
+	private String id;
 
 	/**
 	 * The keyword

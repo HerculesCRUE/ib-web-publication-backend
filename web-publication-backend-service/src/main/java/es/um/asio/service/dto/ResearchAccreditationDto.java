@@ -31,11 +31,6 @@ public class ResearchAccreditationDto {
 	private String description;
 	
 	/**
-	 * The governingAuthority
-	 */
-	private String governingAuthority;
-	
-	/**
 	 * The hasSubjectArea
 	 */
 	private String hasSubjectArea;

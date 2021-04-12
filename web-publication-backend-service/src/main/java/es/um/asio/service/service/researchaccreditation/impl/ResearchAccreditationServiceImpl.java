@@ -57,14 +57,6 @@ public class ResearchAccreditationServiceImpl extends FusekiService<ResearchAccr
 				strBuilder.append(") . ");
 			}
 			
-			if (StringUtils.isNotBlank(filter.getGoverningAuthority())) {
-				strBuilder.append("FILTER (?governingAuthority = \"");
-				strBuilder.append(filter.getGoverningAuthority());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
-			}
-			
 			if (StringUtils.isNotBlank(filter.getHasSubjectArea())) {
 				strBuilder.append("FILTER (?hasSubjectArea = \"");
 				strBuilder.append(filter.getHasSubjectArea());
@@ -96,6 +88,6 @@ public class ResearchAccreditationServiceImpl extends FusekiService<ResearchAccr
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("ResearchAccreditation", "dateIssued", "description", "governingAuthority", "hasSubjectArea", "id", "title");
+		return new Entity("ResearchAccreditation", "dateIssued", "description", "hasSubjectArea", "id", "title");
 	}
 }

@@ -57,6 +57,6 @@ public class BookKeywordServiceImpl extends FusekiService<BookKeywordFilter> imp
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Book-Keyword", "keyword");
+		return new Entity("Book-Keyword", "id", "keyword");
 	}
 }

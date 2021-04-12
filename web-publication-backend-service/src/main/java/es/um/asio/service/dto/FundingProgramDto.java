@@ -4,11 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The Class UniversityDto.
+ * The class FundingProgramDto
  */
 @Getter
 @Setter
-public class UniversityDto {
+public class FundingProgramDto {
 
 	/**
 	 * The id
@@ -21,17 +21,12 @@ public class UniversityDto {
 	private String title;
 	
 	/**
-	 * The abbreviation
+	 * The date
 	 */
-	private String abbreviation;
+	private String date;
 	
 	/**
 	 * The description
 	 */
 	private String description;
-	
-	/**
-	 * The keyword
-	 */
-	private String keyword;
 }

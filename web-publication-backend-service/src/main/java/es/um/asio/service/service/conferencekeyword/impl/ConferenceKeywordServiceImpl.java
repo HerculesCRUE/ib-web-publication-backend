@@ -57,6 +57,6 @@ public class ConferenceKeywordServiceImpl extends FusekiService<ConferenceKeywor
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Conference-Keyword", "keyword");
+		return new Entity("Conference-Keyword", "id", "keyword");
 	}
 }

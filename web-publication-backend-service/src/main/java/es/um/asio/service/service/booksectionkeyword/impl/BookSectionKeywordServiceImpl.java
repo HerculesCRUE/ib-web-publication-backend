@@ -57,6 +57,6 @@ public class BookSectionKeywordServiceImpl extends FusekiService<BookSectionKeyw
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Book-Section-Keyword", "keyword");
+		return new Entity("Book-Section-Keyword", "id", "keyword");
 	}
 }

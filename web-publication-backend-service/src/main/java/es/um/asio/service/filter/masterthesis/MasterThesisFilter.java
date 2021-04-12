@@ -44,9 +44,9 @@ public class MasterThesisFilter extends Filter {
 	private String id;
 	
 	/**
-	 * The name
+	 * The title
 	 */
-	private String name;
+	private String title;
 	
 	/**
 	 * The placeOfPublication

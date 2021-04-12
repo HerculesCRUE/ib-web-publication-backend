@@ -4,34 +4,34 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The Class UniversityDto.
+ * The class PrincipalInvestigatorRoleDto
  */
 @Getter
 @Setter
-public class UniversityDto {
+public class PrincipalInvestigatorRoleDto {
 
 	/**
 	 * The id
 	 */
 	private String id;
-	
+
 	/**
-	 * The title
+	 * The dedication
 	 */
-	private String title;
-	
-	/**
-	 * The abbreviation
-	 */
-	private String abbreviation;
-	
+	private String dedication;
+
 	/**
 	 * The description
 	 */
 	private String description;
-	
+
 	/**
 	 * The keyword
 	 */
 	private String keyword;
+
+	/**
+	 * The ordinal
+	 */
+	private String ordinal;
 }

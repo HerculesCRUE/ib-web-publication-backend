@@ -81,12 +81,12 @@ public class MasterThesisServiceImpl extends FusekiService<MasterThesisFilter> i
 				strBuilder.append(") . ");
 			}
 
-			if (StringUtils.isNotBlank(filter.getName())) {
-				strBuilder.append("FILTER (LANG(?name) = \"");
+			if (StringUtils.isNotBlank(filter.getTitle())) {
+				strBuilder.append("FILTER (LANG(?title) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
 				strBuilder.append("\") . ");
-				strBuilder.append("FILTER ( regex(?name, \"");
-				strBuilder.append(filter.getName());
+				strBuilder.append("FILTER ( regex(?title, \"");
+				strBuilder.append(filter.getTitle());
 				strBuilder.append("\", \"i\")) . ");
 			}
 			
@@ -137,7 +137,7 @@ public class MasterThesisServiceImpl extends FusekiService<MasterThesisFilter> i
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("MasterThesis", "abbreviation", "date", "doi", "endPage", "id", "name", "placeOfPublication", "publishedIn", "startPage", "university");
+		return new Entity("MasterThesis", "abbreviation", "date", "doi", "endPage", "id", "placeOfPublication", "publishedIn", "startPage", "summary", "title", "university");
 	}
 
 }

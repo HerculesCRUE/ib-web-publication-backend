@@ -16,9 +16,9 @@ public class MasterThesisDto {
 	private String id;
 	
 	/**
-	 * The name
+	 * The title
 	 */
-	private String name;
+	private String title;
 
 	/**
 	 * The abbreviation

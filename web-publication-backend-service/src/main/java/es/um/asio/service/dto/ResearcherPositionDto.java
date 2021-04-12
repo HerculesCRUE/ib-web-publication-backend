@@ -4,11 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The class BookSectionKeywordDto
+ * The class ArticleDto
  */
 @Getter
 @Setter
-public class BookSectionKeywordDto {
+public class ResearcherPositionDto {
 	
 	/**
 	 * The id
@@ -16,7 +16,8 @@ public class BookSectionKeywordDto {
 	private String id;
 	
 	/**
-	 * The keyword
+	 * The ordinal
 	 */
-	private String keyword;
+	private String ordinal;
+
 }

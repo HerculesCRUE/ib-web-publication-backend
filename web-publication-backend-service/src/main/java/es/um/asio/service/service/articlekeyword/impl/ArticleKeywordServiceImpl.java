@@ -57,7 +57,7 @@ public class ArticleKeywordServiceImpl extends FusekiService<ArticleKeywordFilte
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Article-Keyword", "keyword");
+		return new Entity("Article-Keyword", "id", "keyword");
 	}
 
 }

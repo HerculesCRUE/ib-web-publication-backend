@@ -4,19 +4,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The class BookSectionKeywordDto
+ * The class CurriculumVitaeDto
  */
 @Getter
 @Setter
-public class BookSectionKeywordDto {
-	
+public class CurriculumVitaeDto {
+
 	/**
 	 * The id
 	 */
 	private String id;
 	
 	/**
-	 * The keyword
+	 * The correspondingAuthor
 	 */
-	private String keyword;
+	private String correspondingAuthor;
 }
