@@ -42,10 +42,11 @@ public class KeycloakController {
 		AccessToken accessToken = getAccessToken();
 
 		boolean isAdmin = false;
-
-		for (String per : accessToken.getResourceAccess(resource).getRoles()) {
-			if (Roles.ROLE_ADMIN.equals(per)) {
-				isAdmin = true;
+		if (accessToken != null) {
+			for (String per : accessToken.getResourceAccess(resource).getRoles()) {
+				if (Roles.ROLE_ADMIN.equals(per)) {
+					isAdmin = true;
+				}
 			}
 		}
 		return isAdmin;
