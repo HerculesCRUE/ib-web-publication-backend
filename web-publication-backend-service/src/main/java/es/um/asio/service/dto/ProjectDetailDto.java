@@ -33,7 +33,7 @@ public class ProjectDetailDto {
 	/**
 	 * The endDate
 	 */
-	private String endDate;
+	private String dateEnd;
 	
 	/**
 	 * The foreseenJustificationDate
@@ -63,7 +63,7 @@ public class ProjectDetailDto {
 	/** 
 	 * The startDate 
 	 */
-	private String startDate;
+	private String dateStart;
 	
 	/** 
 	 * The status 

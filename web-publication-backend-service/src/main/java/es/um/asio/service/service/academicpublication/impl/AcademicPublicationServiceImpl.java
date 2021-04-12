@@ -15,10 +15,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import es.um.asio.abstractions.constants.Constants;
 import es.um.asio.service.filter.academicpublication.AcademicPublicationFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
+import es.um.asio.service.model.SimpleQuery;
 import es.um.asio.service.model.Subentity;
 import es.um.asio.service.service.academicpublication.AcademicPublicationService;
 import es.um.asio.service.service.article.impl.ArticleServiceImpl;
@@ -59,9 +61,9 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 			}
 
 			if (StringUtils.isNotBlank(filter.getTitle())) {
-				strBuilder.append("FILTER (LANG(?name) = \"");
+				strBuilder.append("FILTER (LANG(?title) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
-				strBuilder.append("\" && (regex(?name, \"");
+				strBuilder.append("\" && (regex(?title, \"");
 				strBuilder.append(filter.getTitle());
 				strBuilder.append("\", \"i\"))) . ");
 			}
@@ -93,7 +95,7 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 				Arrays.asList("Doctoral-Thesis", "Master-Thesis");
 		
 		Entity entity = new Entity("AcademicPublication", types, "abbreviation", "date", "doi", "id", 
-				"name", "nowhere:type");
+				"title", "nowhere:type");
 		
 		// Add data to subentity atributes and filters
 		if (filter.getDirectedBy()!=null && !filter.getDirectedBy().isEmpty()) {
@@ -112,7 +114,7 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 			entity.setSubentities(subentities);
 		}
 		
-		// Add data to subentity atributes and filters
+		// Add data to subentity attributes and filters
 		if (filter.getOrganizationId()!=null && !filter.getOrganizationId().isEmpty()) {
 			List<Subentity> subentities = new ArrayList<Subentity>();
 			// Extra fields
@@ -131,9 +133,41 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 		
 		return entity;
 	}
+	
+
+	@Override
+	public Entity retrieveEntity(String type) {
+		List<String> types = new ArrayList<String>();
+		String[] splitType = type.split("/");
+		types.add(splitType[splitType.length - 1]);
+
+			return new Entity("AcademicPublication", types, "date", "doi", "endPage", "id", "placeOfPublication", 
+					"publishedIn", "startPage", "summary", "title", "nowhere:type");
+	}
 
 	@Override
 	public Entity retrieveEntity() {
 		throw new NotImplementedException("retrieveEntity: Not implemented method");
+	}
+
+	@Override
+	public List<Object> find(String id, String type) {
+		logger.info("Searching academic publication with id: {} type: {}", id, type);
+
+		SimpleQuery query = new SimpleQuery(this.retrieveEntity(type), filtersChunk(id));
+
+		return serviceSPARQL.run(query);
+	}
+
+	@Override
+	public String filtersChunk(String id) {
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append("FILTER (?id = \"");
+		strBuilder.append(id);
+		strBuilder.append("\"@");
+		strBuilder.append(Constants.SPANISH_LANGUAGE_SHORT);
+		strBuilder.append(") . ");
+
+		return strBuilder.toString();
 	}
 }

@@ -1,5 +1,7 @@
 package es.um.asio.service.service.academicpublication;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,6 +19,16 @@ public interface AcademicPublicationService {
 	 * @return the page
 	 */
 	Page<FusekiResponse> findPaginated(AcademicPublicationFilter filter, Pageable pageable);
+	
+	
+	/**
+	 * Find.
+	 *
+	 * @param id the id
+	 * @param type the type
+	 * @return the fuseki response
+	 */
+	List<Object> find(String id, String type);
 
 	/**
 	 * Retrieve entity.
@@ -25,6 +37,29 @@ public interface AcademicPublicationService {
 	 * @return the entity
 	 */
 	Entity retrieveEntity(AcademicPublicationFilter filter);
+	
+	/**
+	 * Retrieve entity.
+	 *
+	 * @param type the type
+	 * @return the entity
+	 */
+	Entity retrieveEntity(String type);
 
+	/**
+	 * Filters chunk.
+	 *
+	 * @param filter the filter
+	 * @return the string
+	 */
 	String filtersChunk(AcademicPublicationFilter filter);
+	
+	
+	/**
+	 * Filters chunk.
+	 *
+	 * @param id the id
+	 * @return the string
+	 */
+	String filtersChunk(String id);
 }
