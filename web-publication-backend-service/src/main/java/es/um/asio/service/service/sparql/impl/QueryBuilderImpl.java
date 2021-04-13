@@ -199,7 +199,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 						strBuilder.append(field);
 						strBuilder.append("> ");
 						strBuilder.append("?");
-						strBuilder.append(subentity.getFieldName() + capitalizeFirstLetter(field));
+						strBuilder.append(subentity.getIgnorePrefix() ? field : subentity.getFieldName() + capitalizeFirstLetter(field));
 						strBuilder.append(" . ");
 					}
 

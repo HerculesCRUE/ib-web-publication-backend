@@ -37,5 +37,7 @@ public class Subentity implements Serializable {
 	/** The subentities. */
 	private List<Subentity> subentities;
 	
+	private Boolean ignorePrefix;
+	
 	
 }

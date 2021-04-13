@@ -1,6 +1,9 @@
 package es.um.asio.service.service.researchstaff.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +18,7 @@ import es.um.asio.service.filter.researchstaff.ResearchStaffFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
+import es.um.asio.service.model.Subentity;
 import es.um.asio.service.service.impl.FusekiService;
 import es.um.asio.service.service.researchstaff.ResearchStaffService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
@@ -66,15 +70,32 @@ public class ResearchStaffServiceImpl extends FusekiService<ResearchStaffFilter>
 
 	@Override
 	public Entity retrieveEntity() {
-		Entity entity = new Entity("Person", "birthDate", "description", "firstName", "gender", "hasContactInfo", "homepage", "id", "image", "name", "nickname", 
-				"personalMaibox", "researchLine", "surname", "taxId", "title");
+		Entity entity = new Entity("Researcher-Role", "nowhere:birthDate", "nowhere:description", "nowhere:firstName", "nowhere:gender", "nowhere:hasContactInfo", 
+				"nowhere:homepage", "nowhere:id", "nowhere:image", "nowhere:name", "nowhere:nickname", 
+				"nowhere:personalMaibox", "nowhere:researchLine", "nowhere:surname", "nowhere:taxId", "nowhere:title", "inheresIn");
 		
-		Map<String, Map<String, String>> join = new HashMap<>();
+//		Map<String, Map<String, String>> join = new HashMap<>();
+//		
+//		join.put("Researcher-Role", new HashMap<>());
+//		join.get("Researcher-Role").put("x", "inheresIn");
 		
-		join.put("Researcher-Role", new HashMap<>());
-		join.get("Researcher-Role").put("x", "inheresIn");
+//		entity.setJoin(join);
 		
-		entity.setJoin(join);
+		List<Subentity> subentities = new ArrayList<Subentity>();
+		Subentity subentity = new Subentity();
+		
+		String fieldName = "inheresIn";
+		
+		subentity.setIgnorePrefix(true);
+		subentity.setFieldName(fieldName);
+		subentity.setFields(Arrays.asList("birthDate", "description", "firstName", "gender", "hasContactInfo", "homepage", "id", "image", "name", "nickname", 
+				"personalMaibox", "researchLine", "surname", "taxId", "title"));
+		
+		Map<String, String> filters = new HashMap<>();
+		subentity.setFilters(filters);
+		subentities.add(subentity);
+		
+		entity.setSubentities(subentities);
 		
 		return entity;
 	}
