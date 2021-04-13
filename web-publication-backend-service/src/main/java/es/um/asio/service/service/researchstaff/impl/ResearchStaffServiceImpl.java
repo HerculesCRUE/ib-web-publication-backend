@@ -71,8 +71,8 @@ public class ResearchStaffServiceImpl extends FusekiService<ResearchStaffFilter>
 		
 		Map<String, Map<String, String>> join = new HashMap<>();
 		
-		join.put("Research-Group", new HashMap<>());
-		join.get("Research-Group").put("x", "pers");
+		join.put("Researcher-role", new HashMap<>());
+		join.get("Researcher-role").put("x", "inheresIn");
 		
 		entity.setJoin(join);
 		
