@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 import es.um.asio.service.dto.PatentDetailDto;
 import es.um.asio.service.dto.PatentDto;
-import es.um.asio.service.dto.graphic.PatentByOrganizationDto;
+import es.um.asio.service.dto.graphic.GraphicsDto;
 import es.um.asio.service.filter.patent.PatentFilter;
-import es.um.asio.service.mapper.PatentByOrganizationMapper;
+import es.um.asio.service.mapper.GraphicsMapper;
 import es.um.asio.service.mapper.PatentDetailMapper;
 import es.um.asio.service.mapper.PatentMapper;
 import es.um.asio.service.proxy.patent.PatentProxy;
@@ -34,7 +34,7 @@ public class PatentProxyImpl implements PatentProxy {
 	private PatentDetailMapper detailMapper;
 
 	@Autowired
-	private PatentByOrganizationMapper patentByOrganizationMapper;
+	private GraphicsMapper patentByOrganizationMapper;
 
 	@Override
 	public Page<PatentDto> findPaginated(PatentFilter filter, Pageable pageable) {
@@ -42,8 +42,8 @@ public class PatentProxyImpl implements PatentProxy {
 	}
 
 	@Override
-	public List<PatentByOrganizationDto> getbyOrganization() {
-		List<PatentByOrganizationDto> list = this.patentByOrganizationMapper
+	public List<GraphicsDto> getbyOrganization() {
+		List<GraphicsDto> list = this.patentByOrganizationMapper
 				.convertFusekiResponseToDto(this.service.getbyOrganization());
 		return (list.isEmpty()) ? null : list;
 	}

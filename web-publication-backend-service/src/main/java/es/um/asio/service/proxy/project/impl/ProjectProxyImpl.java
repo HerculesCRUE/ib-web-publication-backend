@@ -8,13 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import es.um.asio.service.dto.PersonParticipantDto;
-import es.um.asio.service.dto.ProjectByModalityDto;
 import es.um.asio.service.dto.ProjectDetailDto;
 import es.um.asio.service.dto.ProjectDto;
+import es.um.asio.service.dto.graphic.GraphicsDto;
 import es.um.asio.service.filter.person.PersonFilter;
 import es.um.asio.service.filter.project.ProjectFilter;
+import es.um.asio.service.mapper.GraphicsMapper;
 import es.um.asio.service.mapper.PersonParticipantMapper;
-import es.um.asio.service.mapper.ProjectByModalityMapper;
 import es.um.asio.service.mapper.ProjectDetailMapper;
 import es.um.asio.service.mapper.ProjectMapper;
 import es.um.asio.service.proxy.project.ProjectProxy;
@@ -34,7 +34,7 @@ public class ProjectProxyImpl implements ProjectProxy {
 	private ProjectMapper mapper;
 
 	@Autowired
-	private ProjectByModalityMapper projectByModalityMapper;
+	private GraphicsMapper projectByModalityMapper;
 
 	@Autowired
 	private ProjectDetailMapper detailMapper;
@@ -55,9 +55,8 @@ public class ProjectProxyImpl implements ProjectProxy {
 	}
 
 	@Override
-	public List<ProjectByModalityDto> getbyModality() {
-		List<ProjectByModalityDto> list = this.projectByModalityMapper
-				.convertFusekiResponseToDto(this.service.getbyModality());
+	public List<GraphicsDto> getbyModality() {
+		List<GraphicsDto> list = this.projectByModalityMapper.convertFusekiResponseToDto(this.service.getbyModality());
 		return (list.isEmpty()) ? null : list;
 	}
 

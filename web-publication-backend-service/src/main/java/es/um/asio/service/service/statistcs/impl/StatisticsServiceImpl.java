@@ -1,44 +1,58 @@
 package es.um.asio.service.service.statistcs.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.um.asio.service.model.Entity;
+import es.um.asio.service.model.SimpleQuery;
+import es.um.asio.service.service.sparql.SparqlExecQuery;
 import es.um.asio.service.service.statistcs.StatisticsService;
 
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
 
+	/**
+	 * Logger
+	 */
+	private final Logger logger = LoggerFactory.getLogger(StatisticsServiceImpl.class);
+
+	@Autowired
+	private SparqlExecQuery serviceSPARQL;
+
 	@Override
-	public String topPublications() {
-		// TODO SPARQL DTO
-		return "[{\"name\": \"Ciencias agrícolas y agroalimentarias\",\"value\": 10},\r\n"
-				+ "			{\"name\": \"Agricultura y Bosques\",\"value\": 20}, \r\n"
-				+ "			{\"name\": \"Astronomía y astrofísica\",\"value\": 15}, \r\n"
-				+ "			{\"name\": \"Biomedicina\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Economía\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Ciencia y tecnología ambiental\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Ciencia y tecnología de los alimentos\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Física fundamental y de partículas\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Producción industrial, ingeniería civil e ingeniería para la sociedad\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Ciencias de la vida\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Ciencias matemáticas\",\"value\":30},\r\n"
-				+ "			{\"name\": \"Biología molecular y celular\",\"value\": 30}]";
+	public List<Object> articlesByPublishedIn() {
+		logger.info("Start sparql articlesByPublishedIn");
+		SimpleQuery query = new SimpleQuery(this.retrieveArticleGraphicEntity(), "");
+
+		return serviceSPARQL.runCount(query);
+	}
+
+	private Entity retrieveArticleGraphicEntity() {
+		Entity entity = new Entity("Article", "publishedIn");
+		List<String> groups = new ArrayList<>();
+		groups.add("publishedIn");
+		entity.setGroup(groups);
+		return entity;
 	}
 
 	@Override
-	public String topPatents() {
-		// TODO SPARQL DTO
-		return "[{\"name\": \"Ciencias agrícolas y agroalimentarias\",\"value\": 10},\r\n"
-				+ "			{\"name\": \"Agricultura y Bosques\",\"value\": 20}, \r\n"
-				+ "			{\"name\": \"Astronomía y astrofísica\",\"value\": 15}, \r\n"
-				+ "			{\"name\": \"Biomedicina\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Economía\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Ciencia y tecnología ambiental\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Ciencia y tecnología de los alimentos\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Física fundamental y de partículas\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Producción industrial, ingeniería civil e ingeniería para la sociedad\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Ciencias de la vida\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Ciencias matemáticas\",\"value\":30},\r\n"
-				+ "			{\"name\": \"Biología molecular y celular\",\"value\": 30}]";
+	public List<Object> projectByClassification() {
+		logger.info("Start sparql projectByClassification");
+		SimpleQuery query = new SimpleQuery(this.projectByClassificationGraphicEntity(), "");
+		return serviceSPARQL.runCount(query);
+	}
+
+	private Entity projectByClassificationGraphicEntity() {
+		Entity entity = new Entity("Project", "projectClassification");
+		List<String> groups = new ArrayList<>();
+		groups.add("projectClassification");
+		entity.setGroup(groups);
+		return entity;
 	}
 
 }

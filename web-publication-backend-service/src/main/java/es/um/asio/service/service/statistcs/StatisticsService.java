@@ -1,9 +1,11 @@
 package es.um.asio.service.service.statistcs;
 
+import java.util.List;
+
 public interface StatisticsService {
 
-	String topPublications();
+	List<Object> articlesByPublishedIn();
 
-	String topPatents();
+	List<Object> projectByClassification();
 
 }
