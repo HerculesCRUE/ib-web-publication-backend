@@ -1,9 +1,13 @@
 package es.um.asio.service.proxy.statistics;
 
+import java.util.List;
+
+import es.um.asio.service.dto.graphic.GraphicsDto;
+
 public interface StatisticsProxy {
 
-	String topPublications();
+	List<GraphicsDto> articlesByPublishedIn();
 
-	String topPatents();
+	List<GraphicsDto> projectByClassification();
 
 }

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import es.um.asio.service.dto.PatentDetailDto;
 import es.um.asio.service.dto.PatentDto;
-import es.um.asio.service.dto.graphic.PatentByOrganizationDto;
+import es.um.asio.service.dto.graphic.GraphicsDto;
 import es.um.asio.service.filter.patent.PatentFilter;
 
 /**
@@ -27,6 +27,6 @@ public interface PatentProxy {
 
 	PatentDetailDto find(String id);
 
-	List<PatentByOrganizationDto> getbyOrganization();
+	List<GraphicsDto> getbyOrganization();
 
 }

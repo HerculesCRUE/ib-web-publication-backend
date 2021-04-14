@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.um.asio.service.dto.ProjectByModalityDto;
 import es.um.asio.service.dto.ProjectDetailDto;
 import es.um.asio.service.dto.ProjectDto;
+import es.um.asio.service.dto.graphic.GraphicsDto;
 import es.um.asio.service.filter.project.ProjectFilter;
 import es.um.asio.service.proxy.project.ProjectProxy;
 import lombok.AccessLevel;
@@ -43,7 +43,7 @@ public class ProjectController {
 	}
 
 	@GetMapping(ProjectController.Mappings.BYMODALITY)
-	public List<ProjectByModalityDto> getbyModality() {
+	public List<GraphicsDto> getbyModality() {
 		return this.proxy.getbyModality();
 	}
 

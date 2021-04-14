@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import es.um.asio.service.dto.PersonDetailDto;
 import es.um.asio.service.dto.PersonDto;
-import es.um.asio.service.dto.graphic.PersonByAreaDto;
+import es.um.asio.service.dto.graphic.GraphicsDto;
 import es.um.asio.service.filter.person.PersonFilter;
 
 public interface PersonProxy {
@@ -29,5 +29,5 @@ public interface PersonProxy {
 	 */
 	PersonDetailDto find(String id);
 
-	List<PersonByAreaDto> getArea();
+	List<GraphicsDto> getArea();
 }

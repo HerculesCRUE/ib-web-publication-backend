@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.um.asio.service.dto.PatentDetailDto;
 import es.um.asio.service.dto.PatentDto;
-import es.um.asio.service.dto.graphic.PatentByOrganizationDto;
+import es.um.asio.service.dto.graphic.GraphicsDto;
 import es.um.asio.service.filter.patent.PatentFilter;
 import es.um.asio.service.proxy.patent.PatentProxy;
 import lombok.AccessLevel;
@@ -43,7 +43,7 @@ public class PatentController {
 	}
 
 	@GetMapping(PatentController.Mappings.AREA)
-	public List<PatentByOrganizationDto> getbyOrganization() {
+	public List<GraphicsDto> getbyOrganization() {
 		return this.proxy.getbyOrganization();
 	}
 

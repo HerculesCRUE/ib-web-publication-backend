@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.um.asio.service.dto.PersonDetailDto;
 import es.um.asio.service.dto.PersonDto;
-import es.um.asio.service.dto.graphic.PersonByAreaDto;
+import es.um.asio.service.dto.graphic.GraphicsDto;
 import es.um.asio.service.filter.person.PersonFilter;
 import es.um.asio.service.proxy.person.PersonProxy;
 import lombok.AccessLevel;
@@ -38,7 +38,7 @@ public class PersonController {
 	}
 
 	@GetMapping(PersonController.Mappings.AREA)
-	public List<PersonByAreaDto> area() {
+	public List<GraphicsDto> area() {
 		return this.proxy.getArea();
 	}
 
