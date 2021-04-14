@@ -15,4 +15,6 @@ public interface ScientificPublicationProxy {
 	 * @return Page<ScientificPublicationDto>
 	 */
 	Page<ScientificPublicationDto> findPaginated(ScientificPublicationFilter filter, Pageable pageable);
+	
+	ScientificPublicationDto find(String id);
 }

@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import es.um.asio.service.dto.PersonParticipantDto;
 import es.um.asio.service.dto.ProjectByModalityDto;
 import es.um.asio.service.dto.ProjectDetailDto;
 import es.um.asio.service.dto.ProjectDto;
+import es.um.asio.service.filter.person.PersonFilter;
 import es.um.asio.service.filter.project.ProjectFilter;
 
 /**
@@ -28,4 +30,12 @@ public interface ProjectProxy {
 	ProjectDetailDto find(String id);
 
 	List<ProjectByModalityDto> getbyModality();
+	
+	/**
+	 * getParticipants.
+	 *
+	 * @param id the id
+	 * @return the list
+	 */
+	Page<PersonParticipantDto> getParticipants(String id, final PersonFilter filter, final Pageable pageable);
 }

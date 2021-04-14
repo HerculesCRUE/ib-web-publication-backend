@@ -101,7 +101,7 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 		if (filter.getDirectedBy()!=null && !filter.getDirectedBy().isEmpty()) {
 			List<Subentity> subentities = new ArrayList<Subentity>();
 			// Extra fields
-			String fieldName = "pers";
+			String fieldName = "correspondingAuthor";
 //			List<String> fields = new ArrayList<String>();
 //			fields.add("id");
 //			entity.getFields().add(fieldName+"Id");
@@ -115,21 +115,21 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 		}
 		
 		// Add data to subentity attributes and filters
-		if (filter.getOrganizationId()!=null && !filter.getOrganizationId().isEmpty()) {
-			List<Subentity> subentities = new ArrayList<Subentity>();
-			// Extra fields
-			String fieldName = "correspondingOrganization";
-//			List<String> fields = new ArrayList<String>();
-//			fields.add("id");
-//			entity.getFields().add(fieldName+"Id");
-			Subentity subentity = new Subentity();
-			subentity.setFieldName(fieldName);
-			Map<String, String> filters = new HashMap<>();
-			filters.put("id", filter.getOrganizationId());
-			subentity.setFilters(filters);
-			subentities.add(subentity);
-			entity.setSubentities(subentities);
-		}
+//		if (filter.getOrganizationId()!=null && !filter.getOrganizationId().isEmpty()) {
+//			List<Subentity> subentities = new ArrayList<Subentity>();
+//			// Extra fields
+//			String fieldName = "correspondingOrganization";
+////			List<String> fields = new ArrayList<String>();
+////			fields.add("id");
+////			entity.getFields().add(fieldName+"Id");
+//			Subentity subentity = new Subentity();
+//			subentity.setFieldName(fieldName);
+//			Map<String, String> filters = new HashMap<>();
+//			filters.put("id", filter.getOrganizationId());
+//			subentity.setFilters(filters);
+//			subentities.add(subentity);
+//			entity.setSubentities(subentities);
+//		}
 		
 		return entity;
 	}

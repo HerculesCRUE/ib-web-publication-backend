@@ -1,5 +1,7 @@
 package es.um.asio.service.proxy.scientificpublication.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,5 +28,12 @@ public class ScientificPublicationProxyImpl implements ScientificPublicationProx
 		Page<FusekiResponse> result = this.service.findPaginated(filter, pageable);
 		
 		return this.mapper.convertPageFusekiResponseToDto(result);
+	}
+
+	@Override
+	public ScientificPublicationDto find(String id) {
+		List<ScientificPublicationDto> list = this.mapper.convertFusekiResponseToDto(this.service.find(id));
+		
+		return (list.isEmpty()) ? null : list.get(0);
 	}
 }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,6 +31,11 @@ public class ScientificPublicationController {
 		return this.proxy.findPaginated(filter, pageable);
 	}
 	
+	@GetMapping(ScientificPublicationController.Mappings.GET)
+	public ScientificPublicationDto findPatent(@PathVariable("id") final String id) {
+		return this.proxy.find(id);
+	}
+	
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	static final class Mappings {
 		/**
@@ -41,5 +47,10 @@ public class ScientificPublicationController {
 		 * Mapping for search.
 		 */
 		protected static final String SEARCH = "/search";
+
+		/**
+		 * Mapping for get.
+		 */
+		protected static final String GET = "/{id}";
 	}
 }

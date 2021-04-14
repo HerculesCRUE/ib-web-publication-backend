@@ -1,6 +1,7 @@
 package es.um.asio.service.service.project.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import es.um.asio.abstractions.constants.Constants;
+import es.um.asio.service.filter.person.PersonFilter;
 import es.um.asio.service.filter.project.ProjectFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
@@ -53,6 +55,40 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		SimpleQuery query = new SimpleQuery(this.retrieveDetailEntity(), filtersChunk(id));
 
 		return serviceSPARQL.run(query);
+	}
+
+	@Override
+	public Page<FusekiResponse> getParticipants(String id, final PersonFilter filter, final Pageable pageable) {
+		logger.info("Searching participants with project id: {} type: {}", id);
+
+		PageableQuery query = new PageableQuery(this.retrieveParticipantsEntity(), filtersChunkParticipants(id, filter), pageable);
+
+		return serviceSPARQL.run(query);
+	}
+	
+	private String filtersChunkParticipants(String id, PersonFilter filter) {
+		StringBuilder strBuilder = new StringBuilder();
+		
+		if (StringUtils.isNotBlank(id)) {
+			strBuilder.append("FILTER (?id = \"");
+			strBuilder.append(id);
+			strBuilder.append("\"@");
+			strBuilder.append(Constants.SPANISH_LANGUAGE_SHORT);
+			strBuilder.append(") . ");
+		}
+		
+		if (filter != null) {
+			if (StringUtils.isNotBlank(filter.getTitle())) {
+				strBuilder.append("FILTER (LANG(?relatesTitle) = \"");
+				strBuilder.append(filter.getLanguage().substring(1));
+				strBuilder.append("\") . ");
+				strBuilder.append("FILTER ( regex(?relatesTitle, \"");
+				strBuilder.append(filter.getTitle());
+				strBuilder.append("\", \"i\")) . ");
+			}
+		}
+		
+		return strBuilder.toString();
 	}
 
 	@Override
@@ -204,8 +240,8 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 
 	@Override
 	public Entity retrieveDetailEntity() {
-		return new Entity("Project", "abbreviation", "description", "dateEnd", "foreseenJustificationDate", "id",
-				"keyword", "modality", "needsEthicalValidation", "projectClassification", "dateStart", "status",
+		return new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id",
+				"keyword", "modality", "needsEthicalValidation", "projectClassification", "startDate", "status",
 				"title");
 	}
 
@@ -230,6 +266,30 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	public Entity retrieveEntity() {
 
 		throw new NotImplementedException("retrieveEntity: Not implemented method");
+	}
+	
+	private Entity retrieveParticipantsEntity() {
+		Entity entity = new Entity("Project", "nowhere:relatesBirthDate", "nowhere:relatesDescription", "nowhere:relatesFirstName", "nowhere:relatesGender", 
+				"nowhere:relatesId", "nowhere:relatesImage", "nowhere:relatesName", "nowhere:relatesNickname", 
+				"nowhere:relatesResearchLine", "nowhere:relatesSurname", "nowhere:relatesTaxId", "relates", "id");
+		
+		List<Subentity> subentities = new ArrayList<Subentity>();
+		Subentity subentity = new Subentity();
+		
+		String fieldName = "relates";
+		
+		subentity.setIgnorePrefix(false);
+		subentity.setFieldName(fieldName);
+		subentity.setFields(Arrays.asList("birthDate", "description", "firstName", "gender", "id", "image", "name", "nickname", 
+				"researchLine", "surname", "taxId"));
+		
+		Map<String, String> filters = new HashMap<>();
+		subentity.setFilters(filters);
+		subentities.add(subentity);
+		
+		entity.setSubentities(subentities);
+		
+		return entity;
 	}
 
 }

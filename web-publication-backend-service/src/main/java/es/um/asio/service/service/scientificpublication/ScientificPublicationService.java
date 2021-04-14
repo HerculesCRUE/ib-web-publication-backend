@@ -1,5 +1,7 @@
 package es.um.asio.service.service.scientificpublication;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -26,4 +28,6 @@ public interface ScientificPublicationService {
 	Entity retrieveEntity();
 
 	String filtersChunk(ScientificPublicationFilter filter);
+	
+	List<Object> find(String id);
 }

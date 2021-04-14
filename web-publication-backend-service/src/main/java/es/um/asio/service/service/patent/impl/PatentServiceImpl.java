@@ -170,7 +170,7 @@ public class PatentServiceImpl implements PatentService {
 		if (filter.getOrganizationId() != null && !filter.getOrganizationId().isEmpty()) {
 			List<Subentity> subentities = new ArrayList<Subentity>();
 			// Extra fields
-			String fieldName = "correspondingOrganization";
+			String fieldName = "ownerOrganization";
 //			List<String> fields = new ArrayList<String>();
 //			fields.add("id");
 //			entity.getFields().add(fieldName+"Id");

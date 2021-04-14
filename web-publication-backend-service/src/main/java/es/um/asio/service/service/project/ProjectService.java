@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import es.um.asio.service.filter.person.PersonFilter;
 import es.um.asio.service.filter.project.ProjectFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
@@ -70,4 +71,12 @@ public interface ProjectService {
 	 * @return the by investigation
 	 */
 	List<Object> getbyModality();
+	
+	/**
+	 * getParticipants.
+	 *
+	 * @param id the id
+	 * @return the list
+	 */
+	Page<FusekiResponse> getParticipants(String id, final PersonFilter filter, final Pageable pageable);
 }
