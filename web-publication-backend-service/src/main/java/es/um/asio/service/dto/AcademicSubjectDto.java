@@ -4,25 +4,24 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The class ArticleDto
+ * The Class AcademicSubjectDto.
  */
 @Getter
 @Setter
-public class ResearcherPositionDto {
-	
+public class AcademicSubjectDto {
+
 	/**
 	 * The id
 	 */
 	private String id;
 	
 	/**
-	 * The dateTimeInterval
+	 * The title
 	 */
-	private String dateTimeInterval;
+	private String title;
 	
 	/**
-	 * The ordinal
+	 * The abbreviation
 	 */
-	private String ordinal;
-
+	private String abbreviation;
 }

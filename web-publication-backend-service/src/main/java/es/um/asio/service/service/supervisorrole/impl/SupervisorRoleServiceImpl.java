@@ -56,6 +56,6 @@ public class SupervisorRoleServiceImpl extends FusekiService<SupervisorRoleFilte
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Supervisor-Role", "id", "date", "dedication", "dedicationPercentage", "description", "hasKnowledgeArea", "inheresIn");
+		return new Entity("Supervisee-Role", "id", "dedication", "dedicationPercentage", "description");
 	}
 }

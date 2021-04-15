@@ -55,6 +55,6 @@ public class ResearcherPositionServiceImpl extends FusekiService<ResearcherPosit
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("ResearcherPosition", "id", "ordinal");
+		return new Entity("ResearcherPosition", "id", "dateTimeInterval", "ordinal");
 	}
 }

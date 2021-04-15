@@ -16,11 +16,6 @@ public class SupervisorRoleDto {
 	private String id;
 	
 	/**
-	 * The date
-	 */
-	private String date;
-	
-	/**
 	 * The dedication
 	 */
 	private String dedication;
@@ -34,14 +29,4 @@ public class SupervisorRoleDto {
 	 * The description
 	 */
 	private String description;
-	
-	/**
-	 * The hasKnowledgeArea
-	 */
-	private String hasKnowledgeArea;
-	
-	/**
-	 * The inheresIn
-	 */
-	private String inheresIn;
 }

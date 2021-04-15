@@ -4,11 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The Class ResearchGroupDto.
+ * The class ArticleDto
  */
 @Getter
 @Setter
-public class ResearchGroupDto {
+public class FundingOrganizationDto {
 	
 	/**
 	 * The id
@@ -19,11 +19,16 @@ public class ResearchGroupDto {
 	 * The title
 	 */
 	private String title;
-
+	
 	/**
 	 * The abbreviation
 	 */
 	private String abbreviation;
+	
+	/**
+	 * The date
+	 */
+	private String date;
 	
 	/**
 	 * The description
@@ -31,17 +36,23 @@ public class ResearchGroupDto {
 	private String description;
 	
 	/**
-	 * The endDate
+	 * The homepage
 	 */
-	private String endDate;
+	private String homepage;
 	
 	/**
-	 * The excellenceLabel
+	 * The isStartup
 	 */
-	private String excellenceLabel;
+	private String isStartup;
 	
 	/**
-	 * The startDate
+	 * The keyword
 	 */
-	private String startDate;
+	private String keyword;
+	
+	/**
+	 * The id
+	 */
+	private String publicCompany;
+
 }
