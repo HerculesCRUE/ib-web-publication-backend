@@ -284,7 +284,7 @@ public class WebApplicationStepDefinitionsTest {
 			person.setResearchLine("personResearchLine");
 			person.setSurname("personSurname");
 //			person.setTaxId("personTaxId");
-			person.setTitle("personTitle");
+//			person.setTitle("personTitle");
 			
 			contentResult.add(person);
 			Page<PersonDto> page = new PageImpl<>(contentResult, pageable, contentResult.size());
@@ -419,7 +419,7 @@ public class WebApplicationStepDefinitionsTest {
 		Page<PersonDto> page = this.proxyPerson.findPaginated(filterPerson, pageable);
 		assertNotNull(page);
 
-		assertEquals(true, page.getContent().get(0).getTitle().equals("personTitle"));
+		assertEquals(true, page.getContent().get(0).getId().equals("personId"));
 	}
 
 	@Then("^the controller call to servie to find and group persons by type of area to send front$")
