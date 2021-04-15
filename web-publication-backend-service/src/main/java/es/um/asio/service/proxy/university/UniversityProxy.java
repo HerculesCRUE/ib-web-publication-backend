@@ -1,9 +1,12 @@
 package es.um.asio.service.proxy.university;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import es.um.asio.service.dto.UniversityDto;
+import es.um.asio.service.dto.graphic.GraphicsDto;
 import es.um.asio.service.filter.university.UniversityFilter;
 
 public interface UniversityProxy {
@@ -19,5 +22,5 @@ public interface UniversityProxy {
 
 	String getQualitySeal();
 
-	String getFinancing();
+	List<GraphicsDto> organizationByType();
 }

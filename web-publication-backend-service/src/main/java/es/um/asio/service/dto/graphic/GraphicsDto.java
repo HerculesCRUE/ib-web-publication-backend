@@ -19,4 +19,6 @@ public class GraphicsDto {
 
 	private String modality;
 
+	private String type;
+
 }
