@@ -76,7 +76,6 @@ public class ProjectController {
 			p.setSubjectArea(person.getRelatesSubjectArea());
 			p.setSurname(person.getRelatesSurname());
 			p.setTaxId(person.getRelatesTaxId());
-			p.setTitle(person.getRelatesTitle());
 			
 			persons.add(p);
 		}
