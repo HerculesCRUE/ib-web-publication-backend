@@ -48,6 +48,11 @@ public class EventFilter extends Filter {
 	 */
 	private String dateTo;
 	
+	/**
+	 * The author id
+	 */
+	private String authorId;
+	
 
 
 	/** The participant id. */

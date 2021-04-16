@@ -49,7 +49,12 @@ public class AcademicPublicationFilter extends Filter {
 	private String directedBy;
 	
 	/** 
-	 * The author id. 
+	 * The organization id. 
 	 * */
 	private String organizationId;
+	
+	/**
+	 * The author id.
+	 */
+	private String authorId;
 }

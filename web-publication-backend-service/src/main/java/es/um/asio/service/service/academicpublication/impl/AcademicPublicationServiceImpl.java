@@ -131,6 +131,21 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 //			entity.setSubentities(subentities);
 //		}
 		
+		if (StringUtils.isNotBlank(filter.getAuthorId())) {
+			List<Subentity> subentities = new ArrayList<Subentity>();
+			
+			String fieldName = "correspondingAuthor";
+
+			Map<String, String> filters = new HashMap<>();
+			filters.put("id", filter.getAuthorId());
+			
+			Subentity subentity = new Subentity();
+			subentity.setFieldName(fieldName);
+			subentity.setFilters(filters);
+			subentities.add(subentity);
+			entity.setSubentities(subentities);
+		}
+		
 		return entity;
 	}
 	

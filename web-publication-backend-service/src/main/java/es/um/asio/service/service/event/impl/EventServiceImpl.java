@@ -2,7 +2,9 @@ package es.um.asio.service.service.event.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +21,7 @@ import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
 import es.um.asio.service.model.SimpleQuery;
+import es.um.asio.service.model.Subentity;
 import es.um.asio.service.service.event.EventService;
 import es.um.asio.service.service.impl.FusekiService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
@@ -117,7 +120,24 @@ public class EventServiceImpl extends FusekiService<EventFilter> implements Even
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
 				: Arrays.asList("Conference", "Exhibit");
 
-		return new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
+		Entity entity = new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
+		
+		if (StringUtils.isNotBlank(filter.getAuthorId())) {
+			List<Subentity> subentities = new ArrayList<Subentity>();
+			
+			String fieldName = "participatedBy";
+
+			Map<String, String> filters = new HashMap<>();
+			filters.put("id", filter.getAuthorId());
+			
+			Subentity subentity = new Subentity();
+			subentity.setFieldName(fieldName);
+			subentity.setFilters(filters);
+			subentities.add(subentity);
+			entity.setSubentities(subentities);
+		}
+		
+		return entity;
 	}
 
 	/**
