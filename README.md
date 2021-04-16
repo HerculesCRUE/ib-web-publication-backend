@@ -7,8 +7,8 @@
 | Módulo         | Servicio e publicación web - API                             |
 | Tipo           | Software                                                     |
 | Objetivo       | Arquetipo Java para API Rest con base de datos relacional.   |
-| Estado         | **30%** funcionalidades para las primeras pantallas del front |
-| Próximos pasos | Se deben completar el resto de controllers pendientes.       |
+| Estado         | **100%**  |
+| Próximos pasos |       |
 
 # ASIO - Web publication backend
 
