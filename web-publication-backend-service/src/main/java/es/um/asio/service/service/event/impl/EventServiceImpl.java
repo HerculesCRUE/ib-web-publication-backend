@@ -122,7 +122,7 @@ public class EventServiceImpl extends FusekiService<EventFilter> implements Even
 
 		Entity entity = new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
 		
-		if (StringUtils.isNotBlank(filter.getAuthorId())) {
+		if (StringUtils.isNotBlank(filter.getParticipantId())) {
 			List<Subentity> subentities = new ArrayList<Subentity>();
 			
 			String fieldName = "participatedBy";
