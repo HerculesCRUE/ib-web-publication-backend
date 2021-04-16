@@ -28,6 +28,8 @@ public interface ScientificPublicationService {
 	Entity retrieveEntity();
 
 	String filtersChunk(ScientificPublicationFilter filter);
-	
+
 	List<Object> find(String id);
+
+	List<Object> publicationByPerson(String id);
 }
