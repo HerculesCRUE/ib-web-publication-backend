@@ -53,7 +53,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 
 		String selectChunk = this.selectChunk(entity.getFields());
 		String typeChunk = this.typeChunk(entity.getEntity(), entity.getTypes());
-		String fieldsChunk = this.fieldsChunk(entity.getFields());
+		String fieldsChunk = this.fieldsChunk(entity.getFields()) + this.subfieldsChunk(entity.getSubentities());
 		String group = this.groupChunk(entity.getGroup());
 		String join = this.joinChunk(entity.getJoin());
 
@@ -156,7 +156,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 
 		return strBuilder.toString();
 	}
-	
+
 	private String buildField(String prefix, String field) {
 		StringBuilder strBuilder = new StringBuilder();
 
@@ -183,13 +183,14 @@ public class QueryBuilderImpl implements QueryBuilder {
 			String prefix) {
 		if (subentities != null) {
 			for (Subentity subentity : subentities) {
-				String nextPrefix = (prefix.isEmpty())? subentity.getFieldName() : prefix + capitalizeFirstLetter(subentity.getFieldName());
+				String nextPrefix = (prefix.isEmpty()) ? subentity.getFieldName()
+						: prefix + capitalizeFirstLetter(subentity.getFieldName());
 				if (prefix.isEmpty()) {
 					strBuilder.append(buildField(subentity.getFieldName()));
 				} else {
-					
+
 					strBuilder.append(buildField(prefix, subentity.getFieldName()));
-					
+
 				}
 
 				if (subentity.getFields() != null) {
@@ -199,7 +200,8 @@ public class QueryBuilderImpl implements QueryBuilder {
 						strBuilder.append(field);
 						strBuilder.append("> ");
 						strBuilder.append("?");
-						strBuilder.append(subentity.getIgnorePrefix() ? field : subentity.getFieldName() + capitalizeFirstLetter(field));
+						strBuilder.append(subentity.getIgnorePrefix() ? field
+								: subentity.getFieldName() + capitalizeFirstLetter(field));
 						strBuilder.append(" . ");
 					}
 
@@ -225,7 +227,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 					strBuilder.append(strBuilderFilters);
 
 				}
-				
+
 				setDataToSubFieldsChunk(strBuilder, subentity.getSubentities(), nextPrefix);
 
 			}
