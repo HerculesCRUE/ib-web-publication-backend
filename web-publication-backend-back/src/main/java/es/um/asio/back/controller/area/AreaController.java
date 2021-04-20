@@ -1,10 +1,13 @@
 package es.um.asio.back.controller.area;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.um.asio.service.dto.graphic.GraphicsDto;
 import es.um.asio.service.filter.area.AreaFilter;
 import es.um.asio.service.proxy.area.AreaProxy;
 import lombok.AccessLevel;
@@ -17,9 +20,9 @@ public class AreaController {
 	@Autowired
 	private AreaProxy proxy;
 
-	@GetMapping(AreaController.Mappings.YEAR_AREA)
-	public String getAreaWithYear(final AreaFilter filter) {
-		return this.proxy.getAreaWithYear(filter);
+	@GetMapping(AreaController.Mappings.RESEARCHGROUPBYAREA)
+	public List<GraphicsDto> getAreaByresearchGroup() {
+		return this.proxy.getAreaByresearchGroup();
 	}
 
 	@GetMapping(AreaController.Mappings.PROJECT_AREA)
@@ -38,7 +41,7 @@ public class AreaController {
 		/**
 		 * Mapping for search.
 		 */
-		protected static final String YEAR_AREA = "/yearArea";
+		protected static final String RESEARCHGROUPBYAREA = "/researchGroupByArea";
 
 		/**
 		 * Mapping for search.
