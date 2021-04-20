@@ -19,6 +19,16 @@ public interface PersonService {
 	 * @return the page
 	 */
 	Page<FusekiResponse> findPaginated(PersonFilter filter, Pageable pageable);
+	
+
+	/**
+	 * Find paginated by project.
+	 *
+	 * @param filter   the filter
+	 * @param pageable the pageable
+	 * @return the page
+	 */
+	Page<FusekiResponse> findPaginatedByProject(PersonFilter filter, Pageable pageable);
 
 	/**
 	 * Find.
@@ -28,12 +38,20 @@ public interface PersonService {
 	 */
 	List<Object> find(String id);
 
+	
 	/**
-	 * Retrieve entity.
+	 * Retrieve entity filtered by project.
 	 *
 	 * @return the entity
 	 */
-	Entity retrieveEntity();
+	public Entity retrieveEntityByProject(PersonFilter filter);
+	
+	/**
+	 * Retrieve the detail of an entity.
+	 *
+	 * @return the entity
+	 */
+	public Entity retrieveDetailEntity();
 
 	String filtersChunk(String id);
 

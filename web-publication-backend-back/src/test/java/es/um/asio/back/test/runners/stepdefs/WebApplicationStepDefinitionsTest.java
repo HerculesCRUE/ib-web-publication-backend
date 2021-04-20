@@ -272,17 +272,17 @@ public class WebApplicationStepDefinitionsTest {
 			PersonDto person = new PersonDto();
 //			person.setBirthDate("personBirthDate");
 //			person.setDescription("personDescription");
-			person.setFirstName("personFirstName");
+//			person.setFirstName("personFirstName");
 			person.setGender("personGender");
 //			person.setHasContactInfo("personHasContactInfo");
 //			person.setHomepage("personHomePage");
 			person.setId("personId");
 //			person.setImage("personImage");
-//			person.setName("personName");
+			person.setName("personName");
 			person.setNickname("personNickname");
-//			person.setPersonalMaibox("personPersonalMaibox");
+			person.setPersonalMaibox("personPersonalMaibox");
 			person.setResearchLine("personResearchLine");
-			person.setSurname("personSurname");
+//			person.setSurname("personSurname");
 //			person.setTaxId("personTaxId");
 //			person.setTitle("personTitle");
 			

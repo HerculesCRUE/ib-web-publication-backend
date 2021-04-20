@@ -61,21 +61,21 @@ public class ProjectController {
 		for (PersonParticipantDto person : page.getContent()) {
 			PersonDto p = new PersonDto();
 			
-			p.setBirthDate(person.getRelatesBirthDate());
-			p.setDescription(person.getRelatesDescription());
-			p.setFirstName(person.getRelatesFirstName());
+//			p.setBirthDate(person.getRelatesBirthDate());
+//			p.setDescription(person.getRelatesDescription());
+//			p.setFirstName(person.getRelatesFirstName());
 			p.setGender(person.getRelatesGender());
-			p.setHasContactInfo(person.getRelatesHasContactInfo());
-			p.setHomepage(person.getRelatesHomepage());
+//			p.setHasContactInfo(person.getRelatesHasContactInfo());
+//			p.setHomepage(person.getRelatesHomepage());
 			p.setId(person.getRelatesId());
-			p.setImage(person.getRelatesImage());
+//			p.setImage(person.getRelatesImage());
 			p.setName(person.getRelatesName());
 			p.setNickname(person.getRelatesNickname());
 			p.setPersonalMaibox(person.getRelatesPersonalMaibox());
 			p.setResearchLine(person.getRelatesResearchLine());
 			p.setSubjectArea(person.getRelatesSubjectArea());
-			p.setSurname(person.getRelatesSurname());
-			p.setTaxId(person.getRelatesTaxId());
+//			p.setSurname(person.getRelatesSurname());
+//			p.setTaxId(person.getRelatesTaxId());
 			
 			persons.add(p);
 		}

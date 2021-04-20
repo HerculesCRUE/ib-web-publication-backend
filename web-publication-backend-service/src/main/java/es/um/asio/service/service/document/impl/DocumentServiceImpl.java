@@ -128,7 +128,8 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 			// Extra fields
 			String fieldName = "correspondingAuthor";
 //			List<String> fields = new ArrayList<String>();
-//			fields.add("id");
+//			fields.add("testid");
+//			entity.setFields(fields);
 //			entity.getFields().add(fieldName+"Id");
 			Subentity subentity = new Subentity();
 			subentity.setFieldName(fieldName);

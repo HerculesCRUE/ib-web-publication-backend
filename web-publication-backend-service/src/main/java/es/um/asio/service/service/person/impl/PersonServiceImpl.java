@@ -1,7 +1,9 @@
 package es.um.asio.service.service.person.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
 import es.um.asio.service.model.SimpleQuery;
+import es.um.asio.service.model.Subentity;
 import es.um.asio.service.service.impl.FusekiService;
 import es.um.asio.service.service.person.PersonService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
@@ -37,6 +40,15 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 		logger.info("Searching persons with filter: {} page: {}", filter, pageable);
 
 		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntity(), filtersChunk(filter), pageable);
+
+		return serviceSPARQL.run(pageableQuery);
+	}
+	
+	@Override
+	public Page<FusekiResponse> findPaginatedByProject(PersonFilter filter, Pageable pageable) {
+		logger.info("Searching persons with filter: {} page: {}", filter, pageable);
+
+		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntityByProject(filter), filtersChunk(filter), pageable);
 
 		return serviceSPARQL.run(pageableQuery);
 	}
@@ -190,12 +202,44 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 
 		return strBuilder.toString();
 	}
-
+	
 	@Override
 	public Entity retrieveEntity() {
+		return new Entity("Person", "gender",
+				"id", "name", "nickname", "personalMaibox", "researchLine", "subjectArea");
+	}
+	
+	@Override
+	public Entity retrieveDetailEntity() {
 		return new Entity("Person", "birthDate", "description", "firstName", "gender", "hasContactInfo", "homepage",
 				"id", "image", "name", "nickname", "personalMaibox", "researchLine", "subjectArea", "surname", "taxId",
 				"title");
+	}
+	
+	@Override
+	public Entity retrieveEntityByProject(PersonFilter filter) {
+		Entity entity = new Entity("Person", "gender",
+				"id", "name", "nickname", "personalMaibox", "researchLine", "subjectArea");
+		
+		// Add data to subentity atributes and filters
+		if (filter.getProjectId()!=null && !filter.getProjectId().isEmpty()) {
+			List<Subentity> subentities = new ArrayList<Subentity>();
+			// Extra fields
+			String fieldName = "correspondingAuthor";
+//					List<String> fields = new ArrayList<String>();
+//					fields.add("testid");
+//					entity.getFields().add(fieldName+"Id");
+//					entity.setFields(fields);
+			Subentity subentity = new Subentity();
+			subentity.setFieldName(fieldName);
+			Map<String, String> filters = new HashMap<>();
+			filters.put("id", filter.getProjectId());
+			subentity.setFilters(filters);
+			subentities.add(subentity);
+			entity.setSubentities(subentities);
+		}
+				
+		return entity;
 	}
 
 	@Override

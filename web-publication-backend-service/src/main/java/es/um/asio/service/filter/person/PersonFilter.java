@@ -97,4 +97,9 @@ public class PersonFilter extends Filter {
 	 * The title
 	 */
 	private String title;
+	
+	/**
+	 * The project id
+	 */
+	private String projectId;
 }
