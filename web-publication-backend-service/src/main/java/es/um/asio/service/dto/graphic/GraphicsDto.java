@@ -21,4 +21,6 @@ public class GraphicsDto {
 
 	private String type;
 
+	private String hasKnowledgeAreatitle;
+
 }

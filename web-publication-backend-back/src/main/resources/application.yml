@@ -77,3 +77,4 @@ keycloak:
   principal-attribute: preferred_username
   enabled: true
   cors: true
+  bearer-only: true

@@ -1,10 +1,15 @@
 package es.um.asio.service.service.area.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.um.asio.service.filter.area.AreaFilter;
 import es.um.asio.service.model.Entity;
+import es.um.asio.service.model.SimpleQuery;
+import es.um.asio.service.model.Subentity;
 import es.um.asio.service.service.area.AreaService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
 
@@ -15,25 +20,41 @@ public class AreaServiceImpl implements AreaService {
 	private SparqlExecQuery serviceSPARQL;
 
 	@Override
-	public String getAreaWithYear(AreaFilter filter) {
+	public List<Object> getAreaByresearchGroup() {
 
-		// SimpleQuery query = new SimpleQuery(this.retrieveEntity(),
-		// filtersChunk(filter));
+		SimpleQuery query = new SimpleQuery(this.retrieveGraphicEntity(), "");
 
-		// serviceSPARQL.run(query);
+		return serviceSPARQL.runCount(query);
+	}
 
-		return "[{\"name\": \"Psicología\",\"value\": 10},\r\n"
-				+ "			{\"name\": \"Métodos de análisis económico\",\"value\": 20}, \r\n"
-				+ "			{\"name\": \"Microelectrónica nanotecnología y fotónica\",\"value\": 15}, \r\n"
-				+ "			{\"name\": \"Materiales para la energía y el medioambiente\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Materiales para biomedicina\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Materiales estructurales\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Materiales con funcionalidad eléctrica magnética óptica o térmica\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Literatura filología lenguas y culturas antiguas y estudios culturales\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Lingüística y lenguas\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Investigación polar\",\"value\": 30},\r\n"
-				+ "			{\"name\": \"Ciencias matemáticas\",\"value\":30},\r\n"
-				+ "			{\"name\": \"Biología molecular y celular\",\"value\": 30}]";
+	private Entity retrieveGraphicEntity() {
+		Entity entity = new Entity("Research-Group", "nowhere:hasKnowledgeAreatitle");
+
+		List<Subentity> subentities = new ArrayList<Subentity>();
+		// Extra fields
+		String fieldName = "hasKnowledgeArea";
+		Subentity subentity = new Subentity();
+		subentity.setFieldName(fieldName);
+
+		// Add All
+		subentities.add(subentity);
+		entity.setSubentities(subentities);
+
+		// Extra fields
+		String fieldName2 = "title";
+		Subentity subentity2 = new Subentity();
+		subentity2.setFieldName(fieldName2);
+
+		// Add All
+		subentity.setSubentities(new ArrayList<Subentity>());
+		subentity.getSubentities().add(subentity2);
+		entity.setSubentities(subentities);
+
+		List<String> groups = new ArrayList<>();
+		groups.add("hasKnowledgeAreatitle");
+		entity.setGroup(groups);
+
+		return entity;
 	}
 
 	@Override
