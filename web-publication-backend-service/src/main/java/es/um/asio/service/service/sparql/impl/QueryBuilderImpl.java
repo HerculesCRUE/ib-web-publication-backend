@@ -183,25 +183,48 @@ public class QueryBuilderImpl implements QueryBuilder {
 			String prefix) {
 		if (subentities != null) {
 			for (Subentity subentity : subentities) {
-				String nextPrefix = (prefix.isEmpty()) ? subentity.getFieldName()
-						: prefix + capitalizeFirstLetter(subentity.getFieldName());
-				if (prefix.isEmpty()) {
+				String namedField = (subentity.getQueryFieldName()!=null && !subentity.getQueryFieldName().isBlank())? subentity.getQueryFieldName() : subentity.getFieldName();
+				String nextPrefix = (prefix.isEmpty()) ? namedField
+						: prefix + capitalizeFirstLetter(namedField);
+				if (subentity.getQueryFieldName()!=null && !subentity.getQueryFieldName().isBlank())  {
+					strBuilder.append("?x ");
+					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+					strBuilder.append(subentity.getFieldName());
+					strBuilder.append("> ");
+					strBuilder.append("?");
+					strBuilder.append(namedField);
+					strBuilder.append(" . ");
+				} else if (prefix.isEmpty()) {
 					strBuilder.append(buildField(subentity.getFieldName()));
 				} else {
-
 					strBuilder.append(buildField(prefix, subentity.getFieldName()));
+				}
+				
+				if(subentity.getTypes()!= null && subentity.getTypes().size()>0) {
+					strBuilder.append("VALUES ?" + namedField +"type {");
+					for (String type : subentity.getTypes()) {
+						strBuilder.append(" <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ");
+						strBuilder.append(" <" + this.propetiesUrl + "/um/es-ES/rec/");
+						strBuilder.append(type);
+						strBuilder.append("> ");
+					}
 
+					strBuilder.append("} ");
+					strBuilder.append("?" + namedField +" <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?" + namedField +"type . ");
 				}
 
 				if (subentity.getFields() != null) {
 					for (String field : subentity.getFields()) {
-						strBuilder.append("?" + subentity.getFieldName() + " ");
+						strBuilder.append("?" + namedField + " ");
 						strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
 						strBuilder.append(field);
 						strBuilder.append("> ");
 						strBuilder.append("?");
-						strBuilder.append(subentity.getIgnorePrefix() ? field
-								: subentity.getFieldName() + capitalizeFirstLetter(field));
+						if(!!subentity.getIgnorePrefix()) {
+							strBuilder.append(field);
+						} else {
+							strBuilder.append(namedField + capitalizeFirstLetter(field));
+						}
 						strBuilder.append(" . ");
 					}
 

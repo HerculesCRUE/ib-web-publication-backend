@@ -33,7 +33,7 @@ public class PersonController {
 	private String fusekiTrellisUrl;
 
 	@GetMapping(PersonController.Mappings.SEARCH)
-	public Page<PersonDto> searchProyects(final PersonFilter filter, final Pageable pageable) {
+	public Page<PersonDto> searchPersons(final PersonFilter filter, final Pageable pageable) {
 		return this.proxy.findPaginated(filter, pageable);
 	}
 
@@ -45,6 +45,11 @@ public class PersonController {
 	@GetMapping(PersonController.Mappings.GET)
 	public PersonDetailDto findPerson(@PathVariable("id") final String id) {
 		return this.proxy.find(id);
+	}
+	
+	@GetMapping(PersonController.Mappings.BY_PROJECT)
+	public Page<PersonDto> findPersonByProject(final PersonFilter filter, final Pageable pageable) {
+		return this.proxy.findPaginatedByProject(filter, pageable);
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -68,5 +73,10 @@ public class PersonController {
 		 * Graphics area.
 		 */
 		protected static final String AREA = "/area";
+		
+		/**
+		 * Graphics area.
+		 */
+		protected static final String BY_PROJECT = "/byproject";
 	}
 }

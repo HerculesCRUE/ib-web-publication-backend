@@ -30,6 +30,13 @@ public class Subentity implements Serializable {
 	//Name of the atribute equivalent to Object
 	private String fieldName;
 	
+	/** The field name. */
+	//Name of the object in query
+	private String queryFieldName;
+	
+	/** The field type. */
+	private List<String> types;
+	
 	/** The fields. */
 	//Name of atributes we want to show in query
 	private List<String> fields;
@@ -37,7 +44,7 @@ public class Subentity implements Serializable {
 	/** The subentities. */
 	private List<Subentity> subentities;
 	
-	private Boolean ignorePrefix;
+	private Boolean ignorePrefix = false;
 	
 	
 }

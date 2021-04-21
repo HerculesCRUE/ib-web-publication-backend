@@ -40,6 +40,11 @@ public class PersonProxyImpl implements PersonProxy {
 	public Page<PersonDto> findPaginated(PersonFilter filter, Pageable pageable) {
 		return this.mapper.convertPageFusekiResponseToDto(this.service.findPaginated(filter, pageable));
 	}
+	
+	@Override
+	public Page<PersonDto> findPaginatedByProject(PersonFilter filter, Pageable pageable) {
+		return this.mapper.convertPageFusekiResponseToDto(this.service.findPaginatedByProject(filter, pageable));
+	}
 
 	@Override
 	public PersonDetailDto find(String id) {
@@ -52,4 +57,5 @@ public class PersonProxyImpl implements PersonProxy {
 		List<GraphicsDto> list = this.personByAreaMapper.convertFusekiResponseToDto(this.service.getArea());
 		return (list.isEmpty()) ? null : list;
 	}
+
 }

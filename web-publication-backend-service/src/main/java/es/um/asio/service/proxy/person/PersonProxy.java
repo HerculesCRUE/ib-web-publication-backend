@@ -20,6 +20,15 @@ public interface PersonProxy {
 	 * @return Page<PersonDto>
 	 */
 	Page<PersonDto> findPaginated(PersonFilter filter, Pageable pageable);
+	
+	/**
+	 * Método de búsqueda
+	 * 
+	 * @param filter
+	 * @param pageable
+	 * @return Page<PersonDto>
+	 */
+	Page<PersonDto> findPaginatedByProject(PersonFilter filter, Pageable pageable);
 
 	/**
 	 * Obtiene una persona

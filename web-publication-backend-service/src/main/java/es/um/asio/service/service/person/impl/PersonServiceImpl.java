@@ -218,25 +218,50 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 	
 	@Override
 	public Entity retrieveEntityByProject(PersonFilter filter) {
-		Entity entity = new Entity("Person", "gender",
-				"id", "name", "nickname", "personalMaibox", "researchLine", "subjectArea");
+		Entity entity = new Entity("Researcher-Position", "nowhere:gender",
+				"nowhere:id", "nowhere:name", "nowhere:nickname", "nowhere:personalMaibox", "nowhere:researchLine", "nowhere:subjectArea");
 		
 		// Add data to subentity atributes and filters
 		if (filter.getProjectId()!=null && !filter.getProjectId().isEmpty()) {
 			List<Subentity> subentities = new ArrayList<Subentity>();
 			// Extra fields
-			String fieldName = "correspondingAuthor";
-//					List<String> fields = new ArrayList<String>();
-//					fields.add("testid");
-//					entity.getFields().add(fieldName+"Id");
-//					entity.setFields(fields);
+			// Person
 			Subentity subentity = new Subentity();
+			String fieldName = "relates";
 			subentity.setFieldName(fieldName);
+			List<String> fields = new ArrayList<String>();
+			fields.add("gender");
+			fields.add("id");
+			fields.add("name");
+			fields.add("nickname");
+			fields.add("personalMaibox");
+			fields.add("researchLine");
+			fields.add("subjectArea");
+			subentity.setFields(fields);
+			List<String> types = new ArrayList<String>();
+			types.add("Person");
+			subentity.setTypes(types);
+			subentity.setIgnorePrefix(true);
+			subentities.add(subentity);
+			
+			// Project
+			Subentity subentity2 = new Subentity();
+			String fieldName2 = "relates";
+			
+			subentity2.setFieldName(fieldName2);
+			subentity2.setQueryFieldName("relates2");
+			List<String> types2 = new ArrayList<String>();
+			types2.add("Project");
+			subentity2.setTypes(types2);
 			Map<String, String> filters = new HashMap<>();
 			filters.put("id", filter.getProjectId());
-			subentity.setFilters(filters);
-			subentities.add(subentity);
+			subentity2.setFilters(filters);
+			
+			subentities.add(subentity2);
+			
 			entity.setSubentities(subentities);
+			
+			
 		}
 				
 		return entity;
