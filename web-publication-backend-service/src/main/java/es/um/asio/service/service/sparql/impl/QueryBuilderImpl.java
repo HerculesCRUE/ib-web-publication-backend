@@ -174,9 +174,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 	private String subfieldsChunk(List<Subentity> subentities) {
 		StringBuilder strBuilder = new StringBuilder();
 
-		strBuilder.append(setDataToSubFieldsChunk(strBuilder, subentities, ""));
-
-		return strBuilder.toString();
+		return (setDataToSubFieldsChunk(strBuilder, subentities, "")).toString();
 	}
 
 	private StringBuilder setDataToSubFieldsChunk(StringBuilder strBuilder, List<Subentity> subentities,
