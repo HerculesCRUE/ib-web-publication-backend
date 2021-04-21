@@ -19,6 +19,7 @@ import es.um.asio.service.proxy.person.PersonProxy;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+
 /**
  * Person controller.
  */
@@ -26,32 +27,64 @@ import lombok.NoArgsConstructor;
 @RequestMapping(PersonController.Mappings.BASE)
 public class PersonController {
 
+	/** The proxy. */
 	@Autowired
 	private PersonProxy proxy;
 
+	/** The fuseki trellis url. */
 	@Value("${app.fusekitrellis.url}")
 	private String fusekiTrellisUrl;
 
+	/**
+	 * Search persons.
+	 *
+	 * @param filter the filter
+	 * @param pageable the pageable
+	 * @return the page
+	 */
 	@GetMapping(PersonController.Mappings.SEARCH)
 	public Page<PersonDto> searchPersons(final PersonFilter filter, final Pageable pageable) {
 		return this.proxy.findPaginated(filter, pageable);
 	}
 
+	/**
+	 * Area.
+	 *
+	 * @return the list
+	 */
 	@GetMapping(PersonController.Mappings.AREA)
 	public List<GraphicsDto> area() {
 		return this.proxy.getArea();
 	}
 
+	/**
+	 * Find person.
+	 *
+	 * @param id the id
+	 * @return the person detail dto
+	 */
 	@GetMapping(PersonController.Mappings.GET)
 	public PersonDetailDto findPerson(@PathVariable("id") final String id) {
 		return this.proxy.find(id);
 	}
 	
+	
+	/**
+	 * Find person by project.
+	 * People involved in the project 
+	 *
+	 * @param filter the filter
+	 * @param pageable the pageable
+	 * @return the page
+	 */
 	@GetMapping(PersonController.Mappings.BY_PROJECT)
 	public Page<PersonDto> findPersonByProject(final PersonFilter filter, final Pageable pageable) {
 		return this.proxy.findPaginatedByProject(filter, pageable);
 	}
 
+	/**
+	 * Instantiates a new mappings.
+	 */
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	static final class Mappings {
 		/**
