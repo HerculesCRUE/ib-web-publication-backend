@@ -23,4 +23,6 @@ public class GraphicsDto {
 
 	private String hasKnowledgeAreatitle;
 
+	private String inheresInsubjectArea;
+
 }

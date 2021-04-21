@@ -43,12 +43,13 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 
 		return serviceSPARQL.run(pageableQuery);
 	}
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginatedByProject(PersonFilter filter, Pageable pageable) {
 		logger.info("Searching persons with filter: {} page: {}", filter, pageable);
 
-		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntityByProject(filter), filtersChunk(filter), pageable);
+		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntityByProject(filter), filtersChunk(filter),
+				pageable);
 
 		return serviceSPARQL.run(pageableQuery);
 	}
@@ -202,27 +203,28 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 
 		return strBuilder.toString();
 	}
-	
+
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Person", "gender",
-				"id", "name", "nickname", "personalMaibox", "researchLine", "subjectArea");
+		return new Entity("Person", "gender", "id", "name", "nickname", "personalMaibox", "researchLine",
+				"subjectArea");
 	}
-	
+
 	@Override
 	public Entity retrieveDetailEntity() {
 		return new Entity("Person", "birthDate", "description", "firstName", "gender", "hasContactInfo", "homepage",
 				"id", "image", "name", "nickname", "personalMaibox", "researchLine", "subjectArea", "surname", "taxId",
 				"title");
 	}
-	
+
 	@Override
 	public Entity retrieveEntityByProject(PersonFilter filter) {
 		Entity entity = new Entity("Researcher-Position", "nowhere:gender",
 				"nowhere:id", "nowhere:name", "nowhere:nickname", "nowhere:personalMaibox", "nowhere:researchLine", "nowhere:subjectArea");
-		
+
+
 		// Add data to subentity atributes and filters
-		if (filter.getProjectId()!=null && !filter.getProjectId().isEmpty()) {
+		if (filter.getProjectId() != null && !filter.getProjectId().isEmpty()) {
 			List<Subentity> subentities = new ArrayList<Subentity>();
 			// Extra fields
 			// Person
@@ -263,7 +265,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 			
 			
 		}
-				
+
 		return entity;
 	}
 
@@ -275,9 +277,30 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 	}
 
 	private Entity retrieveGraphicEntity() {
-		Entity entity = new Entity("Person", "subjectArea");
+		Entity entity = new Entity("Researcher-Role", "nowhere:inheresInsubjectArea");
+
+		List<Subentity> subentities = new ArrayList<Subentity>();
+		// Extra fields
+		String fieldName = "inheresIn";
+		Subentity subentity = new Subentity();
+		subentity.setFieldName(fieldName);
+
+		// Add All
+		subentities.add(subentity);
+		entity.setSubentities(subentities);
+
+		// Extra fields
+		String fieldName2 = "subjectArea";
+		Subentity subentity2 = new Subentity();
+		subentity2.setFieldName(fieldName2);
+
+		// Add All
+		subentity.setSubentities(new ArrayList<Subentity>());
+		subentity.getSubentities().add(subentity2);
+		entity.setSubentities(subentities);
+
 		List<String> groups = new ArrayList<>();
-		groups.add("subjectArea");
+		groups.add("inheresInsubjectArea");
 		entity.setGroup(groups);
 
 		return entity;
