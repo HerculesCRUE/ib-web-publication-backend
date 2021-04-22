@@ -238,11 +238,11 @@ public class QueryBuilderImpl implements QueryBuilder {
 						strBuilder.append("?");
 						strBuilder.append(nextPrefix + capitalizeFirstLetter(filter.getKey()));
 						strBuilder.append(" . ");
-						strBuilderFilters.append("FILTER ( regex(?");
+						strBuilderFilters.append("FILTER ( str(?");
 						strBuilderFilters.append(nextPrefix + capitalizeFirstLetter(filter.getKey()));
-						strBuilderFilters.append(", \"");
+						strBuilderFilters.append(") = \"");
 						strBuilderFilters.append(filter.getValue());
-						strBuilderFilters.append("\")) . ");
+						strBuilderFilters.append("\") . ");
 					}
 
 					strBuilder.append(strBuilderFilters);
