@@ -29,7 +29,7 @@ public class ResearchStaffController {
 
 
 	@GetMapping(ResearchStaffController.Mappings.SEARCH)
-	public Page<PersonDto> searchProyects(final ResearchStaffFilter filter, final Pageable pageable) {
+	public Page<PersonDto> searchResearchStaff(final ResearchStaffFilter filter, final Pageable pageable) {
 		return this.proxy.findPaginated(filter, pageable);
 	}
 	

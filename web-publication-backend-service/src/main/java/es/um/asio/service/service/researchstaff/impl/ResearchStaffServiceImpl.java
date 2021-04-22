@@ -70,9 +70,8 @@ public class ResearchStaffServiceImpl extends FusekiService<ResearchStaffFilter>
 
 	@Override
 	public Entity retrieveEntity() {
-		Entity entity = new Entity("Researcher-Role", "nowhere:birthDate", "nowhere:description", "nowhere:firstName", "nowhere:gender", "nowhere:hasContactInfo", 
-				"nowhere:homepage", "nowhere:id", "nowhere:image", "nowhere:name", "nowhere:nickname", 
-				"nowhere:personalMaibox", "nowhere:researchLine", "nowhere:surname", "nowhere:taxId", "inheresIn");
+		Entity entity = new Entity("Researcher-Role", "nowhere:gender", "nowhere:id", "nowhere:name", "nowhere:nickname", 
+				"nowhere:personalMaibox", "nowhere:researchLine", "nowhere:subjectArea");
 		
 //		Map<String, Map<String, String>> join = new HashMap<>();
 //		
