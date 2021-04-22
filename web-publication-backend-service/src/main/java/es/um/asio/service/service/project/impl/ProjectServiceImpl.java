@@ -61,14 +61,15 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	public Page<FusekiResponse> getParticipants(String id, final PersonFilter filter, final Pageable pageable) {
 		logger.info("Searching participants with project id: {} type: {}", id);
 
-		PageableQuery query = new PageableQuery(this.retrieveParticipantsEntity(), filtersChunkParticipants(id, filter), pageable);
+		PageableQuery query = new PageableQuery(this.retrieveParticipantsEntity(), filtersChunkParticipants(id, filter),
+				pageable);
 
 		return serviceSPARQL.run(query);
 	}
-	
+
 	private String filtersChunkParticipants(String id, PersonFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (StringUtils.isNotBlank(id)) {
 			strBuilder.append("FILTER (?id = \"");
 			strBuilder.append(id);
@@ -76,7 +77,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 			strBuilder.append(Constants.SPANISH_LANGUAGE_SHORT);
 			strBuilder.append(") . ");
 		}
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getTitle())) {
 				strBuilder.append("FILTER (LANG(?relatesTitle) = \"");
@@ -87,7 +88,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 				strBuilder.append("\", \"i\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
@@ -202,9 +203,8 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 
 	@Override
 	public Entity retrieveEntity(ProjectFilter filter) {
-		Entity entity = new Entity("Project", "abbreviation", "endDate", 
-				"id", "projectClassification", "startDate", "status",
-				"title");
+		Entity entity = new Entity("Project", "abbreviation", "endDate", "id", "projectClassification", "startDate",
+				"status", "modality", "title");
 
 		// Add data to subentity atributes and filters
 		if (filter.getAuthorId() != null && !filter.getAuthorId().isEmpty()) {
@@ -267,28 +267,29 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 
 		throw new NotImplementedException("retrieveEntity: Not implemented method");
 	}
-	
+
 	private Entity retrieveParticipantsEntity() {
-		Entity entity = new Entity("Project", "nowhere:relatesBirthDate", "nowhere:relatesDescription", "nowhere:relatesFirstName", "nowhere:relatesGender", 
-				"nowhere:relatesId", "nowhere:relatesImage", "nowhere:relatesName", "nowhere:relatesNickname", 
-				"nowhere:relatesResearchLine", "nowhere:relatesSurname", "nowhere:relatesTaxId", "relates", "id");
-		
+		Entity entity = new Entity("Project", "nowhere:relatesBirthDate", "nowhere:relatesDescription",
+				"nowhere:relatesFirstName", "nowhere:relatesGender", "nowhere:relatesId", "nowhere:relatesImage",
+				"nowhere:relatesName", "nowhere:relatesNickname", "nowhere:relatesResearchLine",
+				"nowhere:relatesSurname", "nowhere:relatesTaxId", "relates", "id");
+
 		List<Subentity> subentities = new ArrayList<Subentity>();
 		Subentity subentity = new Subentity();
-		
+
 		String fieldName = "relates";
-		
+
 		subentity.setIgnorePrefix(false);
 		subentity.setFieldName(fieldName);
-		subentity.setFields(Arrays.asList("birthDate", "description", "firstName", "gender", "id", "image", "name", "nickname", 
-				"researchLine", "surname", "taxId"));
-		
+		subentity.setFields(Arrays.asList("birthDate", "description", "firstName", "gender", "id", "image", "name",
+				"nickname", "researchLine", "surname", "taxId"));
+
 		Map<String, String> filters = new HashMap<>();
 		subentity.setFilters(filters);
 		subentities.add(subentity);
-		
+
 		entity.setSubentities(subentities);
-		
+
 		return entity;
 	}
 
