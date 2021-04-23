@@ -58,7 +58,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 	public List<Object> find(String id) {
 		logger.info("Searching person with id: {}", id);
 
-		SimpleQuery query = new SimpleQuery(this.retrieveEntity(), filtersChunk(id));
+		SimpleQuery query = new SimpleQuery(this.retrieveDetailEntity(), filtersChunk(id));
 
 		return serviceSPARQL.run(query);
 	}
