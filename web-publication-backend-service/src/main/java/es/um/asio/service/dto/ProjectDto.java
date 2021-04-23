@@ -29,6 +29,12 @@ public class ProjectDto {
 	 * The description
 	 */
 //	private String description;
+
+	
+	/** 
+	 * The startDate 
+	 */
+	private String startDate;
 	
 	/**
 	 * The endDate
@@ -59,11 +65,6 @@ public class ProjectDto {
 	 * The projectClassification
 	 */
 	private String projectClassification;
-	
-	/** 
-	 * The startDate 
-	 */
-	private String startDate;
 	
 	/** 
 	 * The status 

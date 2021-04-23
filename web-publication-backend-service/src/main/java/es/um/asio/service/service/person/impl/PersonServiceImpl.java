@@ -206,7 +206,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Person", "gender", "id", "name", "nickname", "personalMaibox", "researchLine",
+		return new Entity("Person", "id", "gender", "name", "nickname", "personalMaibox", "researchLine",
 				"subjectArea");
 	}
 
