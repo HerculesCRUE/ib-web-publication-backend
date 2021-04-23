@@ -26,14 +26,14 @@ public class OrganizationDto {
 	private String abbreviation;
 	
 	/**
-	 * The dateEnd
-	 */
-	private String dateEnd;
-	
-	/**
 	 * The dateStart
 	 */
 	private String dateStart;
+	
+	/**
+	 * The dateEnd
+	 */
+	private String dateEnd;
 	
 	/** 
 	 * The description. 
