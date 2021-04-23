@@ -118,7 +118,7 @@ public class EventServiceImpl extends FusekiService<EventFilter> implements Even
 	@Override
 	public Entity retrieveEntity(EventFilter filter) {
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
-				: Arrays.asList("Conference", "Exhibit");
+				: Arrays.asList("Conference", "Exhibit", "Activity");
 
 		Entity entity = new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
 		
