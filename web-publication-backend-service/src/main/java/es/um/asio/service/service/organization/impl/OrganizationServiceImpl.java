@@ -163,8 +163,8 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 		if (type.equals("University")) {
 			return new Entity("Organization", types, "abbreviation", "id", "title", "description", "nowhere:type");
 		} else {
-			return new Entity("Organization", types, "abbreviation", "description", "dateEnd", "homepage", "id",
-					"isStartup", "publicCompany", "dateStart", "title", "nowhere:type");
+			return new Entity("Organization", types, "abbreviation", "description", "dateEnd", "id",
+					"keyword", "dateStart", "title", "nowhere:type"); 
 		}
 	}
 
