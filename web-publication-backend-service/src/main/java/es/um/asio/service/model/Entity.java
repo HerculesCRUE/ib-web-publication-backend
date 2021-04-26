@@ -28,6 +28,9 @@ public class Entity implements Serializable {
 	/** The fields. */
 	private List<String> fields;
 	
+	/** The optionalFields. */
+	private List<String> optionalFields;
+	
 	/**  The types. */
 	private List<String> types;
 	

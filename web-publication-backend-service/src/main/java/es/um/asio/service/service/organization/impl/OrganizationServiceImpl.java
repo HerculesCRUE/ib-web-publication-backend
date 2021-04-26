@@ -159,13 +159,24 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 		List<String> types = new ArrayList<String>();
 		String[] splitType = type.split("/");
 		types.add(splitType[splitType.length - 1]);
+		
+		Entity entity;
 
+		// TODO Pending update of ETL: University should have at least the same fields as Organization
 		if (type.equals("University")) {
-			return new Entity("Organization", types, "abbreviation", "id", "title", "description", "nowhere:type");
+			entity = new Entity("Organization", types, "abbreviation", "id", "title", "description", "nowhere:type");
 		} else {
-			return new Entity("Organization", types, "abbreviation", "description", "dateEnd", "id",
+			entity = new Entity("Organization", types, "abbreviation", "description", "dateEnd", "id",
 					"keyword", "dateStart", "title", "nowhere:type"); 
 		}
+		
+		List<String> optionalFields = new ArrayList<String>();
+		optionalFields.add("publicCompany");
+		optionalFields.add("isStartup");
+		optionalFields.add("homepage");
+		entity.setOptionalFields(optionalFields);
+		
+		return entity;
 	}
 
 	@Override

@@ -72,7 +72,8 @@ public class OrganizationDetailDto {
 	private String hasReservable;
 
 	/** The freetext keyword. */
-	private String freetextKeyword;
+//	private String freetextKeyword;
+	private String keyword;
 
 	/** The related by. */
 	private String relatedBy;

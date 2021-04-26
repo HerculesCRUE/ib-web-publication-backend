@@ -25,9 +25,9 @@ public class QueryBuilderImpl implements QueryBuilder {
 	@Override
 	public Map<String, String> queryChunks(Entity entity, Pageable pageable) {
 
-		String selectChunk = this.selectChunk(entity.getFields());
+		String selectChunk = this.selectChunk(entity.getFields()) + this.selectChunk(entity.getOptionalFields());
 		String typeChunk = this.typeChunk(entity.getEntity(), entity.getTypes());
-		String fieldsChunk = this.fieldsChunk(entity.getFields()) + this.subfieldsChunk(entity.getSubentities());
+		String fieldsChunk = this.fieldsChunk(entity.getFields()) + this.optionalFieldsChunk(entity.getOptionalFields()) + this.subfieldsChunk(entity.getSubentities());
 		String limit = String.valueOf(pageable.getPageSize());
 		String offset = String.valueOf(pageable.getOffset());
 		String order = this.orderChunk(pageable.getSort());
@@ -51,9 +51,9 @@ public class QueryBuilderImpl implements QueryBuilder {
 	@Override
 	public Map<String, String> queryChunks(Entity entity) {
 
-		String selectChunk = this.selectChunk(entity.getFields());
+		String selectChunk = this.selectChunk(entity.getFields()) + this.selectChunk(entity.getOptionalFields());
 		String typeChunk = this.typeChunk(entity.getEntity(), entity.getTypes());
-		String fieldsChunk = this.fieldsChunk(entity.getFields()) + this.subfieldsChunk(entity.getSubentities());
+		String fieldsChunk = this.fieldsChunk(entity.getFields()) + this.optionalFieldsChunk(entity.getOptionalFields()) + this.subfieldsChunk(entity.getSubentities());
 		String group = this.groupChunk(entity.getGroup());
 		String join = this.joinChunk(entity.getJoin());
 
@@ -71,18 +71,20 @@ public class QueryBuilderImpl implements QueryBuilder {
 	private String selectChunk(List<String> fields) {
 		StringBuilder strBuilder = new StringBuilder();
 
-		for (String field : fields) {
-			String fieldFinal = field;
+		if(fields != null ) {
+			for (String field : fields) {
+				String fieldFinal = field;
 
-			if (field.contains(":")) {
-				fieldFinal = field.split(":")[field.split(":").length - 1];
-			} else if (field.contains(",")) {
-				fieldFinal = field.split(",")[0];
+				if (field.contains(":")) {
+					fieldFinal = field.split(":")[field.split(":").length - 1];
+				} else if (field.contains(",")) {
+					fieldFinal = field.split(",")[0];
+				}
+
+				strBuilder.append("?");
+				strBuilder.append(fieldFinal);
+				strBuilder.append(" ");
 			}
-
-			strBuilder.append("?");
-			strBuilder.append(fieldFinal);
-			strBuilder.append(" ");
 		}
 
 		return strBuilder.toString();
@@ -138,6 +140,33 @@ public class QueryBuilderImpl implements QueryBuilder {
 			} else {
 				strBuilder.append(this.buildField(field));
 			}
+		}
+
+		return strBuilder.toString();
+	}
+	
+	private String optionalFieldsChunk(List<String> optionalFields) {
+		StringBuilder strBuilder = new StringBuilder();
+
+		if (optionalFields!=null) {
+			strBuilder.append("OPTIONAL { ");
+			for (String field : optionalFields) {
+				String[] split = field.split(",");
+
+				strBuilder.append("?x ");
+
+				for (int i = 0; i < split.length; i++) {
+					strBuilder.append(i > 0 ? "|" : "");
+					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+					strBuilder.append(split[i]);
+					strBuilder.append(">");
+				}
+
+				strBuilder.append(" ?");
+				strBuilder.append(split[0]);
+				strBuilder.append(" . ");
+			}
+			strBuilder.append("} ");
 		}
 
 		return strBuilder.toString();
