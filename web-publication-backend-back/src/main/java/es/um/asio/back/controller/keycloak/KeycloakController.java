@@ -1,5 +1,7 @@
 package es.um.asio.back.controller.keycloak;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,10 +23,10 @@ public class KeycloakController {
 	private String resource;
 
 	@GetMapping(KeycloakController.Mappings.IS_LOGIN)
-	public boolean islogin() {
+	public boolean islogin(HttpServletRequest request) {
 		AccessToken accessToken = getAccessToken();
-
-		if (accessToken != null) {
+		String bearerToken = request.getHeader("Authorization");
+		if (accessToken != null && bearerToken != null) {
 			return accessToken.isActive();
 		} else {
 			return false;
