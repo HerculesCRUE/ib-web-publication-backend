@@ -2,12 +2,13 @@
 
 | Entregable     | **Servicio de publicación web**                              |
 | -------------- | ------------------------------------------------------------ |
-| Fecha          | 17/12/2020                                                   |
+| Fecha          | 28/04/2021                                                   |
+| Revisado por   | Paloma Terán Pérez                                           |
 | Proyecto       | [ASIO](https://www.um.es/web/hercules/proyectos/asio) (Arquitectura Semántica e Infraestructura Ontológica) en el marco de la iniciativa [Hércules](https://www.um.es/web/hercules/) para la Semántica de Datos de Investigación de Universidades que forma parte de [CRUE-TIC](https://www.crue.org/proyecto/hercules/) |
 | Módulo         | Servicio e publicación web - API                             |
 | Tipo           | Software                                                     |
 | Objetivo       | Arquetipo Java para API Rest con base de datos relacional.   |
-| Estado         | **30%** funcionalidades para las primeras pantallas del front |
+| Estado         | **100%** Todos los servicios han sido desarrollados para front |
 | Próximos pasos | Se deben completar el resto de controllers pendientes.       |
 
 # ASIO - Web publication backend
@@ -21,7 +22,7 @@ Sistema de gestión de datos del módulo de procesamiento para el proyecto Backe
 
 ## OnBoarding
 
-Para iniciar el entorno de desarrollo se necesita cumplir los siguientes requisitos:
+Para iniciar el entorno de desarrollo se necesitan cumplir los siguientes requisitos:
 
 - OpenJDK 11
 - Eclipse JEE 2019-09 con plugins:
@@ -54,7 +55,7 @@ docker-compose down
 
 ## Instalación en entorno real
 
-Será preciso configurar las siguientes variables de entorno cuando se instale en un entorno real:
+Es preciso configurar las siguientes variables de entorno cuando se instale en un entorno real:
 
 | Variable                | Descripción         | Valor por defecto                    |
 | ----------------------- | ------------------- | ------------------------------------ |
@@ -67,7 +68,7 @@ Será preciso configurar las siguientes variables de entorno cuando se instale e
 
 ### Ejecución
 
-Al generarse un JAR bootable la ejecución se realizará mediante el siguiente comando:
+Al generarse un JAR bootable la ejecución se realiza mediante el siguiente comando:
 
 ```bash
 java -jar {jar-name}.jar
@@ -75,13 +76,13 @@ java -jar {jar-name}.jar
 
 Sustituyendo `{jar-name}` por el nombre del fichero JAR generado.
 
-No es necesario especificar la clase de inicio de la aplicación, ya que el fichero MANIFEST.MF generado ya contiene la información necesaria. Solamente se especificarán los parametros necesarios.
+No es necesario especificar la clase de inicio de la aplicación, ya que el fichero MANIFEST.MF generado ya contiene la información necesaria. Solamente se especifican los parametros necesarios.
 
 ## Testing y cobertura
 
 Se incluyen los resultados del testing y cobertura en los siguientes enlaces:
 
-* [Testing](http://herc-iz-front-desa.atica.um.es:8070/web-publication-backend/surefire/surefire-report.html)
+* [Testing](https://reports.herculesasioizertis.desa.um.es/web-publication-backend/surefire/surefire-report.html)
 * [Cobertura](https://sonarcloud.io/component_measures?id=HerculesCRUE_ib-web-publication-backend&metric=coverage&view=list)
 * [Testing BDD](docs/testing.md)
 
