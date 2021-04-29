@@ -24,7 +24,7 @@ public class SparqlQueryFilter extends AbstractJpaSpecification<SparqlQuery> imp
 	 */
 	private static final long serialVersionUID = 1985967650272588054L;
 
-	private String tipo;
+	private Integer tipo;
 
 	private String username;
 
