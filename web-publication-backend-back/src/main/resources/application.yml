@@ -1,5 +1,18 @@
 ---
 app:
+  persistence:
+    datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      username: root
+      password: root
+      url: jdbc:mysql://localhost:3307/umasio?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
+    
+    jpa:
+      dialect: org.hibernate.dialect.MariaDB53Dialect
+      generate-ddl: false
+      show-sql: false
+      properties:
+        hibernate.temp.use_jdbc_metadata_defaults: false
   # When is true, SPARQL query results are getted from federation services, else these information are getted from fuseki
   federation:
     services: false

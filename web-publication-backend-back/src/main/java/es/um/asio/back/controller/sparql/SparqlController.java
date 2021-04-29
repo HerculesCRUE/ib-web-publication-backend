@@ -9,13 +9,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.um.asio.service.dto.SparqlQueryDto;
+import es.um.asio.service.filter.sparql.SparqlQueryFilter;
 import es.um.asio.service.proxy.sparql.SparqlProxy;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -78,8 +83,37 @@ public class SparqlController {
 		return result;
 	}
 
+	@GetMapping(SparqlController.Mappings.SEARCH)
+	public Page<SparqlQueryDto> searchQuerys(final SparqlQueryFilter filter, final Pageable pageable) {
+		return this.sparqlProxy.findPaginated(filter, pageable);
+	}
+
+	@GetMapping(SparqlController.Mappings.SAVE)
+	public SparqlQueryDto saveQuery(final SparqlQueryDto sparqlQuery) {
+		return this.sparqlProxy.save(sparqlQuery);
+	}
+
+	@GetMapping(SparqlController.Mappings.UPDATE)
+	public SparqlQueryDto updateQuery(final SparqlQueryDto sparqlQuery) {
+		return this.sparqlProxy.update(sparqlQuery);
+	}
+
+	@GetMapping(SparqlController.Mappings.DELETE)
+	public void deleteQuery(final String id) {
+		this.sparqlProxy.delete(id);
+	}
+
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	static final class Mappings {
+
+		protected static final String SEARCH = "/search";
+
+		protected static final String SAVE = "/save";
+
+		protected static final String DELETE = "/delete";
+
+		protected static final String UPDATE = "/update";
+
 		/**
 		 * Controller request mapping.
 		 */

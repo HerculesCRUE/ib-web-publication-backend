@@ -152,6 +152,12 @@
 				<version>${org.springframework.security.oauth.version}</version>
 			</dependency>
 			
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-hibernate4</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			
 			<!-- UM ASIO - dependencies -->
 			<dependency>
 				<groupId>es.um.asio</groupId>
