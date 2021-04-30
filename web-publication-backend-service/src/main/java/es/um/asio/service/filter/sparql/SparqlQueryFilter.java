@@ -24,7 +24,7 @@ public class SparqlQueryFilter extends AbstractJpaSpecification<SparqlQuery> imp
 	 */
 	private static final long serialVersionUID = 1985967650272588054L;
 
-	private Integer tipo;
+	private Integer type;
 
 	private String username;
 
@@ -38,10 +38,10 @@ public class SparqlQueryFilter extends AbstractJpaSpecification<SparqlQuery> imp
 			final CriteriaBuilder criteriaBuilder) {
 
 		final List<Predicate> predicates = new ArrayList<>();
-		if (this.tipo != null) {
-			if (this.tipo == 0) {
+		if (this.type != null) {
+			if (this.type == 0) {
 				predicates.add(this.createEquals(root, criteriaBuilder, SparqlQuery_.USERNAME, null));
-			} else if (this.tipo == 1) {
+			} else if (this.type == 1) {
 				predicates.add(this.createEquals(root, criteriaBuilder, SparqlQuery_.USERNAME, this.username));
 			} else {
 				predicates.add(this.createEquals(root, criteriaBuilder, SparqlQuery_.USERNAME, this.username));
