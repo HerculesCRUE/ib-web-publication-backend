@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -100,8 +101,8 @@ public class SparqlController {
 		return this.sparqlProxy.update(sparqlQuery);
 	}
 
-	@GetMapping(SparqlController.Mappings.DELETE)
-	public void deleteQuery(final String id) {
+	@GetMapping(SparqlController.Mappings.DELETE + "{id}")
+	public void deleteQuery(@PathVariable("id") final String id) {
 		this.sparqlProxy.delete(id);
 	}
 
@@ -112,7 +113,7 @@ public class SparqlController {
 
 		protected static final String SAVE = "/save";
 
-		protected static final String DELETE = "/delete";
+		protected static final String DELETE = "/delete/";
 
 		protected static final String UPDATE = "/update";
 
