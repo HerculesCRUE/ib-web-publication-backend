@@ -38,9 +38,16 @@ public class SparqlQueryFilter extends AbstractJpaSpecification<SparqlQuery> imp
 			final CriteriaBuilder criteriaBuilder) {
 
 		final List<Predicate> predicates = new ArrayList<>();
+		if (this.tipo != null) {
+			if (this.tipo == 0) {
+				predicates.add(this.createEquals(root, criteriaBuilder, SparqlQuery_.USERNAME, null));
+			} else if (this.tipo == 1) {
+				predicates.add(this.createEquals(root, criteriaBuilder, SparqlQuery_.USERNAME, this.username));
+			} else {
+				predicates.add(this.createEquals(root, criteriaBuilder, SparqlQuery_.USERNAME, this.username));
+				predicates.add(this.createEquals(root, criteriaBuilder, SparqlQuery_.USERNAME, null));
 
-		if (this.username != null) {
-			predicates.add(this.createEquals(root, criteriaBuilder, SparqlQuery_.USERNAME, this.username));
+			}
 		}
 
 		if (this.sparqlName != null) {

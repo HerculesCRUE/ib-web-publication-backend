@@ -27,10 +27,34 @@ public abstract class SparqlQueryMapperDecorator implements SparqlQueryMapper {
 
 		List<SparqlQueryDto> list1 = new ArrayList<>(list.size());
 		for (SparqlQuery sparqlQuery : list) {
-			list1.add(delegate.convertSparqlQueryToDto(sparqlQuery));
+			list1.add(convertSparqlQueryToDto(sparqlQuery));
 		}
 
 		return list1;
+	}
+
+	@Override
+	public SparqlQuery convertSparqlQueryFromDto(SparqlQueryDto sparqlQueryDto) {
+		if (sparqlQueryDto == null) {
+			return null;
+		}
+		SparqlQuery query = this.delegate.convertSparqlQueryFromDto(sparqlQueryDto);
+
+		query.setEntityId(sparqlQueryDto.getEntityId());
+
+		return query;
+	}
+
+	@Override
+	public SparqlQueryDto convertSparqlQueryToDto(SparqlQuery sparqlQuery) {
+		if (sparqlQuery == null) {
+			return null;
+		}
+		SparqlQueryDto query = this.delegate.convertSparqlQueryToDto(sparqlQuery);
+
+		query.setEntityId(sparqlQuery.getEntityId());
+
+		return query;
 	}
 
 	@Override
@@ -39,9 +63,10 @@ public abstract class SparqlQueryMapperDecorator implements SparqlQueryMapper {
 			return null;
 		}
 
-		final List<SparqlQueryDto> list = this.delegate.convertSparqlQueryListToDto(page.getContent());
+		final List<SparqlQueryDto> list = this.convertSparqlQueryListToDto(page.getContent());
 
 		return new PageImplHelper<>(list, page.getPageable(), page.getTotalElements());
 
 	}
+
 }
