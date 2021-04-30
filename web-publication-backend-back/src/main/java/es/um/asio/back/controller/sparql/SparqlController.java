@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -88,13 +90,13 @@ public class SparqlController {
 		return this.sparqlProxy.findPaginated(filter, pageable);
 	}
 
-	@GetMapping(SparqlController.Mappings.SAVE)
-	public SparqlQueryDto saveQuery(final SparqlQueryDto sparqlQuery) {
+	@PostMapping(SparqlController.Mappings.SAVE)
+	public SparqlQueryDto saveQuery(@RequestBody final SparqlQueryDto sparqlQuery) {
 		return this.sparqlProxy.save(sparqlQuery);
 	}
 
-	@GetMapping(SparqlController.Mappings.UPDATE)
-	public SparqlQueryDto updateQuery(final SparqlQueryDto sparqlQuery) {
+	@PostMapping(SparqlController.Mappings.UPDATE)
+	public SparqlQueryDto updateQuery(@RequestBody final SparqlQueryDto sparqlQuery) {
 		return this.sparqlProxy.update(sparqlQuery);
 	}
 
