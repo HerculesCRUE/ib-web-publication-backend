@@ -2,14 +2,13 @@
 
 | Entregable     | **Servicio de publicación web**                              |
 | -------------- | ------------------------------------------------------------ |
-| Fecha          | 28/04/2021                                                   |
-| Revisado por   | Paloma Terán Pérez                                           |
+| Fecha          | 03/05/2021                                                   |
+| Revisado por   | Alejandro Torrecilla Sanchez                                           |
 | Proyecto       | [ASIO](https://www.um.es/web/hercules/proyectos/asio) (Arquitectura Semántica e Infraestructura Ontológica) en el marco de la iniciativa [Hércules](https://www.um.es/web/hercules/) para la Semántica de Datos de Investigación de Universidades que forma parte de [CRUE-TIC](https://www.crue.org/proyecto/hercules/) |
 | Módulo         | Servicio e publicación web - API                             |
 | Tipo           | Software                                                     |
 | Objetivo       | Arquetipo Java para API Rest con base de datos relacional.   |
 | Estado         | **100%** Todos los servicios han sido desarrollados para front |
-| Próximos pasos | Se deben completar el resto de controllers pendientes.       |
 
 
 # ASIO - Web publication backend
@@ -65,7 +64,8 @@ Es preciso configurar las siguientes variables de entorno cuando se instale en u
 | `APP_FEDERATIONALL_URL` | Url endpoint sparql consulta federada | http://localhost:9328/federation/nodes/all |
 | `APP_FEDERATIONNODE_URL` | Url endpoint sparql consulta federada node | http://localhost:9328/federation/nodes/listl |
 | `KEYCLOAK_AUTH_SERVER_URL` | Url endpoint KEYCLOAK | http://localhost:8443/auth |
-
+| `APP_PERSISTENCE_DATASOURCE_URL` | Url base de datos | jdbc:mysql://localhost:3307/umasio?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true |
+    
 
 ### Ejecución
 
