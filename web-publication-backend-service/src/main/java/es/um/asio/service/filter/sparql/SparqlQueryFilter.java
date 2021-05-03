@@ -40,18 +40,24 @@ public class SparqlQueryFilter extends AbstractJpaSpecification<SparqlQuery> imp
 		final List<Predicate> predicates = new ArrayList<>();
 		if (this.type != null) {
 			if (this.type == 0) {
-				predicates.add(this.createEquals(root, criteriaBuilder, SparqlQuery_.USERNAME, null));
+				predicates.add(criteriaBuilder.isNull(root.get(SparqlQuery_.USERNAME)));
 			} else if (this.type == 1) {
 				predicates.add(this.createEquals(root, criteriaBuilder, SparqlQuery_.USERNAME, this.username));
 			} else {
-				predicates.add(this.createEquals(root, criteriaBuilder, SparqlQuery_.USERNAME, this.username));
-				predicates.add(this.createEquals(root, criteriaBuilder, SparqlQuery_.USERNAME, null));
 
+				Predicate user = this.createEquals(root, criteriaBuilder, SparqlQuery_.USERNAME, this.username);
+				Predicate forNull = criteriaBuilder.isNull(root.get(SparqlQuery_.USERNAME));
+				predicates.add(criteriaBuilder.or(user, forNull));
 			}
+		} else {
+
+			Predicate user = this.createEquals(root, criteriaBuilder, SparqlQuery_.USERNAME, this.username);
+			Predicate forNull = criteriaBuilder.isNull(root.get(SparqlQuery_.USERNAME));
+			predicates.add(criteriaBuilder.or(user, forNull));
 		}
 
 		if (this.sparqlName != null) {
-			predicates.add(this.createEquals(root, criteriaBuilder, SparqlQuery_.SPARQL_NAME, this.sparqlName));
+			predicates.add(criteriaBuilder.like(root.get(SparqlQuery_.SPARQL_NAME), "%" + this.sparqlName + "%"));
 		}
 
 		return criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
