@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,9 +28,12 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import es.um.asio.service.domain.SparqlQuery;
+import es.um.asio.service.filter.sparql.SparqlQueryFilter;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
 import es.um.asio.service.model.SimpleQuery;
+import es.um.asio.service.repository.SparqlQueryRepository;
 import es.um.asio.service.service.sparql.QueryBuilder;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
 import es.um.asio.service.util.FusekiConstants;
@@ -57,6 +61,9 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	private static final String NODES = "um";
 
 	private static final Integer PAGE_SIZE = 50000;
+
+	@Autowired(required = true)
+	private SparqlQueryRepository sparqlQueryRepository;
 
 	@Autowired
 	private QueryBuilder queryBuilder;
@@ -361,6 +368,26 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		final HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, this.getHeaders());
 
 		return body;
+	}
+
+	@Override
+	public Page<SparqlQuery> findPaginated(SparqlQueryFilter filter, Pageable pageable) {
+		return this.sparqlQueryRepository.findAll(filter, pageable);
+	}
+
+	@Override
+	public SparqlQuery save(SparqlQuery sparqlQuery) {
+		return this.sparqlQueryRepository.saveAndFlush(sparqlQuery);
+	}
+
+	@Override
+	public SparqlQuery update(SparqlQuery sparqlQuery) {
+		return this.sparqlQueryRepository.saveAndFlush(sparqlQuery);
+	}
+
+	@Override
+	public void delete(String id) {
+		this.sparqlQueryRepository.deleteById(id);
 	}
 
 }

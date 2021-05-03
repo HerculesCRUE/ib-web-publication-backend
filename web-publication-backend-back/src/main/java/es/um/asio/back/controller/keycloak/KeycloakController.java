@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.um.asio.back.config.security.Roles;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @RestController
 @RequestMapping(KeycloakController.Mappings.BASE)
@@ -55,17 +57,18 @@ public class KeycloakController {
 	}
 
 	@GetMapping(KeycloakController.Mappings.GET_NAME)
-	public String getName() {
+	public UsernameDto getName() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		KeycloakPrincipal keycloakPrincipal = null;
-
+		UsernameDto user = null;
 		if (authentication.getPrincipal() instanceof KeycloakPrincipal) {
 			keycloakPrincipal = (KeycloakPrincipal) authentication.getPrincipal();
-			return keycloakPrincipal.getName();
+			user = new UsernameDto();
+			user.setUsername(keycloakPrincipal.getName());
 		}
 
-		return null;
+		return user;
 	}
 
 	private AccessToken getAccessToken() {
@@ -100,5 +103,11 @@ public class KeycloakController {
 		 */
 		protected static final String IS_LOGIN = "/isActive";
 
+	}
+
+	@Getter
+	@Setter
+	public class UsernameDto {
+		String username;
 	}
 }
