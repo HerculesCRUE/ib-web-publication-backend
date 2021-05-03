@@ -19,4 +19,9 @@ public class CurriculumVitaeDto {
 	 * The correspondingAuthor
 	 */
 	private String correspondingAuthor;
+	
+	/**
+	 * The dateTimeValue
+	 */
+	private String dateTimeValue;
 }

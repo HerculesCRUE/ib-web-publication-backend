@@ -70,8 +70,8 @@ public class ResearchStaffServiceImpl extends FusekiService<ResearchStaffFilter>
 
 	@Override
 	public Entity retrieveEntity() {
-		Entity entity = new Entity("Researcher-Role", "nowhere:id", "nowhere:gender", "nowhere:name", "nowhere:nickname", 
-				"nowhere:personalMaibox", "nowhere:researchLine", "nowhere:subjectArea");
+		Entity entity = new Entity("Researcher-role", "nowhere:id", "nowhere:gender", "nowhere:name", "nowhere:nickname", 
+				"nowhere:personalMaibox", "nowhere:researchLine");
 		
 //		Map<String, Map<String, String>> join = new HashMap<>();
 //		
@@ -88,7 +88,7 @@ public class ResearchStaffServiceImpl extends FusekiService<ResearchStaffFilter>
 		subentity.setIgnorePrefix(true);
 		subentity.setFieldName(fieldName);
 		subentity.setFields(Arrays.asList("birthDate", "description", "firstName", "gender", "hasContactInfo", "homepage", "id", "image", "name", "nickname", 
-				"personalMaibox", "researchLine", "surname", "taxId", "subjectArea"));
+				"personalMaibox", "researchLine", "surname", "taxId"));
 		
 		Map<String, String> filters = new HashMap<>();
 		subentity.setFilters(filters);

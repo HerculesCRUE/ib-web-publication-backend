@@ -28,7 +28,7 @@ public class ActivityDto {
 	/**
 	 * The date
 	 */
-	private String date;
+	private String dateTimeInterval;
 	
 	/**
 	 * The keyword

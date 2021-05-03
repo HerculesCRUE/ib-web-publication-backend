@@ -21,9 +21,9 @@ public class PublicationDto {
 	private String title;
 	
 	/**
-	 * The date
+	 * The dateTimeValue
 	 */
-	private String date;
+	private String dateTimeValue;
 
 	
 	/**

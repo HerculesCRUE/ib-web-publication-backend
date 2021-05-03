@@ -21,9 +21,9 @@ public class FundingProgramDto {
 	private String title;
 	
 	/**
-	 * The date
+	 * The dateTimeInterval
 	 */
-	private String date;
+	private String dateTimeInterval;
 	
 	/**
 	 * The description

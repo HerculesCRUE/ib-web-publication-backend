@@ -69,7 +69,7 @@ public class KnowledgeAreaServiceImpl extends FusekiService<KnowledgeAreaFilter>
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Knowledge-Area", "id", "title");
+		return new Entity("Knowledge-area", "id", "title");
 	}
 
 }

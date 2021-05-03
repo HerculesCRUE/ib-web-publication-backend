@@ -26,9 +26,9 @@ public class FundingOrganizationDto {
 	private String abbreviation;
 	
 	/**
-	 * The date
+	 * The dateTimeInterval
 	 */
-	private String date;
+	private String dateTimeInterval;
 	
 	/**
 	 * The description

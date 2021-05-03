@@ -29,4 +29,9 @@ public class SupervisorRoleDto {
 	 * The description
 	 */
 	private String description;
+	
+	/**
+	 * The dateTimeInterval
+	 */
+	private String dateTimeInterval;
 }

@@ -92,7 +92,8 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 	public Entity retrieveEntity(AcademicPublicationFilter filter) {
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? 
 				Arrays.asList(filter.getTypes().split(",")) : 
-				Arrays.asList("Doctoral-Thesis", "Master-Thesis");
+				Arrays.asList("Doctoral-thesis");
+//				Arrays.asList("Doctoral-thesis", "Master-Thesis");
 		
 		Entity entity = new Entity("AcademicPublication", types, "abbreviation", "date", "doi", "id", 
 				"title", "nowhere:type");
