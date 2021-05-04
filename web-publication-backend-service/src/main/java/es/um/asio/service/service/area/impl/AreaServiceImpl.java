@@ -28,7 +28,7 @@ public class AreaServiceImpl implements AreaService {
 	}
 
 	private Entity retrieveGraphicEntity() {
-		Entity entity = new Entity("Research-Group", "nowhere:hasKnowledgeAreatitle");
+		Entity entity = new Entity("Research-group", "nowhere:hasKnowledgeAreatitle");
 
 		List<Subentity> subentities = new ArrayList<Subentity>();
 		// Extra fields
