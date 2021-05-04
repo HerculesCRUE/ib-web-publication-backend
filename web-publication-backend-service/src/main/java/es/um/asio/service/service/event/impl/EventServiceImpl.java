@@ -121,22 +121,22 @@ public class EventServiceImpl extends FusekiService<EventFilter> implements Even
 				: Arrays.asList("Conference", "Exhibit", "Activity");
 
 		Entity entity = new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
-		
+
 		if (StringUtils.isNotBlank(filter.getParticipantId())) {
 			List<Subentity> subentities = new ArrayList<Subentity>();
-			
+
 			String fieldName = "participatedBy";
 
 			Map<String, String> filters = new HashMap<>();
 			filters.put("id", filter.getAuthorId());
-			
+
 			Subentity subentity = new Subentity();
 			subentity.setFieldName(fieldName);
 			subentity.setFilters(filters);
 			subentities.add(subentity);
 			entity.setSubentities(subentities);
 		}
-		
+
 		return entity;
 	}
 
@@ -152,13 +152,8 @@ public class EventServiceImpl extends FusekiService<EventFilter> implements Even
 		String[] splitType = type.split("/");
 		types.add(splitType[splitType.length - 1]);
 
-		if (type.equals("Conference")) {
-			return new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
-		} else if (type.equals("Exhibit"))  {
-			return new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
-		} else {
-			return new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
-		}
+		return new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
+
 	}
 
 	@Override

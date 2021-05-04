@@ -27,7 +27,8 @@ public class QueryBuilderImpl implements QueryBuilder {
 
 		String selectChunk = this.selectChunk(entity.getFields()) + this.selectChunk(entity.getOptionalFields());
 		String typeChunk = this.typeChunk(entity.getEntity(), entity.getTypes());
-		String fieldsChunk = this.fieldsChunk(entity.getFields()) + this.optionalFieldsChunk(entity.getOptionalFields()) + this.subfieldsChunk(entity.getSubentities());
+		String fieldsChunk = this.fieldsChunk(entity.getFields()) + this.optionalFieldsChunk(entity.getOptionalFields())
+				+ this.subfieldsChunk(entity.getSubentities());
 		String limit = String.valueOf(pageable.getPageSize());
 		String offset = String.valueOf(pageable.getOffset());
 		String order = this.orderChunk(pageable.getSort());
@@ -53,7 +54,8 @@ public class QueryBuilderImpl implements QueryBuilder {
 
 		String selectChunk = this.selectChunk(entity.getFields()) + this.selectChunk(entity.getOptionalFields());
 		String typeChunk = this.typeChunk(entity.getEntity(), entity.getTypes());
-		String fieldsChunk = this.fieldsChunk(entity.getFields()) + this.optionalFieldsChunk(entity.getOptionalFields()) + this.subfieldsChunk(entity.getSubentities());
+		String fieldsChunk = this.fieldsChunk(entity.getFields()) + this.optionalFieldsChunk(entity.getOptionalFields())
+				+ this.subfieldsChunk(entity.getSubentities());
 		String group = this.groupChunk(entity.getGroup());
 		String join = this.joinChunk(entity.getJoin());
 
@@ -71,7 +73,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 	private String selectChunk(List<String> fields) {
 		StringBuilder strBuilder = new StringBuilder();
 
-		if(fields != null ) {
+		if (fields != null) {
 			for (String field : fields) {
 				String fieldFinal = field;
 
@@ -144,11 +146,11 @@ public class QueryBuilderImpl implements QueryBuilder {
 
 		return strBuilder.toString();
 	}
-	
+
 	private String optionalFieldsChunk(List<String> optionalFields) {
 		StringBuilder strBuilder = new StringBuilder();
 
-		if (optionalFields!=null) {
+		if (optionalFields != null) {
 			strBuilder.append("OPTIONAL { ");
 			for (String field : optionalFields) {
 				String[] split = field.split(",");
@@ -210,10 +212,11 @@ public class QueryBuilderImpl implements QueryBuilder {
 			String prefix) {
 		if (subentities != null) {
 			for (Subentity subentity : subentities) {
-				String namedField = (subentity.getQueryFieldName()!=null && !subentity.getQueryFieldName().isBlank())? subentity.getQueryFieldName() : subentity.getFieldName();
-				String nextPrefix = (prefix.isEmpty()) ? namedField
-						: prefix + capitalizeFirstLetter(namedField);
-				if (subentity.getQueryFieldName()!=null && !subentity.getQueryFieldName().isBlank())  {
+				String namedField = (subentity.getQueryFieldName() != null && !subentity.getQueryFieldName().isBlank())
+						? subentity.getQueryFieldName()
+						: subentity.getFieldName();
+				String nextPrefix = (prefix.isEmpty()) ? namedField : prefix + capitalizeFirstLetter(namedField);
+				if (subentity.getQueryFieldName() != null && !subentity.getQueryFieldName().isBlank()) {
 					strBuilder.append("?x ");
 					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
 					strBuilder.append(subentity.getFieldName());
@@ -226,9 +229,9 @@ public class QueryBuilderImpl implements QueryBuilder {
 				} else {
 					strBuilder.append(buildField(prefix, subentity.getFieldName()));
 				}
-				
-				if(subentity.getTypes()!= null && subentity.getTypes().size()>0) {
-					strBuilder.append("VALUES ?" + namedField +"type {");
+
+				if (subentity.getTypes() != null && subentity.getTypes().size() > 0) {
+					strBuilder.append("VALUES ?" + namedField + "type {");
 					for (String type : subentity.getTypes()) {
 						strBuilder.append(" <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ");
 						strBuilder.append(" <" + this.propetiesUrl + "/um/es-ES/rec/");
@@ -237,7 +240,8 @@ public class QueryBuilderImpl implements QueryBuilder {
 					}
 
 					strBuilder.append("} ");
-					strBuilder.append("?" + namedField +" <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?" + namedField +"type . ");
+					strBuilder.append("?" + namedField + " <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?"
+							+ namedField + "type . ");
 				}
 
 				if (subentity.getFields() != null) {
@@ -247,7 +251,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 						strBuilder.append(field);
 						strBuilder.append("> ");
 						strBuilder.append("?");
-						if(!!subentity.getIgnorePrefix()) {
+						if (subentity.getIgnorePrefix() != null && subentity.getIgnorePrefix()) {
 							strBuilder.append(field);
 						} else {
 							strBuilder.append(namedField + capitalizeFirstLetter(field));

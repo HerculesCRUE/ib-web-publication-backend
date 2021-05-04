@@ -25,7 +25,8 @@ import es.um.asio.service.service.otherpublication.OtherPublicationService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
 
 @Service
-public class OtherPublicationServiceImpl extends FusekiService<OtherPublicationFilter> implements OtherPublicationService {
+public class OtherPublicationServiceImpl extends FusekiService<OtherPublicationFilter>
+		implements OtherPublicationService {
 
 	/**
 	 * Logger
@@ -34,7 +35,7 @@ public class OtherPublicationServiceImpl extends FusekiService<OtherPublicationF
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(OtherPublicationFilter filter, Pageable pageable) {
 		logger.info("Searching other publications with filter: {} page: {}", filter, pageable);
@@ -112,8 +113,9 @@ public class OtherPublicationServiceImpl extends FusekiService<OtherPublicationF
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
 				: Arrays.asList("Dossier");
 
-		Entity entity = new Entity("OtherPublication", types, "id", "title", "date", "description", "ocicnum", "nowhere:type");
-		
+		Entity entity = new Entity("OtherPublication", types, "id", "title", "date", "description", "ocicnum",
+				"nowhere:type");
+
 		return entity;
 	}
 
@@ -123,11 +125,8 @@ public class OtherPublicationServiceImpl extends FusekiService<OtherPublicationF
 		String[] splitType = type.split("/");
 		types.add(splitType[splitType.length - 1]);
 
-		if (type.equals("Dossier")) {
-			return new Entity("OtherPublication", types, "id", "title", "date", "description", "ocicnum", "nowhere:type");
-		} else {
-			return new Entity("OtherPublication", types, "id", "title", "date", "description", "ocicnum", "nowhere:type");
-		}
+		return new Entity("OtherPublication", types, "id", "title", "date", "description", "ocicnum", "nowhere:type");
+
 	}
 
 	@Override
