@@ -128,8 +128,7 @@ public class EventServiceImpl extends FusekiService<EventFilter> implements Even
 			String fieldName = "participatedBy";
 
 			Map<String, String> filters = new HashMap<>();
-			filters.put("id", filter.getAuthorId());
-
+			filters.put("id", filter.getParticipantId());
 			Subentity subentity = new Subentity();
 			subentity.setFieldName(fieldName);
 			subentity.setFilters(filters);
