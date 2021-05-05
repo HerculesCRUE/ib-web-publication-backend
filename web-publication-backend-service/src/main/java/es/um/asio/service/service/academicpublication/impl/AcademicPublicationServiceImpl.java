@@ -53,7 +53,7 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 		
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDate())) {
-				strBuilder.append("FILTER (?date = \"");
+				strBuilder.append("FILTER (?dateTimeValue = \"");
 				strBuilder.append(filter.getDate());
 				strBuilder.append("\"");
 				strBuilder.append(filter.getLanguage());
@@ -69,7 +69,7 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 			}
 			
 			if (StringUtils.isNotBlank(filter.getDateFrom())) {
-				strBuilder.append("FILTER (?date >= \"");
+				strBuilder.append("FILTER (?dateTimeValue >= \"");
 				strBuilder.append(filter.getDateFrom());
 				strBuilder.append("\"");
 				strBuilder.append(filter.getLanguage());
@@ -77,7 +77,7 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 			}
 			
 			if (StringUtils.isNotBlank(filter.getDateTo())) {
-				strBuilder.append("FILTER (?date <= \"");
+				strBuilder.append("FILTER (?dateTimeValue <= \"");
 				strBuilder.append(filter.getDateTo());
 				strBuilder.append("\"");
 				strBuilder.append(filter.getLanguage());
@@ -101,7 +101,7 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 			typesReplace.add(type.replace("Thesis", "thesis"));
 		}
 		
-		Entity entity = new Entity("AcademicPublication", typesReplace, "abbreviation", "date", "doi", "id", 
+		Entity entity = new Entity("AcademicPublication", typesReplace, "abbreviation", "dateTimeValue", "doi", "id", 
 				"title", "nowhere:type");
 		
 		// Add data to subentity atributes and filters
@@ -163,7 +163,7 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 		String[] splitType = type.split("/");
 		types.add(splitType[splitType.length - 1]);
 
-			return new Entity("AcademicPublication", types, "date", "doi", "endPage", "id", "placeOfPublication", 
+			return new Entity("AcademicPublication", types, "dateTimeValue", "doi", "endPage", "id", "placeOfPublication", 
 					"publishedIn", "startPage", "summary", "title", "nowhere:type");
 	}
 
