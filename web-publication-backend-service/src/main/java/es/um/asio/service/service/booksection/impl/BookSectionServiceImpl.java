@@ -37,7 +37,7 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 	public Page<FusekiResponse> findPaginated(BookSectionFilter filter, Pageable pageable) {
 		logger.info("Searching books with filter: {} page: {}", filter, pageable);
 
-		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntity(), filtersChunk(filter), pageable);
+		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntity(filter), filtersChunk(filter), pageable);
 
 		return serviceSPARQL.run(pageableQuery);
 	}
@@ -112,13 +112,7 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 				strBuilder.append("\", \"i\")) . ");
 			}
 			
-			if (StringUtils.isNotBlank(filter.getBookId())) {
-				strBuilder.append("FILTER (?hasPublicationVenueId  = \"");
-				strBuilder.append(filter.getBookId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
-			}
+		
 		}
 		
 		return strBuilder.toString();
