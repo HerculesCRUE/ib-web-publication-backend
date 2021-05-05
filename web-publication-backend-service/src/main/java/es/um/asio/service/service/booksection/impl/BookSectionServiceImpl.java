@@ -126,7 +126,7 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 		if (filter.getBookId()!=null && !filter.getBookId().isEmpty()) {
 			List<Subentity> subentities = new ArrayList<Subentity>();
 			// Extra fields
-			String fieldName = "hasPublicationVenueId";
+			String fieldName = "hasPublicationVenue";
 //			List<String> fields = new ArrayList<String>();
 //			fields.add("testid");
 //			entity.setFields(fields);
