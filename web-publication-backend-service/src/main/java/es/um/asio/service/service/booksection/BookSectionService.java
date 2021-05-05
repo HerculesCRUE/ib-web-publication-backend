@@ -23,7 +23,7 @@ public interface BookSectionService {
 	 *
 	 * @return the entity
 	 */
-	Entity retrieveEntity();
+	Entity retrieveEntity(BookSectionFilter filter);
 
 	String filtersChunk(BookSectionFilter filter);
 }

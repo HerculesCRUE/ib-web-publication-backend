@@ -1,5 +1,10 @@
 package es.um.asio.service.service.booksection.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +17,7 @@ import es.um.asio.service.filter.booksection.BookSectionFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
+import es.um.asio.service.model.Subentity;
 import es.um.asio.service.service.booksection.BookSectionService;
 import es.um.asio.service.service.impl.FusekiService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
@@ -108,7 +114,7 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 			
 			if (StringUtils.isNotBlank(filter.getBookId())) {
 				strBuilder.append("FILTER (?hasPublicationVenueId  = \"");
-				strBuilder.append(filter.getStartPage());
+				strBuilder.append(filter.getBookId());
 				strBuilder.append("\"");
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
@@ -119,7 +125,33 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 	}
 
 	@Override
+	public Entity retrieveEntity(BookSectionFilter filter) {
+		Entity entity = new Entity("BookSection", "date", "doi", "edition", "endPage", "id", "placeOfPublication", "startPage", "title");
+		
+		// Add data to subentity atributes and filters
+		if (filter.getBookId()!=null && !filter.getBookId().isEmpty()) {
+			List<Subentity> subentities = new ArrayList<Subentity>();
+			// Extra fields
+			String fieldName = "hasPublicationVenueId";
+//			List<String> fields = new ArrayList<String>();
+//			fields.add("testid");
+//			entity.setFields(fields);
+//			entity.getFields().add(fieldName+"Id");
+			Subentity subentity = new Subentity();
+			subentity.setFieldName(fieldName);
+			Map<String, String> filters = new HashMap<>();
+			filters.put("id", filter.getBookId());
+			subentity.setFilters(filters);
+			subentities.add(subentity);
+			entity.setSubentities(subentities);
+		}
+		
+		return entity;
+	}
+
+	@Override
 	public Entity retrieveEntity() {
-		return new Entity("BookSection", "date", "doi", "edition", "endPage", "id", "placeOfPublication", "startPage", "title");
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
