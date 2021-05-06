@@ -206,22 +206,19 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Person", "id", "gender", "name", "nickname", "personalMaibox", "researchLine",
-				"subjectArea");
+		return new Entity("Person", "id", "gender", "name", "nickname", "personalMaibox", "researchLine");
 	}
 
 	@Override
 	public Entity retrieveDetailEntity() {
 		return new Entity("Person", "birthDate", "description", "firstName", "gender", "hasContactInfo", "homepage",
-				"id", "image", "name", "nickname", "personalMaibox", "researchLine", "subjectArea", "surname", "taxId",
-				"title");
+				"id", "image", "name", "nickname", "personalMaibox", "researchLine", "surname", "taxId", "title");
 	}
 
 	@Override
 	public Entity retrieveEntityByProject(PersonFilter filter) {
-		Entity entity = new Entity("Researcher-Position", "nowhere:gender",
-				"nowhere:id", "nowhere:name", "nowhere:nickname", "nowhere:personalMaibox", "nowhere:researchLine", "nowhere:subjectArea");
-
+		Entity entity = new Entity("Researcher-Position", "nowhere:gender", "nowhere:id", "nowhere:name",
+				"nowhere:nickname", "nowhere:personalMaibox", "nowhere:researchLine", "nowhere:subjectArea");
 
 		// Add data to subentity atributes and filters
 		if (filter.getProjectId() != null && !filter.getProjectId().isEmpty()) {
@@ -245,11 +242,11 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 			subentity.setTypes(types);
 			subentity.setIgnorePrefix(true);
 			subentities.add(subentity);
-			
+
 			// Project
 			Subentity subentity2 = new Subentity();
 			String fieldName2 = "relates";
-			
+
 			subentity2.setFieldName(fieldName2);
 			subentity2.setQueryFieldName("relates2");
 			List<String> types2 = new ArrayList<String>();
@@ -258,12 +255,11 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 			Map<String, String> filters = new HashMap<>();
 			filters.put("id", filter.getProjectId());
 			subentity2.setFilters(filters);
-			
+
 			subentities.add(subentity2);
-			
+
 			entity.setSubentities(subentities);
-			
-			
+
 		}
 
 		return entity;
