@@ -62,6 +62,14 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 
 		return serviceSPARQL.run(query);
 	}
+	
+
+	@Override
+	public List<Object> getArea() {
+		SimpleQuery query = new SimpleQuery(this.retrieveGraphicEntity(), "");
+
+		return serviceSPARQL.runCount(query);
+	}
 
 	@Override
 	public String filtersChunk(PersonFilter filter) {
@@ -265,13 +273,6 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 		return entity;
 	}
 
-	@Override
-	public List<Object> getArea() {
-		SimpleQuery query = new SimpleQuery(this.retrieveGraphicEntity(), "");
-
-		return serviceSPARQL.runCount(query);
-	}
-
 	private Entity retrieveGraphicEntity() {
 		Entity entity = new Entity("Researcher-Role", "nowhere:inheresInsubjectArea");
 
@@ -286,7 +287,7 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 		entity.setSubentities(subentities);
 
 		// Extra fields
-		String fieldName2 = "subjectArea";
+		String fieldName2 = "hasKnowledgeArea";
 		Subentity subentity2 = new Subentity();
 		subentity2.setFieldName(fieldName2);
 
