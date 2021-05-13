@@ -47,6 +47,7 @@
     	<logger name="org.springframework.web" level="INFO"/>
     	<logger name="org.hibernate" level="INFO"/>
     	<logger name="org.springframework.security" info="TRACE"/>
+    	<logger name="org.keycloak.adapters" info="TRACE"/>
     	
     	<root level="TRACE">
             <appender-ref ref="CONSOLE"/>
