@@ -28,7 +28,8 @@ import es.um.asio.service.service.impl.FusekiService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
 
 @Service
-public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublicationFilter> implements AcademicPublicationService {
+public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublicationFilter>
+		implements AcademicPublicationService {
 
 	/**
 	 * Logger
@@ -37,7 +38,7 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(AcademicPublicationFilter filter, Pageable pageable) {
 		logger.info("Searching AcademicPublications with filter: {} page: {}", filter, pageable);
@@ -50,10 +51,10 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 	@Override
 	public String filtersChunk(AcademicPublicationFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDate())) {
-				strBuilder.append("FILTER (?dateTimeValue = \"");
+				strBuilder.append("FILTER (?date = \"");
 				strBuilder.append(filter.getDate());
 				strBuilder.append("\"");
 				strBuilder.append(filter.getLanguage());
@@ -67,45 +68,44 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 				strBuilder.append(filter.getTitle());
 				strBuilder.append("\", \"i\"))) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDateFrom())) {
-				strBuilder.append("FILTER (?dateTimeValue >= \"");
+				strBuilder.append("FILTER (?date >= \"");
 				strBuilder.append(filter.getDateFrom());
 				strBuilder.append("\"");
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDateTo())) {
-				strBuilder.append("FILTER (?dateTimeValue <= \"");
+				strBuilder.append("FILTER (?date <= \"");
 				strBuilder.append(filter.getDateTo());
 				strBuilder.append("\"");
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity(AcademicPublicationFilter filter) {
-		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? 
-				Arrays.asList(filter.getTypes().split(",")) : 
-				Arrays.asList("Doctoral-thesis");
+		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
+				: Arrays.asList("Doctoral-thesis");
 //				Arrays.asList("Doctoral-thesis", "Master-Thesis");
-				
+
 		List<String> typesReplace = new ArrayList<>();
-				
+
 		for (String type : types) {
 			typesReplace.add(type.replace("Thesis", "thesis"));
 		}
-		
-		Entity entity = new Entity("AcademicPublication", typesReplace, "abbreviation", "dateTimeValue", "doi", "id", 
-				"title", "nowhere:type");
-		
+
+		Entity entity = new Entity("AcademicPublication", typesReplace, "abbreviation", "date", "doi", "id", "title",
+				"nowhere:type");
+
 		// Add data to subentity atributes and filters
-		if (filter.getDirectedBy()!=null && !filter.getDirectedBy().isEmpty()) {
+		if (filter.getDirectedBy() != null && !filter.getDirectedBy().isEmpty()) {
 			List<Subentity> subentities = new ArrayList<Subentity>();
 			// Extra fields
 			String fieldName = "correspondingAuthor";
@@ -120,7 +120,7 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 			subentities.add(subentity);
 			entity.setSubentities(subentities);
 		}
-		
+
 		// Add data to subentity attributes and filters
 //		if (filter.getOrganizationId()!=null && !filter.getOrganizationId().isEmpty()) {
 //			List<Subentity> subentities = new ArrayList<Subentity>();
@@ -137,25 +137,24 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 //			subentities.add(subentity);
 //			entity.setSubentities(subentities);
 //		}
-		
+
 		if (StringUtils.isNotBlank(filter.getAuthorId())) {
 			List<Subentity> subentities = new ArrayList<Subentity>();
-			
+
 			String fieldName = "correspondingAuthor";
 
 			Map<String, String> filters = new HashMap<>();
 			filters.put("id", filter.getAuthorId());
-			
+
 			Subentity subentity = new Subentity();
 			subentity.setFieldName(fieldName);
 			subentity.setFilters(filters);
 			subentities.add(subentity);
 			entity.setSubentities(subentities);
 		}
-		
+
 		return entity;
 	}
-	
 
 	@Override
 	public Entity retrieveEntity(String type) {
@@ -163,8 +162,8 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 		String[] splitType = type.split("/");
 		types.add(splitType[splitType.length - 1]);
 
-			return new Entity("AcademicPublication", types, "dateTimeValue", "doi", "endPage", "id", "placeOfPublication", 
-					"publishedIn", "startPage", "summary", "title", "nowhere:type");
+		return new Entity("AcademicPublication", types, "date", "doi", "endPage", "id", "placeOfPublication",
+				"publishedIn", "startPage", "summary", "title", "nowhere:type");
 	}
 
 	@Override

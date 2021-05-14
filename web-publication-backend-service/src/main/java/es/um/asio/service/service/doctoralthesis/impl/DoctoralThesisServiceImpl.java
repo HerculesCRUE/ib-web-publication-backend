@@ -26,7 +26,7 @@ public class DoctoralThesisServiceImpl extends FusekiService<DoctoralThesisFilte
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(DoctoralThesisFilter filter, Pageable pageable) {
 		logger.info("Searching PhD thesis with filter: {} page: {}", filter, pageable);
@@ -38,8 +38,8 @@ public class DoctoralThesisServiceImpl extends FusekiService<DoctoralThesisFilte
 
 	@Override
 	public String filtersChunk(DoctoralThesisFilter filter) {
-StringBuilder strBuilder = new StringBuilder();
-		
+		StringBuilder strBuilder = new StringBuilder();
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getAbbreviation())) {
 				strBuilder.append("FILTER (?abbreviation = \"");
@@ -48,7 +48,7 @@ StringBuilder strBuilder = new StringBuilder();
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDate())) {
 				strBuilder.append("FILTER (?date = \"");
 				strBuilder.append(filter.getDate());
@@ -56,7 +56,7 @@ StringBuilder strBuilder = new StringBuilder();
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDoi())) {
 				strBuilder.append("FILTER (?doi = \"");
 				strBuilder.append(filter.getDoi());
@@ -64,7 +64,7 @@ StringBuilder strBuilder = new StringBuilder();
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getEndPage())) {
 				strBuilder.append("FILTER (?endPage = \"");
 				strBuilder.append(filter.getEndPage());
@@ -72,7 +72,7 @@ StringBuilder strBuilder = new StringBuilder();
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
 				strBuilder.append("FILTER (?id = \"");
 				strBuilder.append(filter.getId());
@@ -80,7 +80,7 @@ StringBuilder strBuilder = new StringBuilder();
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getPlaceOfPublication())) {
 				strBuilder.append("FILTER (?placeOfPublication = \"");
 				strBuilder.append(filter.getPlaceOfPublication());
@@ -88,7 +88,7 @@ StringBuilder strBuilder = new StringBuilder();
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getPublishedIn())) {
 				strBuilder.append("FILTER (?publishedIn = \"");
 				strBuilder.append(filter.getPublishedIn());
@@ -96,7 +96,7 @@ StringBuilder strBuilder = new StringBuilder();
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getStartPage())) {
 				strBuilder.append("FILTER (?startPage = \"");
 				strBuilder.append(filter.getStartPage());
@@ -104,7 +104,7 @@ StringBuilder strBuilder = new StringBuilder();
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getSummary())) {
 				strBuilder.append("FILTER (LANG(?summary) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
@@ -123,13 +123,14 @@ StringBuilder strBuilder = new StringBuilder();
 				strBuilder.append("\", \"i\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("DoctoralThesis", "abbreviation", "date", "doi", "endPage", "id", "placeOfPublication", "publishedIn", "startPage", "title");
+		return new Entity("Doctoral-thesis", "abbreviation", "date", "doi", "endPage", "id", "placeOfPublication",
+				"publishedIn", "startPage", "title");
 	}
 
 }

@@ -18,7 +18,7 @@ import es.um.asio.service.service.sparql.SparqlExecQuery;
 
 @Service
 public class MasterThesisServiceImpl extends FusekiService<MasterThesisFilter> implements MasterThesisService {
-	
+
 	/**
 	 * Logger
 	 */
@@ -39,7 +39,7 @@ public class MasterThesisServiceImpl extends FusekiService<MasterThesisFilter> i
 	@Override
 	public String filtersChunk(MasterThesisFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getAbbreviation())) {
 				strBuilder.append("FILTER (?abbreviation = \"");
@@ -48,7 +48,7 @@ public class MasterThesisServiceImpl extends FusekiService<MasterThesisFilter> i
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDate())) {
 				strBuilder.append("FILTER (?date = \"");
 				strBuilder.append(filter.getDate());
@@ -56,7 +56,7 @@ public class MasterThesisServiceImpl extends FusekiService<MasterThesisFilter> i
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDoi())) {
 				strBuilder.append("FILTER (?doi = \"");
 				strBuilder.append(filter.getDoi());
@@ -64,7 +64,7 @@ public class MasterThesisServiceImpl extends FusekiService<MasterThesisFilter> i
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getEndPage())) {
 				strBuilder.append("FILTER (?endPage = \"");
 				strBuilder.append(filter.getEndPage());
@@ -72,7 +72,7 @@ public class MasterThesisServiceImpl extends FusekiService<MasterThesisFilter> i
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
 				strBuilder.append("FILTER (?id = \"");
 				strBuilder.append(filter.getId());
@@ -89,7 +89,7 @@ public class MasterThesisServiceImpl extends FusekiService<MasterThesisFilter> i
 				strBuilder.append(filter.getTitle());
 				strBuilder.append("\", \"i\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getPlaceOfPublication())) {
 				strBuilder.append("FILTER (?placeOfPublication = \"");
 				strBuilder.append(filter.getPlaceOfPublication());
@@ -97,7 +97,7 @@ public class MasterThesisServiceImpl extends FusekiService<MasterThesisFilter> i
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getPublishedIn())) {
 				strBuilder.append("FILTER (?publishedIn = \"");
 				strBuilder.append(filter.getPublishedIn());
@@ -105,7 +105,7 @@ public class MasterThesisServiceImpl extends FusekiService<MasterThesisFilter> i
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getStartPage())) {
 				strBuilder.append("FILTER (?startPage = \"");
 				strBuilder.append(filter.getStartPage());
@@ -113,7 +113,7 @@ public class MasterThesisServiceImpl extends FusekiService<MasterThesisFilter> i
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getSummary())) {
 				strBuilder.append("FILTER (LANG(?summary) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
@@ -122,7 +122,7 @@ public class MasterThesisServiceImpl extends FusekiService<MasterThesisFilter> i
 				strBuilder.append(filter.getSummary());
 				strBuilder.append("\", \"i\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getUniversity())) {
 				strBuilder.append("FILTER (?university = \"");
 				strBuilder.append(filter.getUniversity());
@@ -131,13 +131,14 @@ public class MasterThesisServiceImpl extends FusekiService<MasterThesisFilter> i
 				strBuilder.append(") . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("MasterThesis", "abbreviation", "date", "doi", "endPage", "id", "placeOfPublication", "publishedIn", "startPage", "summary", "title", "university");
+		return new Entity("Master-thesis", "abbreviation", "date", "doi", "endPage", "id", "placeOfPublication",
+				"publishedIn", "startPage", "summary", "title", "university");
 	}
 
 }
