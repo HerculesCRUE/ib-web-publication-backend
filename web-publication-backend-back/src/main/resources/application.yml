@@ -78,7 +78,6 @@ server:
 #Keycloak Configuration  
 keycloak:
   auth-server-url: http://herculesasioizertis.desa.um.es/auth
-  jwk-set-uri: http://herculesasioizertis.desa.um.es/auth/realms/umasio/protocol/openid-connect/certs
   realm: umasio
   resource: login-app
   security-constraints:
