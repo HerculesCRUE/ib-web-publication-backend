@@ -1,6 +1,6 @@
 # Registro de cambios
 
-## 2.0-SNAPSHOT
+## 2.0-SNAPSHOT (19/05/2021)
 
 - Ampliación de servicios de listados.
 - Desarrollo de servicios de gráficas.
@@ -14,7 +14,7 @@
 
 
 
-## 1.2-SNAPSHOT
+## 1.2-SNAPSHOT (17/12/2020)
 
 - Desarrollo de primeros servicios de listados
 - Añadidos test cucumber
