@@ -38,6 +38,11 @@ public class DataImporterDto {
 	private String cron;
 	
 	/**
+	 * The params
+	 */
+	private String params;
+	
+	/**
 	 * The importer data error object
 	 */
 	private DataImporterErrorDto importerErrors;
