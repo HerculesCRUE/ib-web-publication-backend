@@ -11,6 +11,7 @@
 - Añadida base de datos para guardar las consultas predefinidas.
 - Añadida verificación SSL
 - Mantenimientos de test
+- Importar datos de forma dinámica.
 
 
 
