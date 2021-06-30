@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,7 +57,7 @@ public class SparqlController {
 
 		ResponseEntity<Object> result = null;
 
-		if (body != null && StringUtils.isNotBlank(body.get(SparqlController.QUERY))) {
+		if (body != null && isQueryTypeAllowed(body.get(SparqlController.QUERY))) {
 			result = sparqlProxy.run(body.get(SparqlController.QUERY), false);
 		} else {
 			logger.error("Empty sparql query");
@@ -104,6 +106,20 @@ public class SparqlController {
 	@GetMapping(SparqlController.Mappings.DELETE + "{id}")
 	public void deleteQuery(@PathVariable("id") final String id) {
 		this.sparqlProxy.delete(id);
+	}
+	
+	private boolean isQueryTypeAllowed(String query) {		
+		if (StringUtils.isBlank(query)) {
+			return false;
+		}
+					
+		boolean isWriteQuery = query.contains("INSERT") || query.contains("UPDATE") || query.contains("DELETE");
+		
+		if (SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken && isWriteQuery) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)

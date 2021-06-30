@@ -49,7 +49,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 		super.configure(http);
 
 		http.csrf().disable().authorizeRequests().antMatchers("/trellis/sparqlfeder").hasAnyRole(Roles.ROLE_ADMIN)
-				.antMatchers("/trellis/sparql").anonymous().anyRequest().permitAll();
+				.anyRequest().permitAll();
 
 	}
 
