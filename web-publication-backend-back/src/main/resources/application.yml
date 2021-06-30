@@ -48,7 +48,8 @@ app:
   # Properties
   properties:
     url: http://hercules.org
-
+  kafka:
+    import-error-topic-name: import-error 
 ## Actuator
 management:
   endpoint:
@@ -91,3 +92,14 @@ keycloak:
   enabled: true
   cors: true
   bearer-only: true
+
+# Spring configuration
+spring:
+  kafka:
+    bootstrap-servers: localhost:29092
+    consumer:
+      bootstrap-servers:
+        - localhost:29092
+      group-id: import-error-group
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
