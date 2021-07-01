@@ -2,7 +2,7 @@ package es.um.asio.service.service.dataimporter;
 
 import java.util.List;
 
-import es.um.asio.service.domain.importer.JobExecutionError;
+import es.um.asio.service.domain.ImportErrorEntity;
 
 public interface DataImporterService {
 	
@@ -13,5 +13,5 @@ public interface DataImporterService {
 	 * @param type
 	 * @return DocumentDto
 	 */
-	List<JobExecutionError> findErrors(Long id);
+	List<ImportErrorEntity> findErrors(Long id);
 }

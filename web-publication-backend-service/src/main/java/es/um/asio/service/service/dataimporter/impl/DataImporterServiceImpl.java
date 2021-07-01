@@ -5,18 +5,18 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.um.asio.service.domain.importer.JobExecutionError;
-import es.um.asio.service.repository.JobExecutionErrorRepository;
+import es.um.asio.service.domain.ImportErrorEntity;
+import es.um.asio.service.repository.ImportErrorRepository;
 import es.um.asio.service.service.dataimporter.DataImporterService;
 
 @Service
 public class DataImporterServiceImpl implements DataImporterService {
 
 	@Autowired
-	private JobExecutionErrorRepository repository;
+	private ImportErrorRepository repository;
 
 	@Override
-	public List<JobExecutionError> findErrors(Long id) {
+	public List<ImportErrorEntity> findErrors(Long id) {
 		return repository.findByJobExecutionId(id);
 	}
 }
