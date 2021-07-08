@@ -22,8 +22,14 @@ public class ValidatorServiceImpl implements ValidatorService{
 	}
 
 	@Override
-	public Validator save(Validator validator) {		
-		return validatorRepository.save(validator);
+	public Validator save(Validator validator) {
+		Validator existingValidator = validatorRepository.findFirstByEntity(validator.getEntity());
+		if ( existingValidator == null) {
+			return validatorRepository.save(validator);
+		} else {
+			existingValidator.setValidator(validator.getValidator());
+			return update(existingValidator);
+		}
 	}
 
 	@Override
