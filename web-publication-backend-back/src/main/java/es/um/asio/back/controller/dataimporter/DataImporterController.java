@@ -1,13 +1,14 @@
 package es.um.asio.back.controller.dataimporter;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.um.asio.service.dto.DataImporterDto;
-import es.um.asio.service.filter.dataimporter.DataImporterFilter;
+import es.um.asio.service.proxy.dataimporter.DataImporterProxy;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -17,30 +18,25 @@ import lombok.NoArgsConstructor;
 @RestController
 @RequestMapping(DataImporterController.Mappings.BASE)
 public class DataImporterController {
+		
+	@Autowired
+	private DataImporterProxy dataImporterProxy;
 	
-	
-	@GetMapping(DataImporterController.Mappings.SEARCH)
-	public Page<DataImporterDto> searchDataImporters(final DataImporterFilter filter, final Pageable pageable) {
-		// return this.proxy.findPaginated(filter, pageable);
-		return null;
+	@GetMapping(DataImporterController.Mappings.ERRORS)
+	public List<String> dataImporterError(@PathVariable("id") final Long id) {		
+		return dataImporterProxy.findErrors(id);
 	}
-	
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	static final class Mappings {
 		/**
 		 * Controller request mapping.
 		 */
-		protected static final String BASE = "/dataimporter";
-
-		/**
-		 * Mapping for search.
-		 */
-		protected static final String SEARCH = "/search";
+		protected static final String BASE = "/importer";
 		
 		/**
-         * Mapping for get.
-         */
-        protected static final String GET = "/{id}";
+		 * Controller request mapping.
+		 */
+		protected static final String ERRORS = "/{id}/errors";
 	}
 }

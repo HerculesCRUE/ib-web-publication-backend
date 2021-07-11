@@ -17,6 +17,7 @@
 
 	<properties>
 		<asio-abstractions.version>1.0-SNAPSHOT</asio-abstractions.version>
+		<dataset-domain-model.version>1.0-SNAPSHOT</dataset-domain-model.version>
 	</properties>
 
 	<dependencies>
@@ -28,17 +29,23 @@
 			<version>${asio-abstractions.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>es.um.asio</groupId>
+			<artifactId>dataset-domain-model</artifactId>
+			<version>${dataset-domain-model.version}</version>
+		</dependency>
+
 		<!-- Additional dependencies -->
 		<dependency>
-		    <groupId>com.zaxxer</groupId>
-		    <artifactId>HikariCP</artifactId>
-		    <version>3.4.2</version>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>3.4.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -73,6 +80,11 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-commons</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
 		</dependency>
 
 		<dependency>
@@ -117,7 +129,7 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
@@ -134,12 +146,12 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 		</dependency>
 
-		
+
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-hibernate5</artifactId>
