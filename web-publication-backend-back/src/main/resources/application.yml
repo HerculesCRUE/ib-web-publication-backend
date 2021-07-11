@@ -3,19 +3,19 @@ app:
   persistence:
     datasource:
       driver-class-name: com.mysql.jdbc.Driver
-      username: root
-      password: root
+      username: app
+      password: sqlpass
       url: jdbc:mysql://localhost:3307/umasio?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
     
     jpa:
       dialect: org.hibernate.dialect.MariaDB53Dialect
-      generate-ddl: false
+      generate-ddl: true
       show-sql: false
       properties:
         hibernate.temp.use_jdbc_metadata_defaults: false
   # When is true, SPARQL query results are getted from federation services, else these information are getted from fuseki
   federation:
-    services: false
+    services: true
   # trellis
   fusekitrellis:
     url: http://localhost:3030/trellis/sparql
@@ -25,6 +25,9 @@ app:
   # Service who get Sparql query results from certain nodes
   federationNode:
     url: http://localhost:9328/federation/nodes/list
+  serviceDiscoveryExcludeNodes:
+    url: http://localhost:9329/service-discovery/exclude/nodes/name
+  node: um
   # CORS
   cors:
     enabled: true
@@ -69,7 +72,7 @@ management:
       
 ## In case of configure web endpoints, remove it or change port number
 server:
-  port: 8787
+  port: 18787
   use-forward-headers: true
   tomcat:
     remote-ip-header: x-forwarded-for
@@ -77,7 +80,7 @@ server:
 
 #Keycloak Configuration  
 keycloak:
-  auth-server-url: http://herculesasioizertis.desa.um.es/auth
+  auth-server-url: http://localhost:8080/auth
   realm: umasio
   resource: login-app
   security-constraints:
