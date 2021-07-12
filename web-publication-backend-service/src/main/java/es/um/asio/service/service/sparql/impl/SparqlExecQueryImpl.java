@@ -310,7 +310,12 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 							getBodyServiceDiscovery(node),
 							Object.class
 					);
-					String nodes = String.join(",",(List<String>) createResult(tempResult).getBody());
+					String nodes;
+					if (tempResult.getStatusCode().is2xxSuccessful()) {
+						nodes = String.join(",", (List<String>) createResult(tempResult).getBody());
+					} else {
+						nodes = node;
+					}
 					tempResult = this.restTemplate.exchange(this.federationNode, HttpMethod.POST,
 							this.getBody(query, PAGE_SIZE, "fuseki", nodes), Object.class);
 

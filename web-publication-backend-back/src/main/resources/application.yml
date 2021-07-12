@@ -99,10 +99,10 @@ keycloak:
 # Spring configuration
 spring:
   kafka:
-    bootstrap-servers: localhost:29092
+    bootstrap-servers: herc-iz-bd-prod.atica.um.es:9092
     consumer:
       bootstrap-servers:
-        - localhost:29092
+        - herc-iz-bd-prod.atica.um.es:9092
       group-id: import-error-group
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
