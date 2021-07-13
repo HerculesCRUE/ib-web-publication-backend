@@ -16,7 +16,7 @@ public class DataImporterServiceImpl implements DataImporterService {
 	private ImportErrorRepository repository;
 
 	@Override
-	public List<ImportErrorEntity> findErrors(Long id) {
+	public List<ImportErrorEntity> findErrors(String id) {
 		return repository.findByJobExecutionId(id);
 	}
 }

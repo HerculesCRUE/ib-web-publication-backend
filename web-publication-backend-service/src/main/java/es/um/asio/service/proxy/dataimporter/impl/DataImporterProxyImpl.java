@@ -17,7 +17,7 @@ public class DataImporterProxyImpl implements DataImporterProxy{
 	private DataImporterService dataImporterService;
 
 	@Override
-	public List<String> findErrors(Long id) {		
+	public List<String> findErrors(String id) {		
 		return dataImporterService.findErrors(id)
 				.stream()
 				.map(ImportErrorEntity::getDescription)				

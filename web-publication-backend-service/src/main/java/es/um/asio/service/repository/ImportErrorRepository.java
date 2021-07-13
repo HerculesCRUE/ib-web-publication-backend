@@ -11,5 +11,5 @@ import es.um.asio.service.domain.ImportErrorEntity;
 @Repository
 public interface ImportErrorRepository extends JpaRepository<ImportErrorEntity, String>, JpaSpecificationExecutor<ImportErrorEntity> {
 
-	List<ImportErrorEntity> findByJobExecutionId (final Long jobExecutionId);
+	List<ImportErrorEntity> findByJobExecutionId (final String jobExecutionId);
 }
