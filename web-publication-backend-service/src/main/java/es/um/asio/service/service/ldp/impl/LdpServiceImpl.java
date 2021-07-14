@@ -93,6 +93,7 @@ public class LdpServiceImpl implements LdpService {
 				JSONObject jsonObject = new JSONObject((LinkedHashMap<String, Object>) response.getBody());
 				count = Integer.parseInt(jsonObject.getJSONObject("results").getJSONArray("bindings").getJSONObject(0)
 						.getJSONObject("count").getString("value"));
+				logger.info(String.format("getElementsCount - Count %s", count));
 			} else {
 				logger.error(String.format("getElementsCount - Response error. code: %s | query: %s ",
 						response.getStatusCode().name(), query));
