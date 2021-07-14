@@ -3,8 +3,8 @@ app:
   persistence:
     datasource:
       driver-class-name: com.mysql.jdbc.Driver
-      username: app
-      password: sqlpass
+      username: root
+      password: root
       url: jdbc:mysql://localhost:3307/umasio?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
     
     jpa:
@@ -15,7 +15,7 @@ app:
         hibernate.temp.use_jdbc_metadata_defaults: false
   # When is true, SPARQL query results are getted from federation services, else these information are getted from fuseki
   federation:
-    services: true
+    services: false
   # trellis
   fusekitrellis:
     url: http://localhost:3030/trellis/sparql
@@ -52,7 +52,9 @@ app:
   properties:
     url: http://hercules.org
   kafka:
-    import-error-topic-name: import-error 
+    import-error-topic-name: import-error
+  ldp:
+    uri-namespace: http://hercules.org/um/es-ES/rec 
 ## Actuator
 management:
   endpoint:
@@ -73,7 +75,7 @@ management:
       
 ## In case of configure web endpoints, remove it or change port number
 server:
-  port: 18787
+  port: 8787
   use-forward-headers: true
   tomcat:
     remote-ip-header: x-forwarded-for
@@ -99,10 +101,10 @@ keycloak:
 # Spring configuration
 spring:
   kafka:
-    bootstrap-servers: herc-iz-bd-prod.atica.um.es:9092
+    bootstrap-servers: localhost:29092
     consumer:
       bootstrap-servers:
-        - herc-iz-bd-prod.atica.um.es:9092
+        - localhost:29092
       group-id: import-error-group
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

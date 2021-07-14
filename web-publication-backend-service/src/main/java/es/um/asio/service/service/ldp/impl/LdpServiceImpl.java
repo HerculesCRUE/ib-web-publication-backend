@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,7 @@ public class LdpServiceImpl implements LdpService {
 	private static final String COUNT_QUERY = "SELECT ?entity (count(distinct ?ac) as ?count) "
 			+ "WHERE { "
 			+ "  ?ac <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?entity . "
-			+ "  FILTER regex(str(?entity), \"http://hercules.org/um/es-ES/rec\", \"i\") "
+			+ "  FILTER regex(str(?entity), \"%s\", \"i\") "
 			+ "} "
 			+ "GROUP BY ?entity "
 			+ "ORDER BY %s (?%s) "
@@ -39,6 +40,9 @@ public class LdpServiceImpl implements LdpService {
 			+ "  FILTER regex(str(?entity), \"http://hercules.org/um/es-ES/rec\", \"i\") "
 			+ "}";
 	
+    @Value("${app.ldp.uri-namespace}")
+    private String uriNamespace;
+	
 	@Autowired
 	private SparqlExecQuery sparqlExecQuery;
 
@@ -49,7 +53,8 @@ public class LdpServiceImpl implements LdpService {
 	
 	private String buildQuery(String query, Pageable pageable) {
 		Order order = pageable.getSort().toList().get(0);
-		return String.format(query, order.getDirection(), order.getProperty(), pageable.getPageSize(), pageable.getOffset());
+		return String.format(query, uriNamespace, order.getDirection(), order.getProperty(), pageable.getPageSize(),
+				pageable.getOffset());
 	}
 	
 	private List<LdpEntityCountDto> getCountElements(final Pageable pageable) {
@@ -76,7 +81,8 @@ public class LdpServiceImpl implements LdpService {
 	
 	private Integer getElementsCount(final String countQuery) {
 		Integer count = 0;
-		ResponseEntity<Object> response = sparqlExecQuery.callFusekiTrellis(countQuery, false);
+		ResponseEntity<Object> response = sparqlExecQuery.callFusekiTrellis(String.format(countQuery, uriNamespace),
+				false);
 		
 		try {
 			if (response.getStatusCode() == HttpStatus.OK) {
