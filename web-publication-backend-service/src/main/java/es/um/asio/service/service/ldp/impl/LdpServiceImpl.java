@@ -57,7 +57,7 @@ public class LdpServiceImpl implements LdpService {
 	private List<LdpEntityCountDto> getCountElements(final Pageable pageable) {
 		List<LdpEntityCountDto> ldpEntityCountDtos = new ArrayList<LdpEntityCountDto>();
 		String query = buildQuery(COUNT_QUERY, pageable);
-		logger.debug(String.format("getCountElements - Executing query %s", query));
+		logger.info(String.format("getCountElements - Executing query %s", query));
 		ResponseEntity<Object> response = sparqlExecQuery.callFusekiTrellis(query, false);
 
 		try {
@@ -85,7 +85,7 @@ public class LdpServiceImpl implements LdpService {
 	private Integer getElementsCount(final String countQuery) {
 		Integer count = 0;
 		String query = String.format(countQuery, uriNamespace);
-		logger.debug(String.format("getElementsCount - Executing query %s", query));
+		logger.info(String.format("getElementsCount - Executing query %s", query));
 		ResponseEntity<Object> response = sparqlExecQuery.callFusekiTrellis(query, false);
 
 		try {
