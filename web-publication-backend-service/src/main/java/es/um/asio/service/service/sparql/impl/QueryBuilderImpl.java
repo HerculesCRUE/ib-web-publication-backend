@@ -217,7 +217,9 @@ public class QueryBuilderImpl implements QueryBuilder {
 						: subentity.getFieldName();
 				String nextPrefix = (prefix.isEmpty()) ? namedField : prefix + capitalizeFirstLetter(namedField);
 				if (subentity.getQueryFieldName() != null && !subentity.getQueryFieldName().isBlank()) {
-					strBuilder.append("?x ");
+					strBuilder.append("?");
+					strBuilder.append(prefix);
+					strBuilder.append(" ");
 					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
 					strBuilder.append(subentity.getFieldName());
 					strBuilder.append("> ");
