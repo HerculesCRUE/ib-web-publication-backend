@@ -161,6 +161,8 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 
 		Entity entity;
 
+		List<String> optionalFields = new ArrayList<>();
+
 		// TODO Pending update of ETL: University should have at least the same fields
 		// as Organization
 		if (type.equals("University")) {
@@ -168,9 +170,12 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 		} else {
 			entity = new Entity("Organization", types, "abbreviation", "description", "dateEnd", "id", "keyword",
 					"dateStart", "title", "nowhere:type");
+
+			optionalFields.add("dateEnd");
+			optionalFields.add("keyword");
+			optionalFields.add("dateStart");
 		}
 
-		List<String> optionalFields = new ArrayList<String>();
 		optionalFields.add("publicCompany");
 		optionalFields.add("isStartup");
 		optionalFields.add("homepage");
