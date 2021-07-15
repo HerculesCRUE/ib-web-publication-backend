@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import es.um.asio.abstractions.constants.Constants;
 import es.um.asio.service.filter.organization.OrganizationFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
@@ -136,11 +135,9 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 	@Override
 	public String filtersChunk(String id) {
 		StringBuilder strBuilder = new StringBuilder();
-		strBuilder.append("FILTER (?id = \"");
+		strBuilder.append("FILTER (regex(?id, \"^");
 		strBuilder.append(id);
-		strBuilder.append("\"@");
-		strBuilder.append(Constants.SPANISH_LANGUAGE_SHORT);
-		strBuilder.append(") . ");
+		strBuilder.append("$\")) . ");
 
 		return strBuilder.toString();
 	}
@@ -168,8 +165,7 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 		if (type.equals("University")) {
 			entity = new Entity("Organization", types, "abbreviation", "id", "title", "description", "nowhere:type");
 		} else {
-			entity = new Entity("Organization", types, "abbreviation", "description", "dateEnd", "id", "keyword",
-					"dateStart", "title", "nowhere:type");
+			entity = new Entity("Organization", types, "abbreviation", "description", "id", "title", "nowhere:type");
 
 			optionalFields.add("dateEnd");
 			optionalFields.add("keyword");
