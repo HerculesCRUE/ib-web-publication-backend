@@ -27,4 +27,6 @@ public class ResearchStaffFilter extends Filter {
 	 * The title
 	 */
 	private String title;
+	
+	private String knowledgeArea;
 }

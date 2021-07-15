@@ -4,6 +4,7 @@
 package es.um.asio.service.service.sparql.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,6 +125,35 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	}
 
 	@Override
+	public Page<FusekiResponse> runDistinct(final PageableQuery page) {
+
+		Page<FusekiResponse> result = null;
+		List<FusekiResponse> contentResult = new ArrayList<>();
+		Integer totalElements = 0;
+
+		this.logger.info("Calling fuseki: {}", this.fusekiTrellisUrl);
+
+		try {
+			// we retrieve the params in order to build the query later
+			final Map<String, String> params = this.queryBuilder.queryChunks(page.getEntity(), page.getPage());
+			params.put(FusekiConstants.FILTERS_CHUNK, page.getFilters());
+
+			this.logger.info("Calling query: {}", this.selectPaginatedQueryDistinct(params));
+
+			contentResult = this.getElements(this.selectPaginatedQueryDistinct(params));
+			totalElements = this.getTotalElements(this.countQuery(params));
+
+			this.logger.info("Total: {}", totalElements);
+		} catch (final Exception e) {
+			this.logger.error("Error building the page {}", page);
+		}
+
+		result = new PageImpl<>(contentResult, page.getPage(), totalElements);
+
+		return result;
+	}
+
+	@Override
 	public List<Object> run(final SimpleQuery query) {
 
 		List<FusekiResponse> contentResult = new ArrayList<>();
@@ -177,6 +207,17 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	 */
 	private String selectPaginatedQuery(final Map<String, String> params) {
 		final String result = String.format(FusekiConstants.QUERY_TEMPLATE_SELECT,
+				params.get(FusekiConstants.SELECT_CHUNK), params.get(FusekiConstants.TYPE_CHUNK),
+				params.get(FusekiConstants.FIELDS_CHUNK), params.get(FusekiConstants.JOIN_CHUNK),
+				params.get(FusekiConstants.FILTERS_CHUNK), params.get(FusekiConstants.GROUP),
+				params.get(FusekiConstants.ORDER), params.get(FusekiConstants.LIMIT),
+				params.get(FusekiConstants.OFFSET));
+
+		return result;
+	}
+
+	private String selectPaginatedQueryDistinct(final Map<String, String> params) {
+		final String result = String.format(FusekiConstants.QUERY_TEMPLATE_SELECT_DISTINCT,
 				params.get(FusekiConstants.SELECT_CHUNK), params.get(FusekiConstants.TYPE_CHUNK),
 				params.get(FusekiConstants.FIELDS_CHUNK), params.get(FusekiConstants.JOIN_CHUNK),
 				params.get(FusekiConstants.FILTERS_CHUNK), params.get(FusekiConstants.GROUP),
@@ -272,6 +313,11 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 		return result;
 	}
+	
+	@Override
+	public ResponseEntity<Object> callFusekiTrellis(final String query, Boolean isFederated) {
+		return callFusekiTrellis(query, isFederated, null);
+	}
 
 	/**
 	 * Call fuseki trellis.
@@ -280,11 +326,17 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	 * @return the response entity
 	 */
 	@Override
-	public ResponseEntity<Object> callFusekiTrellis(final String query, Boolean isFederated) {
+	public ResponseEntity<Object> callFusekiTrellis(final String query, Boolean isFederated, String accept) {
 		ResponseEntity<Object> result = null;
 		if (!federationServices) {
 			try {
-				result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.POST, this.getBody(query),
+				HttpEntity<MultiValueMap<String, String>> body = this.getBody(query);
+				if (accept != null) {
+					HttpHeaders headers =  this.getHeaders();
+					headers.setAccept(Arrays.asList(MediaType.valueOf(accept)));
+					body = this.getBody(query, headers);
+				} 								
+				result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.POST, body,
 						Object.class);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
@@ -304,12 +356,8 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 			} else {
 
 				try {
-					tempResult = this.restTemplate.exchange(
-							this.serviceDiscoveryExcludeNodes+"?nodeName="+node,
-							HttpMethod.GET,
-							getBodyServiceDiscovery(node),
-							Object.class
-					);
+					tempResult = this.restTemplate.exchange(this.serviceDiscoveryExcludeNodes + "?nodeName=" + node,
+							HttpMethod.GET, getBodyServiceDiscovery(node), Object.class);
 					String nodes;
 					if (tempResult.getStatusCode().is2xxSuccessful()) {
 						nodes = String.join(",", (List<String>) createResult(tempResult).getBody());
@@ -320,7 +368,6 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 							this.getBody(query, PAGE_SIZE, "fuseki", nodes), Object.class);
 
 					result = createResult(tempResult);
-
 
 				} catch (final Exception e) {
 					this.logger.error("Error retrieving results from federation cause {}", e.getMessage());
@@ -345,21 +392,26 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	 */
 	private HttpHeaders getHeaders() {
 		final HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);		
 		return headers;
 	}
 
+	
+	private HttpEntity<MultiValueMap<String, String>> getBody(final String query) {
+		return getBody(query, this.getHeaders());
+	}
+	
 	/**
 	 * Gets the body.
 	 *
 	 * @param query the query
 	 * @return the body
 	 */
-	private HttpEntity<MultiValueMap<String, String>> getBody(final String query) {
+	private HttpEntity<MultiValueMap<String, String>> getBody(final String query, final HttpHeaders headers) {
 		final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("query", query);
 
-		final HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, this.getHeaders());
+		final HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, headers);
 
 		return body;
 	}
@@ -377,12 +429,12 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	}
 
 	private HttpEntity<MultiValueMap<String, String>> getBody(final String query, final int pageSize,
-															  final String tripleStore, final List<String> nodeList) {
+			final String tripleStore, final List<String> nodeList) {
 		final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("query", query);
 		params.add("pageSize", Integer.toString(pageSize));
 		params.add("tripleStore", tripleStore);
-		params.add("nodeList", String.join(", ",nodeList));
+		params.add("nodeList", String.join(", ", nodeList));
 
 		final HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, this.getHeaders());
 

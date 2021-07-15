@@ -9,34 +9,38 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ResearcherRoleDto {
-	
+
 	/**
 	 * The id
 	 */
 	private String id;
-	
+
 	/**
 	 * The date
 	 */
 	private String date;
-	
+
 	/**
 	 * The dedication
 	 */
 	private String dedication;
-	
+
 	/**
 	 * The dedicationPercentage
 	 */
 	private String dedicationPercentage;
-	
+
 	/**
 	 * The description
 	 */
 	private String description;
-	
+
 	/**
 	 * The hasKnowledgeArea
 	 */
 	private String hasKnowledgeArea;
+	/**
+	 * The hasKnowledgeAreaTitle
+	 */
+	private String hasKnowledgeAreaTitle;
 }
