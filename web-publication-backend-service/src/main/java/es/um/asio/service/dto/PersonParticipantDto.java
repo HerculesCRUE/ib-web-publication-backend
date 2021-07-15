@@ -13,80 +13,80 @@ public class PersonParticipantDto {
 	/**
 	 * The id
 	 */
-	private String relatesId;
-	
+	private String inheresInId;
+
 	/**
 	 * The title
 	 */
-	private String relatesTitle;
+	private String inheresInTitle;
 
 	/**
 	 * The birthDate
 	 */
-	private String relatesBirthDate;
-	
+	private String inheresInBirthDate;
+
 	/**
 	 * The description
 	 */
-	private String relatesDescription;
-	
+	private String inheresInDescription;
+
 	/**
 	 * The firstName
 	 */
-	private String relatesFirstName;
-	
+	private String inheresInFirstName;
+
 	/**
 	 * The surname
 	 */
-	private String relatesSurname;
-	
+	private String inheresInSurname;
+
 	/**
 	 * The gender
 	 */
-	private String relatesGender;
-	
+	private String inheresInGender;
+
 	/**
 	 * The hasContactInfo
 	 */
-	private String relatesHasContactInfo;
-	
+	private String inheresInHasContactInfo;
+
 	/**
 	 * The homepage
 	 */
-	private String relatesHomepage;
-	
+	private String inheresInHomepage;
+
 	/**
 	 * The image
 	 */
-	private String relatesImage;
-	
+	private String inheresInImage;
+
 	/**
 	 * The name
 	 */
-	private String relatesName;
-	
+	private String inheresInName;
+
 	/**
 	 * The nickname
 	 */
-	private String relatesNickname;
-	
+	private String inheresInNickname;
+
 	/**
 	 * The personalMailBox
 	 */
-	private String relatesPersonalMaibox;
-	
+	private String inheresInPersonalMaibox;
+
 	/**
 	 * The researchLine
 	 */
-	private String relatesResearchLine;
-	
+	private String inheresInResearchLine;
+
 	/**
 	 * The subjectArea
 	 */
-	private String relatesSubjectArea;
-	
+	private String inheresInSubjectArea;
+
 	/**
 	 * The taxId
 	 */
-	private String relatesTaxId;
+	private String inheresInTaxId;
 }
