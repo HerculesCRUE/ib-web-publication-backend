@@ -17,7 +17,8 @@ import es.um.asio.service.service.principalinvestigatorrole.PrincipalInvestigato
 import es.um.asio.service.service.sparql.SparqlExecQuery;
 
 @Service
-public class PrincipalInvestigatorRoleServiceImpl extends FusekiService<PrincipalInvestigatorRoleFilter> implements PrincipalInvestigatorRoleService {
+public class PrincipalInvestigatorRoleServiceImpl extends FusekiService<PrincipalInvestigatorRoleFilter>
+		implements PrincipalInvestigatorRoleService {
 
 	/**
 	 * Logger
@@ -26,7 +27,7 @@ public class PrincipalInvestigatorRoleServiceImpl extends FusekiService<Principa
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(PrincipalInvestigatorRoleFilter filter, Pageable pageable) {
 		logger.info("Searching PrincipalInvestigatorRoles with filter: {} page: {}", filter, pageable);
@@ -39,17 +40,15 @@ public class PrincipalInvestigatorRoleServiceImpl extends FusekiService<Principa
 	@Override
 	public String filtersChunk(PrincipalInvestigatorRoleFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 

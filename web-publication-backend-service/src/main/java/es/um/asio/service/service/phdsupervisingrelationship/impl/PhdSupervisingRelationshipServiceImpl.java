@@ -17,7 +17,8 @@ import es.um.asio.service.service.phdsupervisingrelationship.PhdSupervisingRelat
 import es.um.asio.service.service.sparql.SparqlExecQuery;
 
 @Service
-public class PhdSupervisingRelationshipServiceImpl extends FusekiService<PhdSupervisingRelationshipFilter> implements PhdSupervisingRelationshipService {
+public class PhdSupervisingRelationshipServiceImpl extends FusekiService<PhdSupervisingRelationshipFilter>
+		implements PhdSupervisingRelationshipService {
 
 	/**
 	 * Logger
@@ -26,7 +27,7 @@ public class PhdSupervisingRelationshipServiceImpl extends FusekiService<PhdSupe
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(PhdSupervisingRelationshipFilter filter, Pageable pageable) {
 		logger.info("Searching PhdSupervisingRelationships with filter: {} page: {}", filter, pageable);
@@ -39,21 +40,21 @@ public class PhdSupervisingRelationshipServiceImpl extends FusekiService<PhdSupe
 	@Override
 	public String filtersChunk(PhdSupervisingRelationshipFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
-		if (filter != null) {if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+
+		if (filter != null) {
+			if (StringUtils.isNotBlank(filter.getId())) {
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("PhdSupervisingRelationship", "id", "date", "dedication", "dedicationPercentage", "description", "hasKnowledgeArea");
+		return new Entity("PhdSupervisingRelationship", "id", "date", "dedication", "dedicationPercentage",
+				"description", "hasKnowledgeArea");
 	}
 }

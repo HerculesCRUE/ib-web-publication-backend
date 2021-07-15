@@ -26,7 +26,7 @@ public class ProjectExpenseServiceImpl extends FusekiService<ProjectExpenseFilte
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(ProjectExpenseFilter filter, Pageable pageable) {
 		logger.info("Searching ProjectExpenses with filter: {} page: {}", filter, pageable);
@@ -39,7 +39,7 @@ public class ProjectExpenseServiceImpl extends FusekiService<ProjectExpenseFilte
 	@Override
 	public String filtersChunk(ProjectExpenseFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getCurrency())) {
 				strBuilder.append("FILTER (?currency = \"");
@@ -48,7 +48,7 @@ public class ProjectExpenseServiceImpl extends FusekiService<ProjectExpenseFilte
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDate())) {
 				strBuilder.append("FILTER (?date = \"");
 				strBuilder.append(filter.getDate());
@@ -56,7 +56,7 @@ public class ProjectExpenseServiceImpl extends FusekiService<ProjectExpenseFilte
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDescription())) {
 				strBuilder.append("FILTER (?description = \"");
 				strBuilder.append(filter.getDescription());
@@ -64,7 +64,7 @@ public class ProjectExpenseServiceImpl extends FusekiService<ProjectExpenseFilte
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getExpenseModality())) {
 				strBuilder.append("FILTER (?expenseModality = \"");
 				strBuilder.append(filter.getExpenseModality());
@@ -72,7 +72,7 @@ public class ProjectExpenseServiceImpl extends FusekiService<ProjectExpenseFilte
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getHasExpenseClassification())) {
 				strBuilder.append("FILTER (?hasExpenseClassification = \"");
 				strBuilder.append(filter.getHasExpenseClassification());
@@ -80,15 +80,13 @@ public class ProjectExpenseServiceImpl extends FusekiService<ProjectExpenseFilte
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getMonetaryAmount())) {
 				strBuilder.append("FILTER (?monetaryAmount = \"");
 				strBuilder.append(filter.getMonetaryAmount());
@@ -106,12 +104,13 @@ public class ProjectExpenseServiceImpl extends FusekiService<ProjectExpenseFilte
 				strBuilder.append("\", \"i\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("ProjectExpense", "currency", "date", "description", "expenseModality", "hasExpenseClassification", "id", "monetaryAmount", "title");
+		return new Entity("ProjectExpense", "currency", "date", "description", "expenseModality",
+				"hasExpenseClassification", "id", "monetaryAmount", "title");
 	}
 }

@@ -26,7 +26,7 @@ public class ResearcherRoleServiceImpl extends FusekiService<ResearcherRoleFilte
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(ResearcherRoleFilter filter, Pageable pageable) {
 		logger.info("Searching ResearcherRoles with filter: {} page: {}", filter, pageable);
@@ -39,22 +39,21 @@ public class ResearcherRoleServiceImpl extends FusekiService<ResearcherRoleFilte
 	@Override
 	public String filtersChunk(ResearcherRoleFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("ResearcherRole", "id", "date", "dedication", "dedicationPercentage", "description", "hasKnowledgeArea");
+		return new Entity("ResearcherRole", "id", "date", "dedication", "dedicationPercentage", "description",
+				"hasKnowledgeArea");
 	}
 }

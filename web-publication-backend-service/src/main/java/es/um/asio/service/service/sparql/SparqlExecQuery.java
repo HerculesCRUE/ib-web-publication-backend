@@ -22,6 +22,8 @@ public interface SparqlExecQuery {
 	 */
 	Page<FusekiResponse> run(PageableQuery page);
 
+	Page<FusekiResponse> runDistinct(PageableQuery page);
+
 	/**
 	 * Run.
 	 *

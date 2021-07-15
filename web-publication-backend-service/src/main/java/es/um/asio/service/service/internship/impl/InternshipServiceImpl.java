@@ -27,7 +27,7 @@ public class InternshipServiceImpl extends FusekiService<InternshipFilter> imple
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(InternshipFilter filter, Pageable pageable) {
 		logger.info("Searching article keywords with filter: {} page: {}", filter, pageable);
@@ -40,14 +40,12 @@ public class InternshipServiceImpl extends FusekiService<InternshipFilter> imple
 	@Override
 	public String filtersChunk(InternshipFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 
 			if (StringUtils.isNotBlank(filter.getTitle())) {
@@ -59,12 +57,13 @@ public class InternshipServiceImpl extends FusekiService<InternshipFilter> imple
 				strBuilder.append("\", \"i\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Internship", "id", "title", "contactInformation", "description", "endDate", "locality", "locatedIn", "participatedBy", "startDate");
+		return new Entity("Internship", "id", "title", "contactInformation", "description", "endDate", "locality",
+				"locatedIn", "participatedBy", "startDate");
 	}
 }

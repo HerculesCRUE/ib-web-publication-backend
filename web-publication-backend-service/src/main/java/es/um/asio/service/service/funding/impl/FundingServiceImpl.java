@@ -26,7 +26,7 @@ public class FundingServiceImpl extends FusekiService<FundingFilter> implements 
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(FundingFilter filter, Pageable pageable) {
 		logger.info("Searching congress with filter: {} page: {}", filter, pageable);
@@ -39,7 +39,7 @@ public class FundingServiceImpl extends FusekiService<FundingFilter> implements 
 	@Override
 	public String filtersChunk(FundingFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDate())) {
 				strBuilder.append("FILTER (?date = \"");
@@ -48,15 +48,13 @@ public class FundingServiceImpl extends FusekiService<FundingFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getPublicFunding())) {
 				strBuilder.append("FILTER (?publicFunding = \"");
 				strBuilder.append(filter.getPublicFunding());
@@ -64,7 +62,7 @@ public class FundingServiceImpl extends FusekiService<FundingFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getTitle())) {
 				strBuilder.append("FILTER (LANG(?title) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
@@ -74,7 +72,7 @@ public class FundingServiceImpl extends FusekiService<FundingFilter> implements 
 				strBuilder.append("\", \"i\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 

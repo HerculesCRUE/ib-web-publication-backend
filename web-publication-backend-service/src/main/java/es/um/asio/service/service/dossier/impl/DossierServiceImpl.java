@@ -26,7 +26,7 @@ public class DossierServiceImpl extends FusekiService<DossierFilter> implements 
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(DossierFilter filter, Pageable pageable) {
 		logger.info("Searching dossiers with filter: {} page: {}", filter, pageable);
@@ -39,7 +39,7 @@ public class DossierServiceImpl extends FusekiService<DossierFilter> implements 
 	@Override
 	public String filtersChunk(DossierFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDate())) {
 				strBuilder.append("FILTER (?date = \"");
@@ -48,7 +48,7 @@ public class DossierServiceImpl extends FusekiService<DossierFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDescription())) {
 				strBuilder.append("FILTER (LANG(?description) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
@@ -57,15 +57,13 @@ public class DossierServiceImpl extends FusekiService<DossierFilter> implements 
 				strBuilder.append(filter.getDescription());
 				strBuilder.append("\", \"i\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getOcicnum())) {
 				strBuilder.append("FILTER (?ocicnum = \"");
 				strBuilder.append(filter.getOcicnum());
@@ -83,13 +81,13 @@ public class DossierServiceImpl extends FusekiService<DossierFilter> implements 
 				strBuilder.append("\", \"i\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Dossier", "date", "description", "id", "ocicnum", "title");	}
+		return new Entity("Dossier", "date", "description", "id", "ocicnum", "title");
+	}
 
-	
 }

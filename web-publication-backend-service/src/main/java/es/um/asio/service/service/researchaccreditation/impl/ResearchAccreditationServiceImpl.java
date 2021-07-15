@@ -17,7 +17,8 @@ import es.um.asio.service.service.researchaccreditation.ResearchAccreditationSer
 import es.um.asio.service.service.sparql.SparqlExecQuery;
 
 @Service
-public class ResearchAccreditationServiceImpl extends FusekiService<ResearchAccreditationFilter> implements ResearchAccreditationService {
+public class ResearchAccreditationServiceImpl extends FusekiService<ResearchAccreditationFilter>
+		implements ResearchAccreditationService {
 
 	/**
 	 * Logger
@@ -26,7 +27,7 @@ public class ResearchAccreditationServiceImpl extends FusekiService<ResearchAccr
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(ResearchAccreditationFilter filter, Pageable pageable) {
 		logger.info("Searching ResearchAccreditations with filter: {} page: {}", filter, pageable);
@@ -39,7 +40,7 @@ public class ResearchAccreditationServiceImpl extends FusekiService<ResearchAccr
 	@Override
 	public String filtersChunk(ResearchAccreditationFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDateIssued())) {
 				strBuilder.append("FILTER (?dateIssued = \"");
@@ -48,7 +49,7 @@ public class ResearchAccreditationServiceImpl extends FusekiService<ResearchAccr
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDescription())) {
 				strBuilder.append("FILTER (?description = \"");
 				strBuilder.append(filter.getDescription());
@@ -56,13 +57,11 @@ public class ResearchAccreditationServiceImpl extends FusekiService<ResearchAccr
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 
 			if (StringUtils.isNotBlank(filter.getTitle())) {
@@ -74,7 +73,7 @@ public class ResearchAccreditationServiceImpl extends FusekiService<ResearchAccr
 				strBuilder.append("\", \"i\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 

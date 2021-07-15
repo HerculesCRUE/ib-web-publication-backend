@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import es.um.asio.abstractions.constants.Constants;
 import es.um.asio.service.filter.document.DocumentFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
@@ -100,11 +99,9 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 	@Override
 	public String filtersChunk(String id) {
 		StringBuilder strBuilder = new StringBuilder();
-		strBuilder.append("FILTER (?id = \"");
+		strBuilder.append("FILTER (regex(?id, \"^");
 		strBuilder.append(id);
-		strBuilder.append("\"@");
-		strBuilder.append(Constants.SPANISH_LANGUAGE_SHORT);
-		strBuilder.append(") . ");
+		strBuilder.append("$\")) . ");
 
 		return strBuilder.toString();
 	}
@@ -121,9 +118,9 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 				: Arrays.asList("Article", "Book");
 
 		Entity entity = new Entity("Documento", types, "date", "doi", "id", "title", "nowhere:type");
-		
+
 		// Add data to subentity atributes and filters
-		if (filter.getAuthorId()!=null && !filter.getAuthorId().isEmpty()) {
+		if (filter.getAuthorId() != null && !filter.getAuthorId().isEmpty()) {
 			List<Subentity> subentities = new ArrayList<Subentity>();
 			// Extra fields
 			String fieldName = "correspondingAuthor";
@@ -139,7 +136,7 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 			subentities.add(subentity);
 			entity.setSubentities(subentities);
 		}
-		
+
 		// Add data to subentity atributes and filters
 //		if (filter.getOrganizationId()!=null && !filter.getOrganizationId().isEmpty()) {
 //			List<Subentity> subentities = new ArrayList<Subentity>();
@@ -156,7 +153,7 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 //			subentities.add(subentity);
 //			entity.setSubentities(subentities);
 //		}
-		
+
 		return entity;
 	}
 
@@ -173,12 +170,14 @@ public class DocumentServiceImpl extends FusekiService<DocumentFilter> implement
 		types.add(splitType[splitType.length - 1]);
 
 		if (type.equals("Article")) {
-			return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "summary", "nowhere:type");
-		} else if (type.equals("Book"))  {
-			return new Entity("Documento", types, "date", "doi", "edition", "endPage", "iccn", "id", "placeOfPublication", "publishedIn", 
-					"startPage", "summary", "title", "nowhere:type");
+			return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title",
+					"summary", "nowhere:type");
+		} else if (type.equals("Book")) {
+			return new Entity("Documento", types, "date", "doi", "edition", "endPage", "iccn", "id",
+					"placeOfPublication", "publishedIn", "startPage", "summary", "title", "nowhere:type");
 		} else {
-			return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title", "nowhere:type");
+			return new Entity("Documento", types, "date", "doi", "endPage", "id", "publishedIn", "startPage", "title",
+					"nowhere:type");
 		}
 	}
 

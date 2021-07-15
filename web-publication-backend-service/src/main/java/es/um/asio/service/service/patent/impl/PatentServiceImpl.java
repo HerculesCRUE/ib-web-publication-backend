@@ -89,11 +89,9 @@ public class PatentServiceImpl implements PatentService {
 			}
 
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 
 			if (StringUtils.isNotBlank(filter.getKeyword())) {
@@ -163,8 +161,7 @@ public class PatentServiceImpl implements PatentService {
 
 	@Override
 	public Entity retrieveEntity(PatentFilter filter) {
-		Entity entity = new Entity("Patent", "dateIssued", "doi", "id", "keyword", "mode",
-				"title");
+		Entity entity = new Entity("Patent", "dateIssued", "doi", "id", "keyword", "mode", "title");
 
 		// Add data to subentity atributes and filters
 		if (filter.getOrganizationId() != null && !filter.getOrganizationId().isEmpty()) {
