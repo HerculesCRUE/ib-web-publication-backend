@@ -1,8 +1,11 @@
 package es.um.asio.service.service.ldp.impl;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +21,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.google.common.base.Predicate;
+
 import es.um.asio.service.dto.LdpEntityCountDto;
+import es.um.asio.service.dto.LdpEntityDetailsDto;
+import es.um.asio.service.dto.LdpEntityDetailsDto.LdpEntityDetail;
 import es.um.asio.service.dto.LdpSearchResultDto;
 import es.um.asio.service.service.ldp.LdpService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
@@ -55,6 +62,13 @@ public class LdpServiceImpl implements LdpService {
 			+ "{ ?uri <%s/name> ?title."
 			+ "    FILTER regex(?title, \"%s\", \"i\") }"
 			+ "} ";
+	
+	private static final String ENTITY_QUERY = "SELECT * "
+			+ "WHERE { "
+			+ "  ?ac ?key ?value. "
+			+ "  FILTER regex(str(?ac), \"%s\", \"i\")   "
+			+ "}";
+			
 
 	private final Logger logger = LoggerFactory.getLogger(LdpServiceImpl.class);
 
@@ -66,14 +80,39 @@ public class LdpServiceImpl implements LdpService {
 
 	@Override
 	public Page<LdpEntityCountDto> entityCount(final Pageable pageable) {
-		return new PageImpl<LdpEntityCountDto>(getCountElements(pageable), pageable,
-				getElementsCount(String.format(COUNT_QUERY_COUNT, uriNamespace)));
+		List<LdpEntityCountDto> results = executeQuery(buildQuery(COUNT_QUERY, pageable), this::mapToLdpEntityCountDto);
+		Integer count = executeQuery(String.format(COUNT_QUERY_COUNT, uriNamespace), this::mapToCount).get(0);
+		return new PageImpl<LdpEntityCountDto>(results, pageable,count);		
 	}
 	
 	@Override
 	public Page<LdpSearchResultDto> findByTitle(final String title, final Pageable pageable) {
-		return new PageImpl<LdpSearchResultDto>(findElements(title, pageable), pageable,
-				getElementsCount(String.format(TITLE_QUERY_COUNT, uriNamespace, title, uriNamespace, title)));
+		List<LdpSearchResultDto> results = executeQuery(buildFindQuery(TITLE_QUERY, title, pageable), this::mapToLdpSearchResultDto);
+		Integer count = executeQuery(String.format(TITLE_QUERY_COUNT, uriNamespace, title, uriNamespace, title), this::mapToCount).get(0);
+		return new PageImpl<LdpSearchResultDto>(results, pageable,count);
+	}
+	
+	@Override
+	public LdpEntityDetailsDto findDetails(final String uri) {
+		LdpEntityDetailsDto detailsDto = findDetailsProperties(uri);
+		detailsDto.setRelations(findDetailsRelations(detailsDto));	
+		detailsDto.setUri(uri);
+		return detailsDto;				
+	}
+	
+	private LdpEntityDetailsDto findDetailsProperties (final String uri) {
+		LdpEntityDetailsDto detailsDto = new LdpEntityDetailsDto();		
+		detailsDto.setProperties(executeQuery(String.format(ENTITY_QUERY, uri), this::mapToLdpEntityDetailsDto));
+		detailsDto.setUri(uri);
+		return detailsDto;
+	}
+	
+	private List<LdpEntityDetailsDto> findDetailsRelations (final LdpEntityDetailsDto detailsDto) {
+		Predicate<LdpEntityDetail> isDetailRelation = detail ->  detail.getKey().startsWith(uriNamespace) && isValidUrl(detail.getValue());		
+		return detailsDto.getProperties().stream()
+				.filter(isDetailRelation)
+				.map(detail -> findDetailsProperties(detail.getValue()))
+				.collect(Collectors.toList());	
 	}
 
 	private String buildQuery(String query, Pageable pageable) {
@@ -81,45 +120,17 @@ public class LdpServiceImpl implements LdpService {
 		return String.format(query, uriNamespace, order.getDirection(), order.getProperty(), pageable.getPageSize(),
 				pageable.getOffset());
 	}
-
-	private List<LdpEntityCountDto> getCountElements(final Pageable pageable) {
-		List<LdpEntityCountDto> ldpEntityCountDtos = new ArrayList<LdpEntityCountDto>();
-		String query = buildQuery(COUNT_QUERY, pageable);
-		logger.info(String.format("getCountElements - Executing query %s", query));
-		ResponseEntity<Object> response = sparqlExecQuery.callFusekiTrellis(query, false);
-
-		try {
-			if (response.getStatusCode() == HttpStatus.OK) {
-				JSONObject jsonObject = new JSONObject((LinkedHashMap<String, Object>) response.getBody());
-				JSONArray jsonResults = jsonObject.getJSONObject("results").getJSONArray("bindings");
-
-				for (int i = 0; i < jsonResults.length(); i++) {
-					JSONObject jsonResult = jsonResults.getJSONObject(i);
-					LdpEntityCountDto entityCountDto = new LdpEntityCountDto();
-					entityCountDto.setEntity(jsonResult.getJSONObject("entity").getString("value"));
-					entityCountDto.setCount(Integer.parseInt(jsonResult.getJSONObject("count").getString("value")));
-					ldpEntityCountDtos.add(entityCountDto);
-				}
-			} else {
-				logger.error(String.format("getCountElements - Response error. code: %s | query: %s ",
-						response.getStatusCode().name(), query));
-			}
-		} catch (Exception e) {
-			logger.error(String.format("getCountElements - Unkown error. query: %s ", query), e);
-		}
-		return ldpEntityCountDtos;
-	}
+	
 	
 	private String buildFindQuery(String query, String title, Pageable pageable) {
 		Order order = pageable.getSort().toList().get(0);
 		return String.format(query, uriNamespace, title, uriNamespace, title, order.getDirection(), order.getProperty(), pageable.getPageSize(),
 				pageable.getOffset());
-	}
+	}	
 	
-	private List<LdpSearchResultDto> findElements(final String title, final Pageable pageable) {
-		List<LdpSearchResultDto> ldpSearchResultDtos = new ArrayList<LdpSearchResultDto>();
-		String query = buildFindQuery(TITLE_QUERY, title, pageable);
-		logger.info(String.format("findElements - Executing query %s", query));
+	private <T> List<T> executeQuery(final String query, final Function<JSONObject, T> mapper) {
+		List<T> ldpSearchResultDtos = new ArrayList<T>();		
+		logger.info(String.format("exceuteQuery - Executing query %s", query));
 		ResponseEntity<Object> response = sparqlExecQuery.callFusekiTrellis(query, false);
 
 		try {
@@ -129,40 +140,68 @@ public class LdpServiceImpl implements LdpService {
 
 				for (int i = 0; i < jsonResults.length(); i++) {
 					JSONObject jsonResult = jsonResults.getJSONObject(i);
-					LdpSearchResultDto entityCountDto = new LdpSearchResultDto();
-					entityCountDto.setUri(jsonResult.getJSONObject("uri").getString("value"));
-					entityCountDto.setTitle(jsonResult.getJSONObject("title").getString("value"));
-					ldpSearchResultDtos.add(entityCountDto);
+					T mappedElement = mapper.apply(jsonResult);
+					if (mappedElement!=null) {
+						ldpSearchResultDtos.add(mappedElement);
+					}
 				}
 			} else {
-				logger.error(String.format("findElements - Response error. code: %s | query: %s ",
+				logger.error(String.format("exceuteQuery - Response error. code: %s | query: %s ",
 						response.getStatusCode().name(), query));
 			}
 		} catch (Exception e) {
-			logger.error(String.format("findElements - Unkown error. query: %s ", query), e);
+			logger.error(String.format("exceuteQuery - Unkown error. query: %s ", query), e);
 		}
 		return ldpSearchResultDtos;
 	}
-
-	private Integer getElementsCount(final String countQuery) {
-		Integer count = 0;		
-		logger.info(String.format("getElementsCount - Executing query %s", countQuery));
-		ResponseEntity<Object> response = sparqlExecQuery.callFusekiTrellis(countQuery, false);
-
+	
+	private LdpSearchResultDto mapToLdpSearchResultDto (JSONObject jsonObject) {
+		LdpSearchResultDto dto = new LdpSearchResultDto();
 		try {
-			if (response.getStatusCode() == HttpStatus.OK) {
-				JSONObject jsonObject = new JSONObject((LinkedHashMap<String, Object>) response.getBody());
-				count = Integer.parseInt(jsonObject.getJSONObject("results").getJSONArray("bindings").getJSONObject(0)
-						.getJSONObject("count").getString("value"));
-				logger.info(String.format("getElementsCount - Count %s", count));
-			} else {
-				logger.error(String.format("getElementsCount - Response error. code: %s | query: %s ",
-						response.getStatusCode().name(), countQuery));
-			}
-		} catch (Exception e) {
-			logger.error(String.format("getElementsCount - Unkown error. query: %s ", countQuery), e);
+			dto.setUri(jsonObject.getJSONObject("uri").getString("value"));
+			dto.setTitle(jsonObject.getJSONObject("title").getString("value"));
+		}catch (Exception e) {
+			return null;
 		}
-		return count;
+		return dto;
+	}
+	
+	private LdpEntityCountDto mapToLdpEntityCountDto (JSONObject jsonObject) {
+		LdpEntityCountDto dto = new LdpEntityCountDto();
+		try {
+			dto.setEntity(jsonObject.getJSONObject("entity").getString("value"));
+			dto.setCount(Integer.parseInt(jsonObject.getJSONObject("count").getString("value")));
+		}catch (Exception e) {
+			return null;
+		}
+		return dto;
+	}
+	
+	private LdpEntityDetail mapToLdpEntityDetailsDto (JSONObject jsonObject) {
+		try {
+			String key = jsonObject.getJSONObject("key").getString("value");
+			String value = jsonObject.getJSONObject("value").getString("value");
+			return LdpEntityDetailsDto.buildDetail(key, value);
+		}catch (Exception e) {
+			return null;
+		}
+	}
+	
+	private Integer mapToCount(JSONObject jsonObject) {
+		try {
+			return Integer.parseInt(jsonObject.getJSONObject("count").getString("value"));
+		}catch (Exception e) {
+			return null;
+		}
+	}
+	
+	private boolean isValidUrl(String uri) {
+		try {
+			new URL(uri);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }
