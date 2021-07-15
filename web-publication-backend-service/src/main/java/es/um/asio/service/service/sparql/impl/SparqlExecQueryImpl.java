@@ -4,6 +4,7 @@
 package es.um.asio.service.service.sparql.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -272,6 +273,11 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 		return result;
 	}
+	
+	@Override
+	public ResponseEntity<Object> callFusekiTrellis(final String query, Boolean isFederated) {
+		return callFusekiTrellis(query, isFederated, null);
+	}
 
 	/**
 	 * Call fuseki trellis.
@@ -280,11 +286,17 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	 * @return the response entity
 	 */
 	@Override
-	public ResponseEntity<Object> callFusekiTrellis(final String query, Boolean isFederated) {
+	public ResponseEntity<Object> callFusekiTrellis(final String query, Boolean isFederated, String accept) {
 		ResponseEntity<Object> result = null;
 		if (!federationServices) {
 			try {
-				result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.POST, this.getBody(query),
+				HttpEntity<MultiValueMap<String, String>> body = this.getBody(query);
+				if (accept != null) {
+					HttpHeaders headers =  this.getHeaders();
+					headers.setAccept(Arrays.asList(MediaType.valueOf(accept)));
+					body = this.getBody(query, headers);
+				} 								
+				result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.POST, body,
 						Object.class);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
@@ -345,21 +357,26 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	 */
 	private HttpHeaders getHeaders() {
 		final HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);		
 		return headers;
 	}
 
+	
+	private HttpEntity<MultiValueMap<String, String>> getBody(final String query) {
+		return getBody(query, this.getHeaders());
+	}
+	
 	/**
 	 * Gets the body.
 	 *
 	 * @param query the query
 	 * @return the body
 	 */
-	private HttpEntity<MultiValueMap<String, String>> getBody(final String query) {
+	private HttpEntity<MultiValueMap<String, String>> getBody(final String query, final HttpHeaders headers) {
 		final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("query", query);
 
-		final HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, this.getHeaders());
+		final HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, headers);
 
 		return body;
 	}
