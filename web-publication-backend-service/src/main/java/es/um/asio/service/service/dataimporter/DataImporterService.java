@@ -13,5 +13,5 @@ public interface DataImporterService {
 	 * @param type
 	 * @return DocumentDto
 	 */
-	List<ImportErrorEntity> findErrors(Long id);
+	List<ImportErrorEntity> findErrors(String id);
 }

@@ -23,7 +23,7 @@ public class DataImporterController {
 	private DataImporterProxy dataImporterProxy;
 	
 	@GetMapping(DataImporterController.Mappings.ERRORS)
-	public List<String> dataImporterError(@PathVariable("id") final Long id) {		
+	public List<String> dataImporterError(@PathVariable("id") final String id) {		
 		return dataImporterProxy.findErrors(id);
 	}
 

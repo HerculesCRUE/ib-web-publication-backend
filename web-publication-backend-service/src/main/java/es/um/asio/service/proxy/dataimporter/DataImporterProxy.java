@@ -11,5 +11,5 @@ public interface DataImporterProxy {
 	 * @param type
 	 * @return DataImporterErrorDto
 	 */
-	List<String> findErrors(Long id);
+	List<String> findErrors(String id);
 }

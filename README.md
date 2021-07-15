@@ -68,6 +68,7 @@ Es preciso configurar las siguientes variables de entorno cuando se instale en u
 | `APP_KAFKA_IMPORT_ERROR_TOPIC_NAME` | Nombre del topic de Kafka para errores de importación | import-error | 
 | `SPRING_KAFKA_BOOTSTRAP_SERVERS` | URL del servicio de Kafka para los productores | localhost:29092 |
 | `SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS` | URL del servicio de Kafka para los consumidores | localhost:29092 |    
+| `APP_LDP_URI-NAMESPACE` | Namespace generado para almacenar las entidades en trellis. Se utiliza al consultarlas en el apartado LDP | http://hercules.org/um/es-ES/rec  |  
 
 ### Ejecución
 
