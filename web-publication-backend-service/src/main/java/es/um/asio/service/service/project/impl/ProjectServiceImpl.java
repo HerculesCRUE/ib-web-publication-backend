@@ -71,10 +71,10 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		StringBuilder strBuilder = new StringBuilder();
 
 		if (StringUtils.isNotBlank(id)) {
-			strBuilder.append("FILTER (regex(?id, \"");
+			strBuilder.append("FILTER (regex(?id, \"^");
 			strBuilder.append(id);
 
-			strBuilder.append("\")) . ");
+			strBuilder.append("$\")) . ");
 		}
 
 		if (filter != null) {
