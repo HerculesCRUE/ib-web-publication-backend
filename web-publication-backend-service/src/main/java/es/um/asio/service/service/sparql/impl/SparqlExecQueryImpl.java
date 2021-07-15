@@ -141,7 +141,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 			this.logger.info("Calling query: {}", this.selectPaginatedQueryDistinct(params));
 
 			contentResult = this.getElements(this.selectPaginatedQueryDistinct(params));
-			totalElements = this.getTotalElements(this.countQuery(params));
+			totalElements = this.getTotalElements(this.countQueryDistinct(params));
 
 			this.logger.info("Total: {}", totalElements);
 		} catch (final Exception e) {
@@ -262,6 +262,16 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		return result;
 	}
 
+	private String countQueryDistinct(final Map<String, String> params) {
+		final String result = String.format(FusekiConstants.QUERY_TEMPLATE_COUNT_DISTINCT,
+				params.get(FusekiConstants.COUNT_CHUNK), params.get(FusekiConstants.TYPE_CHUNK),
+				params.get(FusekiConstants.FIELDS_CHUNK), params.get(FusekiConstants.JOIN_CHUNK),
+				params.get(FusekiConstants.FILTERS_CHUNK), params.get(FusekiConstants.LIMIT),
+				params.get(FusekiConstants.OFFSET));
+
+		return result;
+	}
+
 	/**
 	 * Gets the elements.
 	 *
@@ -313,7 +323,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 		return result;
 	}
-	
+
 	@Override
 	public ResponseEntity<Object> callFusekiTrellis(final String query, Boolean isFederated) {
 		return callFusekiTrellis(query, isFederated, null);
@@ -332,12 +342,11 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 			try {
 				HttpEntity<MultiValueMap<String, String>> body = this.getBody(query);
 				if (accept != null) {
-					HttpHeaders headers =  this.getHeaders();
+					HttpHeaders headers = this.getHeaders();
 					headers.setAccept(Arrays.asList(MediaType.valueOf(accept)));
 					body = this.getBody(query, headers);
-				} 								
-				result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.POST, body,
-						Object.class);
+				}
+				result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.POST, body, Object.class);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
 			}
@@ -392,15 +401,14 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	 */
 	private HttpHeaders getHeaders() {
 		final HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);		
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		return headers;
 	}
 
-	
 	private HttpEntity<MultiValueMap<String, String>> getBody(final String query) {
 		return getBody(query, this.getHeaders());
 	}
-	
+
 	/**
 	 * Gets the body.
 	 *

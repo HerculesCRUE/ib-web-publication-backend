@@ -27,4 +27,5 @@ public class FusekiConstants {
 
 	public static final String QUERY_TEMPLATE_SELECT_DISTINCT = "PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> SELECT DISTINCT %s WHERE { %s %s %s %s } %s %s LIMIT %s offset %s";
 
+	public static final String QUERY_TEMPLATE_COUNT_DISTINCT = "PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> SELECT DISTINCT %s WHERE { %s %s %s %s } ";
 }
