@@ -68,6 +68,8 @@ public class LdpServiceImpl implements LdpService {
 			+ "  ?ac ?key ?value. "
 			+ "  FILTER regex(str(?ac), \"%s\", \"i\")   "
 			+ "}";
+	
+	private static final String JSON_LD_TEMPLATE = "CONSTRUCT {?ac ?key ?value} WHERE {%s}";
 			
 
 	private final Logger logger = LoggerFactory.getLogger(LdpServiceImpl.class);
@@ -95,8 +97,8 @@ public class LdpServiceImpl implements LdpService {
 	@Override
 	public LdpEntityDetailsDto findDetails(final String uri) {
 		LdpEntityDetailsDto detailsDto = findDetailsProperties(uri);
-		detailsDto.setRelations(findDetailsRelations(detailsDto));	
-		detailsDto.setUri(uri);
+		detailsDto.setRelations(findDetailsRelations(detailsDto));
+		detailsDto.setJsonLd(findDetailsJson(uri));
 		return detailsDto;				
 	}
 	
@@ -105,6 +107,10 @@ public class LdpServiceImpl implements LdpService {
 		detailsDto.setProperties(executeQuery(String.format(ENTITY_QUERY, uri), this::mapToLdpEntityDetailsDto));
 		detailsDto.setUri(uri);
 		return detailsDto;
+	}
+	
+	private String findDetailsJson(final String uri) {
+		return executeQuery(String.format(JSON_LD_TEMPLATE, String.format(ENTITY_QUERY, uri)), this::mapToString , false, "application/ld+json").get(0);
 	}
 	
 	private List<LdpEntityDetailsDto> findDetailsRelations (final LdpEntityDetailsDto detailsDto) {
@@ -129,13 +135,24 @@ public class LdpServiceImpl implements LdpService {
 	}	
 	
 	private <T> List<T> executeQuery(final String query, final Function<JSONObject, T> mapper) {
+		return executeQuery(query, mapper, true, null);
+	}
+	
+	private <T> List<T> executeQuery(final String query, final Function<JSONObject, T> mapper, final boolean mapResults, final String accept) {
 		List<T> ldpSearchResultDtos = new ArrayList<T>();		
 		logger.info(String.format("exceuteQuery - Executing query %s", query));
-		ResponseEntity<Object> response = sparqlExecQuery.callFusekiTrellis(query, false);
+		ResponseEntity<Object> response = sparqlExecQuery.callFusekiTrellis(query, false, accept);
 
 		try {
-			if (response.getStatusCode() == HttpStatus.OK) {
+			if (response.getStatusCode() == HttpStatus.OK) {				
+				
 				JSONObject jsonObject = new JSONObject((LinkedHashMap<String, Object>) response.getBody());
+				
+				if (!mapResults) {
+					ldpSearchResultDtos.add(mapper.apply(jsonObject));
+					return ldpSearchResultDtos;
+				}
+				
 				JSONArray jsonResults = jsonObject.getJSONObject("results").getJSONArray("bindings");
 
 				for (int i = 0; i < jsonResults.length(); i++) {
@@ -190,6 +207,14 @@ public class LdpServiceImpl implements LdpService {
 	private Integer mapToCount(JSONObject jsonObject) {
 		try {
 			return Integer.parseInt(jsonObject.getJSONObject("count").getString("value"));
+		}catch (Exception e) {
+			return null;
+		}
+	}
+	
+	private String mapToString(JSONObject jsonObject) {
+		try {
+			return jsonObject.toString();
 		}catch (Exception e) {
 			return null;
 		}
