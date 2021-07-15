@@ -98,11 +98,25 @@ keycloak:
 
 # Spring configuration
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: herculesizertis@gmail.com
+    password: h3rcul3s1z3rt1s
+    properties:
+      mail:
+        smtp:
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          starttls:
+            enable: true
   kafka:
-    bootstrap-servers: herc-iz-bd-prod.atica.um.es:9092
+    bootstrap-servers: herc-iz-bd-prod.atica.um.es:29092
     consumer:
       bootstrap-servers:
-        - herc-iz-bd-prod.atica.um.es:9092
+        - herc-iz-bd-prod.atica.um.es:29092
       group-id: import-error-group
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
