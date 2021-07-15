@@ -12,6 +12,8 @@ public class LdpEntityDetailsDto {
 
 	private String uri;
 	
+	private String jsonLd;
+	
 	private List<LdpEntityDetail> properties;
 		
 	private List<LdpEntityDetailsDto> relations;
