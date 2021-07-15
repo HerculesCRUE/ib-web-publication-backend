@@ -27,7 +27,7 @@ public class SupervisorRoleServiceImpl extends FusekiService<SupervisorRoleFilte
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(SupervisorRoleFilter filter, Pageable pageable) {
 		logger.info("Searching article keywords with filter: {} page: {}", filter, pageable);
@@ -40,17 +40,15 @@ public class SupervisorRoleServiceImpl extends FusekiService<SupervisorRoleFilte
 	@Override
 	public String filtersChunk(SupervisorRoleFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 

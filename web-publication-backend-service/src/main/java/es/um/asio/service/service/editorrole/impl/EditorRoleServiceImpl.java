@@ -26,7 +26,7 @@ public class EditorRoleServiceImpl extends FusekiService<EditorRoleFilter> imple
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(EditorRoleFilter filter, Pageable pageable) {
 		logger.info("Searching editor role with filter: {} page: {}", filter, pageable);
@@ -39,7 +39,7 @@ public class EditorRoleServiceImpl extends FusekiService<EditorRoleFilter> imple
 	@Override
 	public String filtersChunk(EditorRoleFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDate())) {
 				strBuilder.append("FILTER (?date = \"");
@@ -48,7 +48,7 @@ public class EditorRoleServiceImpl extends FusekiService<EditorRoleFilter> imple
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDedication())) {
 				strBuilder.append("FILTER (?dedication = \"");
 				strBuilder.append(filter.getDedication());
@@ -56,7 +56,7 @@ public class EditorRoleServiceImpl extends FusekiService<EditorRoleFilter> imple
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDedicationPercentage())) {
 				strBuilder.append("FILTER (?dedicationPercentage = \"");
 				strBuilder.append(filter.getDedicationPercentage());
@@ -73,21 +73,20 @@ public class EditorRoleServiceImpl extends FusekiService<EditorRoleFilter> imple
 				strBuilder.append(filter.getDescription());
 				strBuilder.append("\", \"i\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("EditorRole", "date", "dedication", "dedicationPercentage", "description", "id", "hasKnowledgeArea");
+		return new Entity("EditorRole", "date", "dedication", "dedicationPercentage", "description", "id",
+				"hasKnowledgeArea");
 	}
 }

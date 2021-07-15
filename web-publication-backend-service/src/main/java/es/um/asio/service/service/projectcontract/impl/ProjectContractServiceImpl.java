@@ -26,7 +26,7 @@ public class ProjectContractServiceImpl extends FusekiService<ProjectContractFil
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(ProjectContractFilter filter, Pageable pageable) {
 		logger.info("Searching ProjectContracts with filter: {} page: {}", filter, pageable);
@@ -39,7 +39,7 @@ public class ProjectContractServiceImpl extends FusekiService<ProjectContractFil
 	@Override
 	public String filtersChunk(ProjectContractFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getAttachment())) {
 				strBuilder.append("FILTER (?attachment = \"");
@@ -48,7 +48,7 @@ public class ProjectContractServiceImpl extends FusekiService<ProjectContractFil
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getEndDate())) {
 				strBuilder.append("FILTER (?endDate = \"");
 				strBuilder.append(filter.getEndDate());
@@ -56,15 +56,13 @@ public class ProjectContractServiceImpl extends FusekiService<ProjectContractFil
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getStartDate())) {
 				strBuilder.append("FILTER (?startDate = \"");
 				strBuilder.append(filter.getStartDate());
@@ -72,7 +70,7 @@ public class ProjectContractServiceImpl extends FusekiService<ProjectContractFil
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getSummary())) {
 				strBuilder.append("FILTER (LANG(?summary) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
@@ -82,12 +80,13 @@ public class ProjectContractServiceImpl extends FusekiService<ProjectContractFil
 				strBuilder.append("\", \"i\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("ProjectContract", "attachment", "endDate", "id", "startDate", "summary", "Publication", "SubjectArea");
+		return new Entity("ProjectContract", "attachment", "endDate", "id", "startDate", "summary", "Publication",
+				"SubjectArea");
 	}
 }

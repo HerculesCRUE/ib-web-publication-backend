@@ -73,7 +73,6 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		if (StringUtils.isNotBlank(id)) {
 			strBuilder.append("FILTER (regex(?id, \"^");
 			strBuilder.append(id);
-
 			strBuilder.append("$\")) . ");
 		}
 

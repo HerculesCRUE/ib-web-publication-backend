@@ -91,11 +91,9 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 			}
 
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 
 			if (StringUtils.isNotBlank(filter.getIsStartup())) {
@@ -154,28 +152,30 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 
 		return new Entity("Organization", types, "abbreviation", "id", "title", "description", "nowhere:type");
 	}
+
 	@Override
 	public Entity retrieveEntity(String type) {
 		List<String> types = new ArrayList<String>();
 		String[] splitType = type.split("/");
 		types.add(splitType[splitType.length - 1]);
-		
+
 		Entity entity;
 
-		// TODO Pending update of ETL: University should have at least the same fields as Organization
+		// TODO Pending update of ETL: University should have at least the same fields
+		// as Organization
 		if (type.equals("University")) {
 			entity = new Entity("Organization", types, "abbreviation", "id", "title", "description", "nowhere:type");
 		} else {
-			entity = new Entity("Organization", types, "abbreviation", "description", "dateEnd", "id",
-					"keyword", "dateStart", "title", "nowhere:type"); 
+			entity = new Entity("Organization", types, "abbreviation", "description", "dateEnd", "id", "keyword",
+					"dateStart", "title", "nowhere:type");
 		}
-		
+
 		List<String> optionalFields = new ArrayList<String>();
 		optionalFields.add("publicCompany");
 		optionalFields.add("isStartup");
 		optionalFields.add("homepage");
 		entity.setOptionalFields(optionalFields);
-		
+
 		return entity;
 	}
 

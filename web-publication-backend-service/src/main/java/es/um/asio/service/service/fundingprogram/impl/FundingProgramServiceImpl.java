@@ -26,7 +26,7 @@ public class FundingProgramServiceImpl extends FusekiService<FundingProgramFilte
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(FundingProgramFilter filter, Pageable pageable) {
 		logger.info("Searching FundingPrograms with filter: {} page: {}", filter, pageable);
@@ -39,7 +39,7 @@ public class FundingProgramServiceImpl extends FusekiService<FundingProgramFilte
 	@Override
 	public String filtersChunk(FundingProgramFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDate())) {
 				strBuilder.append("FILTER (?date = \"");
@@ -48,13 +48,11 @@ public class FundingProgramServiceImpl extends FusekiService<FundingProgramFilte
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 
 			if (StringUtils.isNotBlank(filter.getTitle())) {
@@ -66,7 +64,7 @@ public class FundingProgramServiceImpl extends FusekiService<FundingProgramFilte
 				strBuilder.append("\", \"i\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 

@@ -26,7 +26,7 @@ public class BookServiceImpl extends FusekiService<BookFilter> implements BookSe
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(BookFilter filter, Pageable pageable) {
 		logger.info("Searching books with filter: {} page: {}", filter, pageable);
@@ -39,7 +39,7 @@ public class BookServiceImpl extends FusekiService<BookFilter> implements BookSe
 	@Override
 	public String filtersChunk(BookFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDate())) {
 				strBuilder.append("FILTER (?date = \"");
@@ -48,7 +48,7 @@ public class BookServiceImpl extends FusekiService<BookFilter> implements BookSe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDoi())) {
 				strBuilder.append("FILTER (?doi = \"");
 				strBuilder.append(filter.getDoi());
@@ -56,7 +56,7 @@ public class BookServiceImpl extends FusekiService<BookFilter> implements BookSe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getEdition())) {
 				strBuilder.append("FILTER (?edition = \"");
 				strBuilder.append(filter.getEdition());
@@ -64,7 +64,7 @@ public class BookServiceImpl extends FusekiService<BookFilter> implements BookSe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getEndPage())) {
 				strBuilder.append("FILTER (?endPage = \"");
 				strBuilder.append(filter.getEndPage());
@@ -72,7 +72,7 @@ public class BookServiceImpl extends FusekiService<BookFilter> implements BookSe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getIccn())) {
 				strBuilder.append("FILTER (?iccn = \"");
 				strBuilder.append(filter.getIccn());
@@ -80,15 +80,13 @@ public class BookServiceImpl extends FusekiService<BookFilter> implements BookSe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getPlaceOfPublication())) {
 				strBuilder.append("FILTER (?placeOfPublication = \"");
 				strBuilder.append(filter.getPlaceOfPublication());
@@ -96,7 +94,7 @@ public class BookServiceImpl extends FusekiService<BookFilter> implements BookSe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getPublishedIn())) {
 				strBuilder.append("FILTER (?publishedIn = \"");
 				strBuilder.append(filter.getPublishedIn());
@@ -104,7 +102,7 @@ public class BookServiceImpl extends FusekiService<BookFilter> implements BookSe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getStartPage())) {
 				strBuilder.append("FILTER (?startPage = \"");
 				strBuilder.append(filter.getStartPage());
@@ -121,7 +119,7 @@ public class BookServiceImpl extends FusekiService<BookFilter> implements BookSe
 				strBuilder.append(filter.getTitle());
 				strBuilder.append("\", \"i\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getSummary())) {
 				strBuilder.append("FILTER (LANG(?summary) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
@@ -130,7 +128,7 @@ public class BookServiceImpl extends FusekiService<BookFilter> implements BookSe
 				strBuilder.append(filter.getSummary());
 				strBuilder.append("\", \"i\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDateFrom())) {
 				strBuilder.append("FILTER (?date >= \"");
 				strBuilder.append(filter.getDateFrom());
@@ -138,7 +136,7 @@ public class BookServiceImpl extends FusekiService<BookFilter> implements BookSe
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDateTo())) {
 				strBuilder.append("FILTER (?date <= \"");
 				strBuilder.append(filter.getDateTo());
@@ -147,13 +145,14 @@ public class BookServiceImpl extends FusekiService<BookFilter> implements BookSe
 				strBuilder.append(") . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Book", "date", "doi", "edition", "endPage", "iccn", "id", "placeOfPublication", "publishedIn", "startPage", "summary", "title");
+		return new Entity("Book", "date", "doi", "edition", "endPage", "iccn", "id", "placeOfPublication",
+				"publishedIn", "startPage", "summary", "title");
 	}
 
 }

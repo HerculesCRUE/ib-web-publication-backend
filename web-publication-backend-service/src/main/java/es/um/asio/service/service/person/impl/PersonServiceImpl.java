@@ -62,7 +62,6 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 
 		return serviceSPARQL.run(query);
 	}
-	
 
 	@Override
 	public List<Object> getArea() {
@@ -125,11 +124,9 @@ public class PersonServiceImpl extends FusekiService<PersonFilter> implements Pe
 			}
 
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 
 			if (StringUtils.isNotBlank(filter.getImage())) {

@@ -17,7 +17,8 @@ import es.um.asio.service.service.researcherposition.ResearcherPositionService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
 
 @Service
-public class ResearcherPositionServiceImpl extends FusekiService<ResearcherPositionFilter> implements ResearcherPositionService {
+public class ResearcherPositionServiceImpl extends FusekiService<ResearcherPositionFilter>
+		implements ResearcherPositionService {
 
 	/**
 	 * Logger
@@ -26,7 +27,7 @@ public class ResearcherPositionServiceImpl extends FusekiService<ResearcherPosit
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(ResearcherPositionFilter filter, Pageable pageable) {
 		logger.info("Searching ResearcherPositions with filter: {} page: {}", filter, pageable);
@@ -39,17 +40,15 @@ public class ResearcherPositionServiceImpl extends FusekiService<ResearcherPosit
 	@Override
 	public String filtersChunk(ResearcherPositionFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
