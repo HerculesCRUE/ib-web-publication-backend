@@ -9,7 +9,7 @@ app:
     
     jpa:
       dialect: org.hibernate.dialect.MariaDB53Dialect
-      generate-ddl: false
+      generate-ddl: true
       show-sql: false
       properties:
         hibernate.temp.use_jdbc_metadata_defaults: false
@@ -25,6 +25,9 @@ app:
   # Service who get Sparql query results from certain nodes
   federationNode:
     url: http://localhost:9328/federation/nodes/list
+  serviceDiscoveryExcludeNodes:
+    url: https://linkeddata1.um.es/service-discovery/service-discovery/exclude/nodes/name
+  node: um
   # CORS
   cors:
     enabled: true
@@ -48,7 +51,10 @@ app:
   # Properties
   properties:
     url: http://hercules.org
-
+  kafka:
+    import-error-topic-name: import-error
+  ldp:
+    uri-namespace: https://ldpld1.um.es/um/es-ES/rec
 ## Actuator
 management:
   endpoint:
@@ -77,7 +83,7 @@ server:
 
 #Keycloak Configuration  
 keycloak:
-  auth-server-url: http://herculesasioizertis.desa.um.es/auth
+  auth-server-url: http://localhost:8080/auth
   realm: umasio
   resource: login-app
   security-constraints:
@@ -91,3 +97,14 @@ keycloak:
   enabled: true
   cors: true
   bearer-only: true
+
+# Spring configuration
+spring:
+  kafka:
+    bootstrap-servers: localhost:29092
+    consumer:
+      bootstrap-servers:
+        - localhost:29092
+      group-id: import-error-group
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

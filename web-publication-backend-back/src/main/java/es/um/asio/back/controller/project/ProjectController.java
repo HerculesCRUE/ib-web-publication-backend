@@ -51,35 +51,36 @@ public class ProjectController {
 	public List<GraphicsDto> getbyModality() {
 		return this.proxy.getbyModality();
 	}
-	
+
 	@GetMapping(ProjectController.Mappings.GET + ProjectController.Mappings.PARTICIPANTS)
-	public Page<PersonDto> getParticipants(@PathVariable("id") final String id, final PersonFilter filter, final Pageable pageable) {
+	public Page<PersonDto> getParticipants(@PathVariable("id") final String id, final PersonFilter filter,
+			final Pageable pageable) {
 		Page<PersonParticipantDto> page = this.proxy.getParticipants(id, filter, pageable);
-		
+
 		List<PersonDto> persons = new ArrayList<>();
-		
+
 		for (PersonParticipantDto person : page.getContent()) {
 			PersonDto p = new PersonDto();
-			
+
 //			p.setBirthDate(person.getRelatesBirthDate());
 //			p.setDescription(person.getRelatesDescription());
 //			p.setFirstName(person.getRelatesFirstName());
-			p.setGender(person.getRelatesGender());
+			p.setGender(person.getInheresInGender());
 //			p.setHasContactInfo(person.getRelatesHasContactInfo());
 //			p.setHomepage(person.getRelatesHomepage());
-			p.setId(person.getRelatesId());
+			p.setId(person.getInheresInId());
 //			p.setImage(person.getRelatesImage());
-			p.setName(person.getRelatesName());
-			p.setNickname(person.getRelatesNickname());
-			p.setPersonalMaibox(person.getRelatesPersonalMaibox());
-			p.setResearchLine(person.getRelatesResearchLine());
-			p.setSubjectArea(person.getRelatesSubjectArea());
+			p.setName(person.getInheresInName());
+			p.setNickname(person.getInheresInNickname());
+			p.setPersonalMaibox(person.getInheresInPersonalMaibox());
+			p.setResearchLine(person.getInheresInResearchLine());
+			p.setSubjectArea(person.getInheresInSubjectArea());
 //			p.setSurname(person.getRelatesSurname());
 //			p.setTaxId(person.getRelatesTaxId());
-			
+
 			persons.add(p);
 		}
-		
+
 		return new PageImplHelper<PersonDto>(persons, page.getPageable(), page.getTotalElements());
 	}
 
@@ -104,7 +105,7 @@ public class ProjectController {
 		 * Graphics investigation actions.
 		 */
 		protected static final String BYMODALITY = "/byModality";
-		
+
 		/**
 		 * Mapping for participants.
 		 */

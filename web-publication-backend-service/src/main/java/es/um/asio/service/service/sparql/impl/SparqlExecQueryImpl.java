@@ -55,6 +55,12 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	@Value("${app.federationNode.url}")
 	private String federationNode;
 
+	@Value("${app.serviceDiscoveryExcludeNodes.url}")
+	private String serviceDiscoveryExcludeNodes;
+
+	@Value("${app.node}")
+	private String node;
+
 	@Value("${app.federation.services}")
 	private Boolean federationServices;
 
@@ -298,10 +304,23 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 			} else {
 
 				try {
-					tempResult = this.restTemplate.exchange(this.federationUrl, HttpMethod.POST,
-							this.getBody(query, PAGE_SIZE, "fuseki"), Object.class);
+					tempResult = this.restTemplate.exchange(
+							this.serviceDiscoveryExcludeNodes+"?nodeName="+node,
+							HttpMethod.GET,
+							getBodyServiceDiscovery(node),
+							Object.class
+					);
+					String nodes;
+					if (tempResult.getStatusCode().is2xxSuccessful()) {
+						nodes = String.join(",", (List<String>) createResult(tempResult).getBody());
+					} else {
+						nodes = node;
+					}
+					tempResult = this.restTemplate.exchange(this.federationNode, HttpMethod.POST,
+							this.getBody(query, PAGE_SIZE, "fuseki", nodes), Object.class);
 
 					result = createResult(tempResult);
+
 
 				} catch (final Exception e) {
 					this.logger.error("Error retrieving results from federation cause {}", e.getMessage());
@@ -358,6 +377,19 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	}
 
 	private HttpEntity<MultiValueMap<String, String>> getBody(final String query, final int pageSize,
+															  final String tripleStore, final List<String> nodeList) {
+		final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("query", query);
+		params.add("pageSize", Integer.toString(pageSize));
+		params.add("tripleStore", tripleStore);
+		params.add("nodeList", String.join(", ",nodeList));
+
+		final HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, this.getHeaders());
+
+		return body;
+	}
+
+	private HttpEntity<MultiValueMap<String, String>> getBody(final String query, final int pageSize,
 			final String tripleStore, final String nodes) {
 		final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("query", query);
@@ -365,6 +397,14 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		params.add("tripleStore", tripleStore);
 		params.add("nodeList", nodes);
 
+		final HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, this.getHeaders());
+
+		return body;
+	}
+
+	private HttpEntity<MultiValueMap<String, String>> getBodyServiceDiscovery(final String node) {
+		final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("nodeName", node);
 		final HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, this.getHeaders());
 
 		return body;

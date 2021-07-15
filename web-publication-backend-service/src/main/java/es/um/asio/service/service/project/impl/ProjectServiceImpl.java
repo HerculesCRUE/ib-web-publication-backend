@@ -71,11 +71,10 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		StringBuilder strBuilder = new StringBuilder();
 
 		if (StringUtils.isNotBlank(id)) {
-			strBuilder.append("FILTER (?id = \"");
+			strBuilder.append("FILTER (regex(?id, \"");
 			strBuilder.append(id);
-			strBuilder.append("\"@");
-			strBuilder.append(Constants.SPANISH_LANGUAGE_SHORT);
-			strBuilder.append(") . ");
+
+			strBuilder.append("\")) . ");
 		}
 
 		if (filter != null) {
@@ -204,7 +203,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	@Override
 	public Entity retrieveEntity(ProjectFilter filter) {
 		Entity entity = new Entity("Project", "abbreviation", "endDate", "id", "projectClassification", "startDate",
-				"status", "modality", "title");
+				"modality", "title");
 
 		// Add data to subentity atributes and filters
 		if (filter.getAuthorId() != null && !filter.getAuthorId().isEmpty()) {
@@ -241,8 +240,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	@Override
 	public Entity retrieveDetailEntity() {
 		return new Entity("Project", "abbreviation", "description", "endDate", "foreseenJustificationDate", "id",
-				"keyword", "modality", "needsEthicalValidation", "projectClassification", "startDate", "status",
-				"title");
+				"keyword", "modality", "needsEthicalValidation", "projectClassification", "startDate", "title");
 	}
 
 	@Override
@@ -269,25 +267,35 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	}
 
 	private Entity retrieveParticipantsEntity() {
-		Entity entity = new Entity("Project", "nowhere:relatesBirthDate", "nowhere:relatesDescription",
-				"nowhere:relatesFirstName", "nowhere:relatesGender", "nowhere:relatesId", "nowhere:relatesImage",
-				"nowhere:relatesName", "nowhere:relatesNickname", "nowhere:relatesResearchLine",
-				"nowhere:relatesSurname", "nowhere:relatesTaxId", "relates", "id");
+		Entity entity = new Entity("Project", "id", "nowhere:inheresInBirthDate", "nowhere:inheresInDescription",
+				"nowhere:inheresInFirstName", "nowhere:inheresInGender", "nowhere:inheresInImage",
+				"nowhere:inheresInName", "nowhere:inheresInId", "nowhere:inheresInNickname",
+				"nowhere:inheresInResearchLine", "nowhere:inheresInSurname", "nowhere:inheresInTaxId");
 
 		List<Subentity> subentities = new ArrayList<Subentity>();
-		Subentity subentity = new Subentity();
-
+		// Extra fields
 		String fieldName = "relates";
 
-		subentity.setIgnorePrefix(false);
+		Subentity subentity = new Subentity();
+		subentity.setIgnorePrefix(true);
 		subentity.setFieldName(fieldName);
-		subentity.setFields(Arrays.asList("birthDate", "description", "firstName", "gender", "id", "image", "name",
+
+		// Add All
+		subentities.add(subentity);
+		entity.setSubentities(subentities);
+
+		// Extra fields
+		String fieldName2 = "inheresIn";
+		Subentity subentity2 = new Subentity();
+		// subentity2.setIgnorePrefix(true);
+		subentity2.setQueryFieldName(fieldName2);
+		subentity2.setFieldName(fieldName2);
+		subentity2.setFields(Arrays.asList("birthDate", "id", "description", "firstName", "gender", "image", "name",
 				"nickname", "researchLine", "surname", "taxId"));
 
-		Map<String, String> filters = new HashMap<>();
-		subentity.setFilters(filters);
-		subentities.add(subentity);
-
+		// Add All
+		subentity.setSubentities(new ArrayList<Subentity>());
+		subentity.getSubentities().add(subentity2);
 		entity.setSubentities(subentities);
 
 		return entity;
