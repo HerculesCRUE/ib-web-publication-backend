@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Book controller.
@@ -42,7 +43,7 @@ public class MailController {
 		String subject = (String) map.get("subject");
 		String text = (String) map.get("text");
 		emailService.sendSimpleMail(mails, subject, text);
-		return "Done";
+		return "{\"status\":\"done\"}";
 	}
 	
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)

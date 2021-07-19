@@ -4,7 +4,7 @@ app:
     datasource:
       driver-class-name: com.mysql.jdbc.Driver
       username: root
-      password: root
+      password: 1z3rt1s
       url: jdbc:mysql://localhost:3307/umasio?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
     
     jpa:
@@ -75,7 +75,7 @@ management:
       
 ## In case of configure web endpoints, remove it or change port number
 server:
-  port: 8787
+  port: 18787
   use-forward-headers: true
   tomcat:
     remote-ip-header: x-forwarded-for
