@@ -87,14 +87,6 @@ public class DoctoralThesisServiceImpl extends FusekiService<DoctoralThesisFilte
 				strBuilder.append(") . ");
 			}
 
-			if (StringUtils.isNotBlank(filter.getPublishedIn())) {
-				strBuilder.append("FILTER (?publishedIn = \"");
-				strBuilder.append(filter.getPublishedIn());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
-			}
-
 			if (StringUtils.isNotBlank(filter.getStartPage())) {
 				strBuilder.append("FILTER (?startPage = \"");
 				strBuilder.append(filter.getStartPage());
@@ -127,8 +119,8 @@ public class DoctoralThesisServiceImpl extends FusekiService<DoctoralThesisFilte
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Doctoral-thesis", "abbreviation", "date", "doi", "endPage", "id", "placeOfPublication",
-				"publishedIn", "startPage", "title");
+		return new Entity("Doctoral-thesis", "abbreviation", "date", "doi", "pageEnd", "id", "placeOfPublication",
+				"pageStart", "title");
 	}
 
 }
