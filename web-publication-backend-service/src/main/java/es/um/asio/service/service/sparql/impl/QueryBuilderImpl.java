@@ -131,7 +131,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 
 				for (int i = 0; i < split.length; i++) {
 					strBuilder.append(i > 0 ? "|" : "");
-					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/def/");
 					strBuilder.append(split[i]);
 					strBuilder.append(">");
 				}
@@ -159,7 +159,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 
 				for (int i = 0; i < split.length; i++) {
 					strBuilder.append(i > 0 ? "|" : "");
-					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/def/");
 					strBuilder.append(split[i]);
 					strBuilder.append(">");
 				}
@@ -178,7 +178,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 		StringBuilder strBuilder = new StringBuilder();
 
 		strBuilder.append("?x ");
-		strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+		strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/def/");
 		strBuilder.append(field);
 		strBuilder.append("> ");
 		strBuilder.append("?");
@@ -192,7 +192,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 		StringBuilder strBuilder = new StringBuilder();
 
 		strBuilder.append("?" + prefix + " ");
-		strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+		strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/def/");
 		strBuilder.append(field);
 		strBuilder.append("> ");
 		strBuilder.append("?");
@@ -220,7 +220,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 					strBuilder.append("?");
 					strBuilder.append(prefix);
 					strBuilder.append(" ");
-					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/def/");
 					strBuilder.append(subentity.getFieldName());
 					strBuilder.append("> ");
 					strBuilder.append("?");
@@ -249,7 +249,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 				if (subentity.getFields() != null) {
 					for (String field : subentity.getFields()) {
 						strBuilder.append("?" + namedField + " ");
-						strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+						strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/def/");
 						strBuilder.append(field);
 						strBuilder.append("> ");
 						strBuilder.append("?");
@@ -267,7 +267,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 					StringBuilder strBuilderFilters = new StringBuilder();
 					for (Entry<String, String> filter : subentity.getFilters().entrySet()) {
 						strBuilder.append("?" + nextPrefix + " ");
-						strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+						strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/def/");
 						strBuilder.append(filter.getKey());
 						strBuilder.append("> ");
 						strBuilder.append("?");
@@ -347,7 +347,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 					fields.append(" ");
 
 					where.append(model);
-					where.append(" <" + this.propetiesUrl + "/um/es-ES/rec/");
+					where.append(" <" + this.propetiesUrl + "/um/es-ES/def/");
 					where.append(s.getValue());
 					where.append("> ?");
 					where.append(s.getValue());
