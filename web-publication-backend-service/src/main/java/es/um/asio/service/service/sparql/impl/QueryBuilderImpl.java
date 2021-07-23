@@ -215,7 +215,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 				String namedField = (subentity.getQueryFieldName() != null && !subentity.getQueryFieldName().isBlank())
 						? subentity.getQueryFieldName()
 						: subentity.getFieldName();
-				String nextPrefix = (prefix.isEmpty()) ? namedField : prefix + capitalizeFirstLetter(namedField);
+				String nextPrefix = (prefix.isEmpty()) ? namedField : prefix + namedField;
 				if (subentity.getQueryFieldName() != null && !subentity.getQueryFieldName().isBlank()) {
 					strBuilder.append("?");
 					strBuilder.append(prefix);
@@ -256,7 +256,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 						if (subentity.getIgnorePrefix() != null && subentity.getIgnorePrefix()) {
 							strBuilder.append(field);
 						} else {
-							strBuilder.append(namedField + capitalizeFirstLetter(field));
+							strBuilder.append(namedField + field);
 						}
 						strBuilder.append(" . ");
 					}
@@ -271,10 +271,10 @@ public class QueryBuilderImpl implements QueryBuilder {
 						strBuilder.append(filter.getKey());
 						strBuilder.append("> ");
 						strBuilder.append("?");
-						strBuilder.append(nextPrefix + capitalizeFirstLetter(filter.getKey()));
+						strBuilder.append(nextPrefix + filter.getKey());
 						strBuilder.append(" . ");
 						strBuilderFilters.append("FILTER ( str(?");
-						strBuilderFilters.append(nextPrefix + capitalizeFirstLetter(filter.getKey()));
+						strBuilderFilters.append(nextPrefix + filter.getKey());
 						strBuilderFilters.append(") = \"");
 						strBuilderFilters.append(filter.getValue());
 						strBuilderFilters.append("\") . ");
@@ -378,10 +378,10 @@ public class QueryBuilderImpl implements QueryBuilder {
 		return strBuilder.toString();
 	}
 
-	private String capitalizeFirstLetter(String original) {
-		if (original == null || original.length() == 0) {
-			return original;
-		}
-		return original.substring(0, 1).toUpperCase() + original.substring(1);
-	}
+//	private String capitalizeFirstLetter(String original) {
+//		if (original == null || original.length() == 0) {
+//			return original;
+//		}
+//		return original.substring(0, 1).toUpperCase() + original.substring(1);
+//	}
 }

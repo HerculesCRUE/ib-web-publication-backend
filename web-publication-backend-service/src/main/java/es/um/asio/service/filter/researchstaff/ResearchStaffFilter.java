@@ -22,11 +22,13 @@ public class ResearchStaffFilter extends Filter {
 	 * The name
 	 */
 	private String name;
-	
+
 	/**
 	 * The title
 	 */
 	private String title;
-	
+
 	private String knowledgeArea;
+
+	private String organizationId;
 }

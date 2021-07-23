@@ -145,7 +145,7 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 	@Override
 	public Entity retrieveEntity(OrganizationFilter filter) {
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
-				: Arrays.asList("Organization", "University");
+				: Arrays.asList("Center", "Department", "Research-group", "Organization", "Funding-organization");
 
 		return new Entity("Organization", types, "abbreviation", "id", "title", "description", "nowhere:type");
 	}
@@ -160,18 +160,11 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 
 		List<String> optionalFields = new ArrayList<>();
 
-		// TODO Pending update of ETL: University should have at least the same fields
-		// as Organization
-		if (type.equals("University")) {
-			entity = new Entity("Organization", types, "abbreviation", "id", "title", "description", "nowhere:type");
-		} else {
-			entity = new Entity("Organization", types, "abbreviation", "description", "id", "title", "nowhere:type");
+		entity = new Entity("Organization", types, "abbreviation", "description", "id", "title", "nowhere:type");
 
-			optionalFields.add("dateEnd");
-			optionalFields.add("keyword");
-			optionalFields.add("dateStart");
-		}
-
+		optionalFields.add("dateEnd");
+		optionalFields.add("keyword");
+		optionalFields.add("dateStart");
 		optionalFields.add("publicCompany");
 		optionalFields.add("isStartup");
 		optionalFields.add("homepage");
