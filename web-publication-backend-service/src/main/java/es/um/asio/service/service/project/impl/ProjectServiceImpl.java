@@ -260,10 +260,10 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	}
 
 	private Entity retrieveParticipantsEntity() {
-		Entity entity = new Entity("Project", "id", "nowhere:inheresInBirthDate", "nowhere:inheresInDescription",
-				"nowhere:inheresInFirstName", "nowhere:inheresInGender", "nowhere:inheresInImage",
-				"nowhere:inheresInName", "nowhere:inheresInId", "nowhere:inheresInNickname",
-				"nowhere:inheresInResearchLine", "nowhere:inheresInSurname", "nowhere:inheresInTaxId");
+		Entity entity = new Entity("Project", "id", "nowhere:inheresInbirthDate", "nowhere:inheresIndescription",
+				"nowhere:inheresInfirstName", "nowhere:inheresIngender", "nowhere:inheresInimage",
+				"nowhere:inheresInname", "nowhere:inheresInid", "nowhere:inheresInnickname",
+				"nowhere:inheresInresearchLine", "nowhere:inheresInsurname", "nowhere:inheresIntaxId");
 
 		List<Subentity> subentities = new ArrayList<Subentity>();
 		// Extra fields
