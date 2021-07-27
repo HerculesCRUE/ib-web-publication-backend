@@ -54,7 +54,7 @@ app:
   kafka:
     import-error-topic-name: import-error
   ldp:
-    uri-namespace: https://ldpld1.um.es/um/es-ES/rec
+    uri-namespace: http://hercules.org/um/es-ES
 ## Actuator
 management:
   endpoint:

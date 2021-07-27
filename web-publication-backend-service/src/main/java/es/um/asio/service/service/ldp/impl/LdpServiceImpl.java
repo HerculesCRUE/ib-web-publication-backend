@@ -36,20 +36,20 @@ public class LdpServiceImpl implements LdpService {
 	
 	private static final String COUNT_QUERY = "SELECT ?entity (count(distinct ?ac) as ?count) " + "WHERE { "
 			+ "  ?ac <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?entity . "
-			+ "  FILTER regex(str(?entity), \"%s\", \"i\") " + "} " + "GROUP BY ?entity " + "ORDER BY %s (?%s) "
+			+ "  FILTER regex(str(?entity), \"%s/rec\", \"i\") " + "} " + "GROUP BY ?entity " + "ORDER BY %s (?%s) "
 			+ "LIMIT %s " + "OFFSET %s ";
 
 	private static final String COUNT_QUERY_COUNT = "SELECT (count(distinct ?entity) as ?count) " + "WHERE { "
 			+ "  ?ac <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?entity . "
-			+ "  FILTER regex(str(?entity), \"%s\", \"i\") " + "}";
+			+ "  FILTER regex(str(?entity), \"%s/rec\", \"i\") " + "}";
 	
 	private static final String TITLE_QUERY = "SELECT ?uri ?title "
 			+ "WHERE {"
 			+ "{?uri <%s/title> ?title."
-			+ "    FILTER regex(?title, \"%s\", \"i\")} "
+			+ "    FILTER regex(?title, \"%s/def\", \"i\")} "
 			+ "UNION "
 			+ "{ ?uri <%s/name> ?title."
-			+ "    FILTER regex(?title, \"%s\", \"i\") }"
+			+ "    FILTER regex(?title, \"%s/def\", \"i\") }"
 			+ "} "
 			+ "ORDER BY %s (?%s) "
 			+ "LIMIT %s " + "OFFSET %s ";
@@ -57,10 +57,10 @@ public class LdpServiceImpl implements LdpService {
 	private static final String TITLE_QUERY_COUNT = "SELECT (count(?uri) as ?count) "
 			+ "WHERE {"
 			+ "{?uri <%s/title> ?title."
-			+ "    FILTER regex(?title, \"%s\", \"i\")} "
+			+ "    FILTER regex(?title, \"%s/def\", \"i\")} "
 			+ "UNION "
 			+ "{ ?uri <%s/name> ?title."
-			+ "    FILTER regex(?title, \"%s\", \"i\") }"
+			+ "    FILTER regex(?title, \"%s/def\", \"i\") }"
 			+ "} ";
 	
 	private static final String ENTITY_QUERY = "SELECT * "
