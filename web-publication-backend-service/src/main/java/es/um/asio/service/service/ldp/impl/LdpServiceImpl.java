@@ -45,22 +45,22 @@ public class LdpServiceImpl implements LdpService {
 	
 	private static final String TITLE_QUERY = "SELECT ?uri ?title "
 			+ "WHERE {"
-			+ "{?uri <%s/title> ?title."
-			+ "    FILTER regex(?title, \"%s/def\", \"i\")} "
+			+ "{?uri <%s/def/title> ?title."
+			+ "    FILTER regex(?title, \"%s\", \"i\")} "
 			+ "UNION "
-			+ "{ ?uri <%s/name> ?title."
-			+ "    FILTER regex(?title, \"%s/def\", \"i\") }"
+			+ "{ ?uri <%s/def/name> ?title."
+			+ "    FILTER regex(?title, \"%s\", \"i\") }"
 			+ "} "
 			+ "ORDER BY %s (?%s) "
 			+ "LIMIT %s " + "OFFSET %s ";
 	
 	private static final String TITLE_QUERY_COUNT = "SELECT (count(?uri) as ?count) "
 			+ "WHERE {"
-			+ "{?uri <%s/title> ?title."
-			+ "    FILTER regex(?title, \"%s/def\", \"i\")} "
+			+ "{?uri <%s/def/title> ?title."
+			+ "    FILTER regex(?title, \"%s\", \"i\")} "
 			+ "UNION "
-			+ "{ ?uri <%s/name> ?title."
-			+ "    FILTER regex(?title, \"%s/def\", \"i\") }"
+			+ "{ ?uri <%s/def/name> ?title."
+			+ "    FILTER regex(?title, \"%s\", \"i\") }"
 			+ "} ";
 	
 	private static final String ENTITY_QUERY = "SELECT * "
