@@ -26,7 +26,7 @@ public class ConferenceServiceImpl extends FusekiService<ConferenceFilter> imple
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(ConferenceFilter filter, Pageable pageable) {
 		logger.info("Searching congress with filter: {} page: {}", filter, pageable);
@@ -39,7 +39,7 @@ public class ConferenceServiceImpl extends FusekiService<ConferenceFilter> imple
 	@Override
 	public String filtersChunk(ConferenceFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getAbbreviation())) {
 				strBuilder.append("FILTER (?abbreviation = \"");
@@ -48,7 +48,7 @@ public class ConferenceServiceImpl extends FusekiService<ConferenceFilter> imple
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getContactInformation())) {
 				strBuilder.append("FILTER (?contactInformation = \"");
 				strBuilder.append(filter.getContactInformation());
@@ -56,7 +56,7 @@ public class ConferenceServiceImpl extends FusekiService<ConferenceFilter> imple
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDate())) {
 				strBuilder.append("FILTER (?date = \"");
 				strBuilder.append(filter.getDate());
@@ -64,7 +64,7 @@ public class ConferenceServiceImpl extends FusekiService<ConferenceFilter> imple
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDescription())) {
 				strBuilder.append("FILTER (LANG(?description) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
@@ -75,13 +75,11 @@ public class ConferenceServiceImpl extends FusekiService<ConferenceFilter> imple
 			}
 
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getLocality())) {
 				strBuilder.append("FILTER (?locality = \"");
 				strBuilder.append(filter.getLocality());
@@ -89,7 +87,7 @@ public class ConferenceServiceImpl extends FusekiService<ConferenceFilter> imple
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getLocatedIn())) {
 				strBuilder.append("FILTER (?locatedIn = \"");
 				strBuilder.append(filter.getLocatedIn());
@@ -97,7 +95,7 @@ public class ConferenceServiceImpl extends FusekiService<ConferenceFilter> imple
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getPresents())) {
 				strBuilder.append("FILTER (?presents = \"");
 				strBuilder.append(filter.getPresents());
@@ -115,13 +113,14 @@ public class ConferenceServiceImpl extends FusekiService<ConferenceFilter> imple
 				strBuilder.append("\", \"i\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Conference", "abbreviation", "contactInformation", "date", "description", "id", "locality", "locatedIn", "presents", "title");
+		return new Entity("Conference", "abbreviation", "contactInformation", "date", "description", "id", "locality",
+				"locatedIn", "presents", "title");
 	}
 
 }

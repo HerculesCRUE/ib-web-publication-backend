@@ -26,7 +26,7 @@ public class AwardedDegreeServiceImpl extends FusekiService<AwardedDegreeFilter>
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(AwardedDegreeFilter filter, Pageable pageable) {
 		logger.info("Searching AwardedDegrees with filter: {} page: {}", filter, pageable);
@@ -39,17 +39,15 @@ public class AwardedDegreeServiceImpl extends FusekiService<AwardedDegreeFilter>
 	@Override
 	public String filtersChunk(AwardedDegreeFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 

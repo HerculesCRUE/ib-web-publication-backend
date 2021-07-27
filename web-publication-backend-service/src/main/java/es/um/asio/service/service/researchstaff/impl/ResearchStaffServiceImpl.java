@@ -30,23 +30,23 @@ public class ResearchStaffServiceImpl extends FusekiService<ResearchStaffFilter>
 	 * Logger
 	 */
 	private final Logger logger = LoggerFactory.getLogger(ResearchStaffServiceImpl.class);
-	
+
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(ResearchStaffFilter filter, Pageable pageable) {
 		logger.info("Searching research staff with filter: {} page: {}", filter, pageable);
-		
-		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntity(), filtersChunk(filter), pageable);
 
-		return serviceSPARQL.run(pageableQuery);
+		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntity(filter), filtersChunk(filter), pageable);
+
+		return serviceSPARQL.runDistinct(pageableQuery);
 	}
 
 	@Override
 	public String filtersChunk(ResearchStaffFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (StringUtils.isNotBlank(filter.getName())) {
 			strBuilder.append("FILTER (LANG(?name) = \"");
 			strBuilder.append(filter.getLanguage().substring(1));
@@ -55,7 +55,16 @@ public class ResearchStaffServiceImpl extends FusekiService<ResearchStaffFilter>
 			strBuilder.append(filter.getName());
 			strBuilder.append("\", \"i\")) . ");
 		}
-		
+
+		if (StringUtils.isNotBlank(filter.getKnowledgeArea())) {
+			strBuilder.append("FILTER (LANG(?hasKnowledgeAreaTitle) = \"");
+			strBuilder.append(filter.getLanguage().substring(1));
+			strBuilder.append("\") . ");
+			strBuilder.append("FILTER ( regex(?hasKnowledgeAreaTitle, \"");
+			strBuilder.append(filter.getKnowledgeArea());
+			strBuilder.append("\", \"i\")) . ");
+		}
+
 		if (StringUtils.isNotBlank(filter.getTitle())) {
 			strBuilder.append("FILTER (LANG(?title) = \"");
 			strBuilder.append(filter.getLanguage().substring(1));
@@ -64,38 +73,75 @@ public class ResearchStaffServiceImpl extends FusekiService<ResearchStaffFilter>
 			strBuilder.append(filter.getTitle());
 			strBuilder.append("\", \"i\")) . ");
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
-	public Entity retrieveEntity() {
-		Entity entity = new Entity("Researcher-role", "nowhere:id", "nowhere:gender", "nowhere:name", "nowhere:nickname", 
-				"nowhere:personalMaibox", "nowhere:researchLine");
-		
-//		Map<String, Map<String, String>> join = new HashMap<>();
-//		
-//		join.put("Researcher-Role", new HashMap<>());
-//		join.get("Researcher-Role").put("x", "inheresIn");
-		
-//		entity.setJoin(join);
-		
+	public Entity retrieveEntity(ResearchStaffFilter filter) {
+		Entity entity = new Entity("Researcher-role", "nowhere:id", "nowhere:gender", "nowhere:name",
+				"nowhere:nickname", "nowhere:personalMaibox", "nowhere:researchLine");// ,
+																						// "nowhere:hasKnowledgeAreaTitle");
+
 		List<Subentity> subentities = new ArrayList<Subentity>();
 		Subentity subentity = new Subentity();
-		
+
 		String fieldName = "inheresIn";
-		
+
 		subentity.setIgnorePrefix(true);
 		subentity.setFieldName(fieldName);
-		subentity.setFields(Arrays.asList("birthDate", "description", "firstName", "gender", "hasContactInfo", "homepage", "id", "image", "name", "nickname", 
-				"personalMaibox", "researchLine", "surname", "taxId"));
-		
+		subentity.setFields(Arrays.asList("birthDate", "description", "firstName", "gender", "hasContactInfo",
+				"homepage", "id", "image", "name", "nickname", "personalMaibox", "researchLine", "surname", "taxId"));
+
 		Map<String, String> filters = new HashMap<>();
 		subentity.setFilters(filters);
 		subentities.add(subentity);
-		
+
+		if (filter.getOrganizationId() != null && !StringUtils.isBlank(filter.getOrganizationId())) {
+			Subentity subentity2 = new Subentity();
+
+			String fieldName2 = "relatedBy";
+
+			subentity2.setIgnorePrefix(true);
+			subentity2.setFieldName(fieldName2);
+
+			// Extra fields
+			String fieldName3 = "relates";
+			Subentity subentity3 = new Subentity();
+			subentity3.setIgnorePrefix(true);
+
+			Map<String, String> filters2 = new HashMap<>();
+			filters2.put("id", filter.getOrganizationId());
+			subentity3.setFilters(filters2);
+
+			subentity3.setFieldName(fieldName3);
+
+//		// Extra fields
+//		String fieldName4 = "hasKnowledgeArea";
+//		Subentity subentity4 = new Subentity();
+//		// subentity2.setIgnorePrefix(true);
+//		subentity4.setQueryFieldName(fieldName4);
+//		subentity4.setFieldName(fieldName4);
+//		subentity4.setFields(Arrays.asList("id", "title"));
+//		
+			// Add All
+//		subentity3.setSubentities(new ArrayList<Subentity>());
+//		subentity3.getSubentities().add(subentity4);
+
+			// Add All
+			subentity2.setSubentities(new ArrayList<Subentity>());
+			subentity2.getSubentities().add(subentity3);
+
+			subentities.add(subentity2);
+
+		}
 		entity.setSubentities(subentities);
-		
 		return entity;
+	}
+
+	@Override
+	public Entity retrieveEntity() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

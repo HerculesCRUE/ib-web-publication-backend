@@ -26,7 +26,7 @@ public class ArticleServiceImpl extends FusekiService<ArticleFilter> implements 
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(ArticleFilter filter, Pageable pageable) {
 		logger.info("Searching articles with filter: {} page: {}", filter, pageable);
@@ -39,7 +39,7 @@ public class ArticleServiceImpl extends FusekiService<ArticleFilter> implements 
 	@Override
 	public String filtersChunk(ArticleFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDate())) {
 				strBuilder.append("FILTER (?date = \"");
@@ -48,7 +48,7 @@ public class ArticleServiceImpl extends FusekiService<ArticleFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDoi())) {
 				strBuilder.append("FILTER (?doi = \"");
 				strBuilder.append(filter.getDoi());
@@ -56,7 +56,7 @@ public class ArticleServiceImpl extends FusekiService<ArticleFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getEndPage())) {
 				strBuilder.append("FILTER (?endPage = \"");
 				strBuilder.append(filter.getEndPage());
@@ -64,15 +64,13 @@ public class ArticleServiceImpl extends FusekiService<ArticleFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getPublishedIn())) {
 				strBuilder.append("FILTER (?publishedIn = \"");
 				strBuilder.append(filter.getPublishedIn());
@@ -80,7 +78,7 @@ public class ArticleServiceImpl extends FusekiService<ArticleFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getStartPage())) {
 				strBuilder.append("FILTER (?startPage = \"");
 				strBuilder.append(filter.getStartPage());
@@ -106,7 +104,7 @@ public class ArticleServiceImpl extends FusekiService<ArticleFilter> implements 
 				strBuilder.append(filter.getSummary());
 				strBuilder.append("\", \"i\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDateFrom())) {
 				strBuilder.append("FILTER (?date >= \"");
 				strBuilder.append(filter.getDateFrom());
@@ -114,7 +112,7 @@ public class ArticleServiceImpl extends FusekiService<ArticleFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDateTo())) {
 				strBuilder.append("FILTER (?date <= \"");
 				strBuilder.append(filter.getDateTo());
@@ -123,7 +121,7 @@ public class ArticleServiceImpl extends FusekiService<ArticleFilter> implements 
 				strBuilder.append(") . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 

@@ -32,7 +32,7 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(BookSectionFilter filter, Pageable pageable) {
 		logger.info("Searching books with filter: {} page: {}", filter, pageable);
@@ -45,7 +45,7 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 	@Override
 	public String filtersChunk(BookSectionFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDate())) {
 				strBuilder.append("FILTER (?date = \"");
@@ -54,7 +54,7 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDoi())) {
 				strBuilder.append("FILTER (?doi = \"");
 				strBuilder.append(filter.getDoi());
@@ -62,7 +62,7 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getEdition())) {
 				strBuilder.append("FILTER (?edition = \"");
 				strBuilder.append(filter.getEdition());
@@ -70,7 +70,7 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getEndPage())) {
 				strBuilder.append("FILTER (?endPage = \"");
 				strBuilder.append(filter.getEndPage());
@@ -78,15 +78,13 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getPlaceOfPublication())) {
 				strBuilder.append("FILTER (?placeOfPublication = \"");
 				strBuilder.append(filter.getPlaceOfPublication());
@@ -94,7 +92,7 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getStartPage())) {
 				strBuilder.append("FILTER (?startPage = \"");
 				strBuilder.append(filter.getStartPage());
@@ -111,19 +109,19 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 				strBuilder.append(filter.getTitle());
 				strBuilder.append("\", \"i\")) . ");
 			}
-			
-		
+
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity(BookSectionFilter filter) {
-		Entity entity = new Entity("BookSection", "date", "doi", "edition", "endPage", "id", "placeOfPublication", "startPage", "title");
-		
+		Entity entity = new Entity("BookSection", "date", "doi", "edition", "endPage", "id", "placeOfPublication",
+				"startPage", "title");
+
 		// Add data to subentity atributes and filters
-		if (filter.getBookId()!=null && !filter.getBookId().isEmpty()) {
+		if (filter.getBookId() != null && !filter.getBookId().isEmpty()) {
 			List<Subentity> subentities = new ArrayList<Subentity>();
 			// Extra fields
 			String fieldName = "hasPublicationVenue";
@@ -139,7 +137,7 @@ public class BookSectionServiceImpl extends FusekiService<BookSectionFilter> imp
 			subentities.add(subentity);
 			entity.setSubentities(subentities);
 		}
-		
+
 		return entity;
 	}
 

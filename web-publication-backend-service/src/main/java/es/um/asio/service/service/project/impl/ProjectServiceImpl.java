@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import es.um.asio.abstractions.constants.Constants;
 import es.um.asio.service.filter.person.PersonFilter;
 import es.um.asio.service.filter.project.ProjectFilter;
 import es.um.asio.service.model.Entity;
@@ -44,7 +43,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 
 		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntity(filter), filtersChunk(filter), pageable);
 
-		return serviceSPARQL.run(pageableQuery);
+		return serviceSPARQL.runDistinct(pageableQuery);
 
 	}
 
@@ -71,10 +70,9 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 		StringBuilder strBuilder = new StringBuilder();
 
 		if (StringUtils.isNotBlank(id)) {
-			strBuilder.append("FILTER (regex(?id, \"");
+			strBuilder.append("FILTER (regex(?id, \"^");
 			strBuilder.append(id);
-
-			strBuilder.append("\")) . ");
+			strBuilder.append("$\")) . ");
 		}
 
 		if (filter != null) {
@@ -191,11 +189,9 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	@Override
 	public String filtersChunk(String id) {
 		StringBuilder strBuilder = new StringBuilder();
-		strBuilder.append("FILTER (?id = \"");
+		strBuilder.append("FILTER (regex(?id, \"^");
 		strBuilder.append(id);
-		strBuilder.append("\"@");
-		strBuilder.append(Constants.SPANISH_LANGUAGE_SHORT);
-		strBuilder.append(") . ");
+		strBuilder.append("$\")) . ");
 
 		return strBuilder.toString();
 	}
@@ -211,16 +207,13 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 			List<Subentity> subentities = new ArrayList<Subentity>();
 			// Extra fields
 			String fieldName = "relates";
-//			List<String> fields = new ArrayList<String>();
-//			fields.add("id");
-//			entity.getFields().add(fieldName+"Id");
 			Subentity subentity = new Subentity();
 			subentity.setFieldName(fieldName);
 
 			// Get person
 			List<Subentity> subSubentities = new ArrayList<Subentity>();
 			// Extra fields
-			String fieldName2 = "RO_0000052";
+			String fieldName2 = "inheresIn";
 			Subentity subSubentity = new Subentity();
 			subSubentity.setFieldName(fieldName2);
 			Map<String, String> filters2 = new HashMap<>();
@@ -267,10 +260,10 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	}
 
 	private Entity retrieveParticipantsEntity() {
-		Entity entity = new Entity("Project", "id", "nowhere:inheresInBirthDate", "nowhere:inheresInDescription",
-				"nowhere:inheresInFirstName", "nowhere:inheresInGender", "nowhere:inheresInImage",
-				"nowhere:inheresInName", "nowhere:inheresInId", "nowhere:inheresInNickname",
-				"nowhere:inheresInResearchLine", "nowhere:inheresInSurname", "nowhere:inheresInTaxId");
+		Entity entity = new Entity("Project", "id", "nowhere:inheresInbirthDate", "nowhere:inheresIndescription",
+				"nowhere:inheresInfirstName", "nowhere:inheresIngender", "nowhere:inheresInimage",
+				"nowhere:inheresInname", "nowhere:inheresInid", "nowhere:inheresInnickname",
+				"nowhere:inheresInresearchLine", "nowhere:inheresInsurname", "nowhere:inheresIntaxId");
 
 		List<Subentity> subentities = new ArrayList<Subentity>();
 		// Extra fields

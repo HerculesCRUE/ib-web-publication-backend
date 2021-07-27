@@ -74,24 +74,14 @@ public class DoctoralThesisServiceImpl extends FusekiService<DoctoralThesisFilte
 			}
 
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 
 			if (StringUtils.isNotBlank(filter.getPlaceOfPublication())) {
 				strBuilder.append("FILTER (?placeOfPublication = \"");
 				strBuilder.append(filter.getPlaceOfPublication());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
-			}
-
-			if (StringUtils.isNotBlank(filter.getPublishedIn())) {
-				strBuilder.append("FILTER (?publishedIn = \"");
-				strBuilder.append(filter.getPublishedIn());
 				strBuilder.append("\"");
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
@@ -129,8 +119,8 @@ public class DoctoralThesisServiceImpl extends FusekiService<DoctoralThesisFilte
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Doctoral-thesis", "abbreviation", "date", "doi", "endPage", "id", "placeOfPublication",
-				"publishedIn", "startPage", "title");
+		return new Entity("Doctoral-thesis", "abbreviation", "date", "doi", "pageEnd", "id", "placeOfPublication",
+				"pageStart", "title");
 	}
 
 }

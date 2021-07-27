@@ -26,7 +26,7 @@ public class AcademicDegreeServiceImpl extends FusekiService<AcademicDegreeFilte
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(AcademicDegreeFilter filter, Pageable pageable) {
 		logger.info("Searching AcademicDegrees with filter: {} page: {}", filter, pageable);
@@ -39,14 +39,12 @@ public class AcademicDegreeServiceImpl extends FusekiService<AcademicDegreeFilte
 	@Override
 	public String filtersChunk(AcademicDegreeFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 
 			if (StringUtils.isNotBlank(filter.getTitle())) {
@@ -58,12 +56,12 @@ public class AcademicDegreeServiceImpl extends FusekiService<AcademicDegreeFilte
 				strBuilder.append("\", \"i\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("AcademicDegree", "abbreviation","id", "title");
+		return new Entity("AcademicDegree", "abbreviation", "id", "title");
 	}
 }

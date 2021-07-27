@@ -75,7 +75,7 @@ management:
       
 ## In case of configure web endpoints, remove it or change port number
 server:
-  port: 8787
+  port: 18787
   use-forward-headers: true
   tomcat:
     remote-ip-header: x-forwarded-for
@@ -100,6 +100,20 @@ keycloak:
 
 # Spring configuration
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: herculesizertis@gmail.com
+    password: h3rcul3s1z3rt1s
+    properties:
+      mail:
+        smtp:
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          starttls:
+            enable: true
   kafka:
     bootstrap-servers: localhost:29092
     consumer:

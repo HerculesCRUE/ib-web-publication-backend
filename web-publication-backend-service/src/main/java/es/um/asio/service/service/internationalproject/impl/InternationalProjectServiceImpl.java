@@ -17,7 +17,8 @@ import es.um.asio.service.service.internationalproject.InternationalProjectServi
 import es.um.asio.service.service.sparql.SparqlExecQuery;
 
 @Service
-public class InternationalProjectServiceImpl extends FusekiService<InternationalProjectFilter> implements InternationalProjectService {
+public class InternationalProjectServiceImpl extends FusekiService<InternationalProjectFilter>
+		implements InternationalProjectService {
 
 	/**
 	 * Logger
@@ -26,7 +27,7 @@ public class InternationalProjectServiceImpl extends FusekiService<International
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(InternationalProjectFilter filter, Pageable pageable) {
 		logger.info("Searching international projects with filter: {} page: {}", filter, pageable);
@@ -39,7 +40,7 @@ public class InternationalProjectServiceImpl extends FusekiService<International
 	@Override
 	public String filtersChunk(InternationalProjectFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getEndDate())) {
 				strBuilder.append("FILTER (?endDate = \"");
@@ -48,15 +49,13 @@ public class InternationalProjectServiceImpl extends FusekiService<International
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-	
+
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getName())) {
 				strBuilder.append("FILTER (LANG(?name) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
@@ -65,7 +64,7 @@ public class InternationalProjectServiceImpl extends FusekiService<International
 				strBuilder.append(filter.getName());
 				strBuilder.append("\", \"i\")) . ");
 			}
-	
+
 			if (StringUtils.isNotBlank(filter.getObjective())) {
 				strBuilder.append("FILTER (LANG(?objective) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
@@ -74,7 +73,7 @@ public class InternationalProjectServiceImpl extends FusekiService<International
 				strBuilder.append(filter.getObjective());
 				strBuilder.append("\", \"i\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getStartDate())) {
 				strBuilder.append("FILTER (?startDate = \"");
 				strBuilder.append(filter.getStartDate());
@@ -83,7 +82,7 @@ public class InternationalProjectServiceImpl extends FusekiService<International
 				strBuilder.append(") . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 

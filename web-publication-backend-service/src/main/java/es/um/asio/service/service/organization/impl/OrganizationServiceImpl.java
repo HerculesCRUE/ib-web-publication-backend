@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import es.um.asio.abstractions.constants.Constants;
 import es.um.asio.service.filter.organization.OrganizationFilter;
 import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
@@ -91,11 +90,9 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 			}
 
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 
 			if (StringUtils.isNotBlank(filter.getIsStartup())) {
@@ -138,11 +135,9 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 	@Override
 	public String filtersChunk(String id) {
 		StringBuilder strBuilder = new StringBuilder();
-		strBuilder.append("FILTER (?id = \"");
+		strBuilder.append("FILTER (regex(?id, \"^");
 		strBuilder.append(id);
-		strBuilder.append("\"@");
-		strBuilder.append(Constants.SPANISH_LANGUAGE_SHORT);
-		strBuilder.append(") . ");
+		strBuilder.append("$\")) . ");
 
 		return strBuilder.toString();
 	}
@@ -150,32 +145,31 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 	@Override
 	public Entity retrieveEntity(OrganizationFilter filter) {
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
-				: Arrays.asList("Organization", "University");
+				: Arrays.asList("Center", "Department", "Research-group", "Organization", "Funding-organization");
 
 		return new Entity("Organization", types, "abbreviation", "id", "title", "description", "nowhere:type");
 	}
+
 	@Override
 	public Entity retrieveEntity(String type) {
 		List<String> types = new ArrayList<String>();
 		String[] splitType = type.split("/");
 		types.add(splitType[splitType.length - 1]);
-		
+
 		Entity entity;
 
-		// TODO Pending update of ETL: University should have at least the same fields as Organization
-		if (type.equals("University")) {
-			entity = new Entity("Organization", types, "abbreviation", "id", "title", "description", "nowhere:type");
-		} else {
-			entity = new Entity("Organization", types, "abbreviation", "description", "dateEnd", "id",
-					"keyword", "dateStart", "title", "nowhere:type"); 
-		}
-		
-		List<String> optionalFields = new ArrayList<String>();
+		List<String> optionalFields = new ArrayList<>();
+
+		entity = new Entity("Organization", types, "abbreviation", "description", "id", "title", "nowhere:type");
+
+		optionalFields.add("dateEnd");
+		optionalFields.add("keyword");
+		optionalFields.add("dateStart");
 		optionalFields.add("publicCompany");
 		optionalFields.add("isStartup");
 		optionalFields.add("homepage");
 		entity.setOptionalFields(optionalFields);
-		
+
 		return entity;
 	}
 

@@ -27,7 +27,7 @@ public class InvoiceServiceImpl extends FusekiService<InvoiceFilter> implements 
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(InvoiceFilter filter, Pageable pageable) {
 		logger.info("Searching invoices with filter: {} page: {}", filter, pageable);
@@ -40,7 +40,7 @@ public class InvoiceServiceImpl extends FusekiService<InvoiceFilter> implements 
 	@Override
 	public String filtersChunk(InvoiceFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDateTime())) {
 				strBuilder.append("FILTER (?dateTime = \"");
@@ -49,7 +49,7 @@ public class InvoiceServiceImpl extends FusekiService<InvoiceFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getDoi())) {
 				strBuilder.append("FILTER (?doi = \"");
 				strBuilder.append(filter.getDoi());
@@ -57,7 +57,7 @@ public class InvoiceServiceImpl extends FusekiService<InvoiceFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getEndPage())) {
 				strBuilder.append("FILTER (?endPage = \"");
 				strBuilder.append(filter.getEndPage());
@@ -65,15 +65,13 @@ public class InvoiceServiceImpl extends FusekiService<InvoiceFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getKeyword())) {
 				strBuilder.append("FILTER (?keyword = \"");
 				strBuilder.append(filter.getKeyword());
@@ -81,7 +79,7 @@ public class InvoiceServiceImpl extends FusekiService<InvoiceFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getPublishedIn())) {
 				strBuilder.append("FILTER (?publishedIn = \"");
 				strBuilder.append(filter.getPublishedIn());
@@ -89,7 +87,7 @@ public class InvoiceServiceImpl extends FusekiService<InvoiceFilter> implements 
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getStartPage())) {
 				strBuilder.append("FILTER (?startPage = \"");
 				strBuilder.append(filter.getStartPage());
@@ -106,7 +104,7 @@ public class InvoiceServiceImpl extends FusekiService<InvoiceFilter> implements 
 				strBuilder.append(filter.getSummary());
 				strBuilder.append("\", \"i\")) . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getTitle())) {
 				strBuilder.append("FILTER (LANG(?title) = \"");
 				strBuilder.append(filter.getLanguage().substring(1));
@@ -116,13 +114,14 @@ public class InvoiceServiceImpl extends FusekiService<InvoiceFilter> implements 
 				strBuilder.append("\", \"i\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Invoice", "dateTime", "doi", "endPage", "id", "keyword", "publishedIn", "startPage", "title");
+		return new Entity("Invoice", "dateTime", "doi", "endPage", "id", "keyword", "publishedIn", "startPage",
+				"title");
 	}
 
 }

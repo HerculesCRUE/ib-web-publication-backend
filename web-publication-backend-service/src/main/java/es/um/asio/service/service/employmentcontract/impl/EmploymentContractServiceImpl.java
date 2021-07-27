@@ -18,7 +18,8 @@ import es.um.asio.service.service.impl.FusekiService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
 
 @Service
-public class EmploymentContractServiceImpl extends FusekiService<EmploymentContractFilter> implements EmploymentContractService {
+public class EmploymentContractServiceImpl extends FusekiService<EmploymentContractFilter>
+		implements EmploymentContractService {
 
 	/**
 	 * Logger
@@ -27,7 +28,7 @@ public class EmploymentContractServiceImpl extends FusekiService<EmploymentContr
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(EmploymentContractFilter filter, Pageable pageable) {
 		logger.info("Searching article keywords with filter: {} page: {}", filter, pageable);
@@ -40,15 +41,13 @@ public class EmploymentContractServiceImpl extends FusekiService<EmploymentContr
 	@Override
 	public String filtersChunk(EmploymentContractFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (StringUtils.isNotBlank(filter.getId())) {
-			strBuilder.append("FILTER (?id = \"");
+			strBuilder.append("FILTER (regex(?id, \"^");
 			strBuilder.append(filter.getId());
-			strBuilder.append("\"");
-			strBuilder.append(filter.getLanguage());
-			strBuilder.append(") . ");
+			strBuilder.append("$\")) . ");
 		}
-		
+
 		return strBuilder.toString();
 	}
 

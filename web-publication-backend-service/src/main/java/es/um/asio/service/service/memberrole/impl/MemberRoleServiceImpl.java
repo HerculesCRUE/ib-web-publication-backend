@@ -27,7 +27,7 @@ public class MemberRoleServiceImpl extends FusekiService<MemberRoleFilter> imple
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(MemberRoleFilter filter, Pageable pageable) {
 		logger.info("Searching article keywords with filter: {} page: {}", filter, pageable);
@@ -40,22 +40,21 @@ public class MemberRoleServiceImpl extends FusekiService<MemberRoleFilter> imple
 	@Override
 	public String filtersChunk(MemberRoleFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Member-Role", "id", "date", "dedication", "dedicationPercentage", "description", "hasKnowledgeArea");
+		return new Entity("Member-Role", "id", "date", "dedication", "dedicationPercentage", "description",
+				"hasKnowledgeArea");
 	}
 }

@@ -26,7 +26,7 @@ public class FundingSourceServiceImpl extends FusekiService<FundingSourceFilter>
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(FundingSourceFilter filter, Pageable pageable) {
 		logger.info("Searching funding sources with filter: {} page: {}", filter, pageable);
@@ -39,7 +39,7 @@ public class FundingSourceServiceImpl extends FusekiService<FundingSourceFilter>
 	@Override
 	public String filtersChunk(FundingSourceFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getFunds())) {
 				strBuilder.append("FILTER (?funds = \"");
@@ -48,16 +48,14 @@ public class FundingSourceServiceImpl extends FusekiService<FundingSourceFilter>
 				strBuilder.append(filter.getLanguage());
 				strBuilder.append(") . ");
 			}
-			
+
 			if (StringUtils.isNotBlank(filter.getId())) {
-				strBuilder.append("FILTER (?id = \"");
+				strBuilder.append("FILTER (regex(?id, \"^");
 				strBuilder.append(filter.getId());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
-				strBuilder.append(") . ");
+				strBuilder.append("$\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
