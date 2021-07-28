@@ -102,8 +102,8 @@ public class ResearchStaffServiceImpl extends FusekiService<ResearchStaffFilter>
 
 		subentity.setIgnorePrefix(true);
 		subentity.setFieldName(fieldName);
-		subentity.setFields(Arrays.asList("birthDate", "description", "firstName", "gender", "hasContactInfo",
-				"homepage", "id", "image", "name", "nickname", "researchLine", "surname", "taxId"));
+		subentity.setFields(Arrays.asList("birthDate", "description", "firstName", "gender", "id", "image", "name",
+				"nickname", "researchLine", "surname", "taxId"));
 
 		Map<String, String> filters = new HashMap<>();
 		subentity.setFilters(filters);
