@@ -11,7 +11,9 @@ public interface LdpService {
 
 	Page<LdpEntityCountDto> entityCount(Pageable pageable); 
 	
-	Page<LdpSearchResultDto> findByTitle(final String title, final Pageable pageable);
+	Page<LdpSearchResultDto> findByTitleOrName(final String title, final Pageable pageable);
+	
+	Page<LdpSearchResultDto> findByCategory(final String category, final Pageable pageable);
 	
 	LdpEntityDetailsDto findDetails(final String uri);
 }

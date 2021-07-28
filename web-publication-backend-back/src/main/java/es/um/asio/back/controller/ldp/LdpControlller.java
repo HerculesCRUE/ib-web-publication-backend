@@ -34,7 +34,16 @@ public class LdpControlller {
 	        throw new IllegalArgumentException();
 	    }
 		
-		return ldpService.findByTitle(title, pageable);
+		return ldpService.findByTitleOrName(title, pageable);
+	}
+	
+	@GetMapping(LdpControlller.Mappings.FIND_CATEGORY)
+	public Page<LdpSearchResultDto> findByCategory(@RequestParam(required = true) String category, Pageable pageable) {
+	    if(StringUtils.isBlank(category)) {
+	        throw new IllegalArgumentException();
+	    }
+		
+		return ldpService.findByCategory(category, pageable);
 	}
 	
 	@GetMapping(LdpControlller.Mappings.FIND_DETAILS)
@@ -62,6 +71,11 @@ public class LdpControlller {
 		 * Controller request mapping.
 		 */
 		protected static final String FIND_TITLE = "/findTitle";
+		
+		/**
+		 * Controller request mapping.
+		 */
+		protected static final String FIND_CATEGORY = "/findCategory";
 		
 		/**
 		 * Controller request mapping.

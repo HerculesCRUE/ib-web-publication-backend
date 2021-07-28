@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.graalvm.compiler.loop.InductionVariable.Direction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +36,8 @@ import es.um.asio.service.service.sparql.SparqlExecQuery;
 @Service
 public class LdpServiceImpl implements LdpService {
 
+	private static final String TITLE_QUERY_TYPE_TITLE = "title";
+	private static final String TITLE_QUERY_TYPE_CATEGORY = "uri";	
 	
 	private static final String COUNT_QUERY = "SELECT ?entity (count(distinct ?ac) as ?count) " + "WHERE { "
 			+ "  ?ac <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?entity . "
@@ -43,24 +48,31 @@ public class LdpServiceImpl implements LdpService {
 			+ "  ?ac <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?entity . "
 			+ "  FILTER regex(str(?entity), \"%s/rec\", \"i\") " + "}";
 	
-	private static final String TITLE_QUERY = "SELECT ?uri ?title "
+	private static final String TITLE_QUERY = "SELECT ?uri (GROUP_CONCAT(?title2; SEPARATOR=\", \") AS ?title) "
 			+ "WHERE {"
-			+ "{?uri <%s/def/title> ?title."
-			+ "    FILTER regex(?title, \"%s\", \"i\")} "
+			+ "{?uri <%s/rec/title> ?title2."
+			+ "    FILTER regex(str(?%s), \"%s\", \"i\")} "
 			+ "UNION "
-			+ "{ ?uri <%s/def/name> ?title."
-			+ "    FILTER regex(?title, \"%s\", \"i\") }"
+			+ "{ ?uri <%s/rec/name> ?title2."
+			+ "    FILTER regex(str(?%s), \"%s\", \"i\") }"			
+			+ "UNION "
+			+ "{ ?uri <%s/rec/id> ?title2."
+			+ "    FILTER regex(str(?%s), \"%s\", \"i\") }"
 			+ "} "
+			+ "GROUP BY ?uri "
 			+ "ORDER BY %s (?%s) "
 			+ "LIMIT %s " + "OFFSET %s ";
 	
-	private static final String TITLE_QUERY_COUNT = "SELECT (count(?uri) as ?count) "
+	private static final String TITLE_QUERY_COUNT = "SELECT (count(distinct ?uri) as ?count) "
 			+ "WHERE {"
-			+ "{?uri <%s/def/title> ?title."
-			+ "    FILTER regex(?title, \"%s\", \"i\")} "
+			+ "{?uri <%s/rec/title> ?title2."
+			+ "    FILTER regex(str(?%s), \"%s\", \"i\")} "
 			+ "UNION "
-			+ "{ ?uri <%s/def/name> ?title."
-			+ "    FILTER regex(?title, \"%s\", \"i\") }"
+			+ "{ ?uri <%s/rec/name> ?title2."
+			+ "    FILTER regex(str(?%s), \"%s\", \"i\") }"			
+			+ "UNION "
+			+ "{ ?uri <%s/rec/id> ?title2."
+			+ "    FILTER regex(str(?%s), \"%s\", \"i\") }"
 			+ "} ";
 	
 	private static final String ENTITY_QUERY = "SELECT * "
@@ -88,11 +100,21 @@ public class LdpServiceImpl implements LdpService {
 	}
 	
 	@Override
-	public Page<LdpSearchResultDto> findByTitle(final String title, final Pageable pageable) {
-		List<LdpSearchResultDto> results = executeQuery(buildFindQuery(TITLE_QUERY, title, pageable), this::mapToLdpSearchResultDto);
-		Integer count = executeQuery(String.format(TITLE_QUERY_COUNT, uriNamespace, title, uriNamespace, title), this::mapToCount).get(0);
+	public Page<LdpSearchResultDto> findByTitleOrName(final String title, final Pageable pageable) {
+		return findByTitle(title, TITLE_QUERY_TYPE_TITLE, pageable);
+	}
+	
+	@Override
+	public Page<LdpSearchResultDto> findByCategory(final String category, final Pageable pageable) {		
+		return findByTitle(category, TITLE_QUERY_TYPE_CATEGORY, pageable);
+	}
+	
+	private Page<LdpSearchResultDto> findByTitle(final String searchToken, final String type, final Pageable pageable) {
+		List<LdpSearchResultDto> results = executeQuery(buildFindQuery(TITLE_QUERY, type, searchToken, pageable), this::mapToLdpSearchResultDto);
+		Integer count = executeQuery(String.format(TITLE_QUERY_COUNT, uriNamespace, type, searchToken, uriNamespace, type, searchToken, uriNamespace, type, searchToken), this::mapToCount).get(0);
 		return new PageImpl<LdpSearchResultDto>(results, pageable,count);
 	}
+	 
 	
 	@Override
 	public LdpEntityDetailsDto findDetails(final String uri) {
@@ -128,9 +150,12 @@ public class LdpServiceImpl implements LdpService {
 	}
 	
 	
-	private String buildFindQuery(String query, String title, Pageable pageable) {
-		Order order = pageable.getSort().toList().get(0);
-		return String.format(query, uriNamespace, title, uriNamespace, title, order.getDirection(), order.getProperty(), pageable.getPageSize(),
+	private String buildFindQuery(String query, String type, String title, Pageable pageable) {
+		Order order = new Order(Direction.ASC, "uri");
+		if (!pageable.getSort().toList().isEmpty()) {
+			order = pageable.getSort().toList().get(0);
+		}
+		return String.format(query, uriNamespace, type, title, uriNamespace, type, title, uriNamespace, type, title, order.getDirection(), order.getProperty(), pageable.getPageSize(),
 				pageable.getOffset());
 	}	
 	
