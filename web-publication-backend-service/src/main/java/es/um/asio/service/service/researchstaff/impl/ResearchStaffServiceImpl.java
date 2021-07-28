@@ -56,13 +56,26 @@ public class ResearchStaffServiceImpl extends FusekiService<ResearchStaffFilter>
 			strBuilder.append("\", \"i\")) . ");
 		}
 
-		if (StringUtils.isNotBlank(filter.getKnowledgeArea())) {
-			strBuilder.append("FILTER (LANG(?hasKnowledgeAreaTitle) = \"");
+		if (filter.getKnowledgeAreas() != null && filter.getKnowledgeAreas().size() > 0) {
+			strBuilder.append("FILTER (LANG(?hasKnowledgeAreaid) = \"");
 			strBuilder.append(filter.getLanguage().substring(1));
 			strBuilder.append("\") . ");
-			strBuilder.append("FILTER ( regex(?hasKnowledgeAreaTitle, \"");
-			strBuilder.append(filter.getKnowledgeArea());
-			strBuilder.append("\", \"i\")) . ");
+			strBuilder.append("FILTER ( ");
+
+			int i = 0;
+			for (String data : filter.getKnowledgeAreas()) {
+				if (i == 0) {
+					strBuilder.append(" regex (?hasKnowledgeAreaid ,  \"^");
+					strBuilder.append(data);
+				} else {
+					strBuilder.append("$\") || regex(?hasKnowledgeAreaid ,  \"^");
+					strBuilder.append(data);
+				}
+
+				i++;
+			}
+
+			strBuilder.append("$\")) . ");
 		}
 
 		if (StringUtils.isNotBlank(filter.getTitle())) {
@@ -80,8 +93,7 @@ public class ResearchStaffServiceImpl extends FusekiService<ResearchStaffFilter>
 	@Override
 	public Entity retrieveEntity(ResearchStaffFilter filter) {
 		Entity entity = new Entity("Researcher-role", "nowhere:id", "nowhere:gender", "nowhere:name",
-				"nowhere:nickname", "nowhere:personalMaibox", "nowhere:researchLine");// ,
-																						// "nowhere:hasKnowledgeAreaTitle");
+				"nowhere:nickname", "nowhere:personalMaibox", "nowhere:researchLine", "nowhere:hasKnowledgeAreatitle");
 
 		List<Subentity> subentities = new ArrayList<Subentity>();
 		Subentity subentity = new Subentity();
@@ -116,24 +128,44 @@ public class ResearchStaffServiceImpl extends FusekiService<ResearchStaffFilter>
 
 			subentity3.setFieldName(fieldName3);
 
-//		// Extra fields
-//		String fieldName4 = "hasKnowledgeArea";
-//		Subentity subentity4 = new Subentity();
-//		// subentity2.setIgnorePrefix(true);
-//		subentity4.setQueryFieldName(fieldName4);
-//		subentity4.setFieldName(fieldName4);
-//		subentity4.setFields(Arrays.asList("id", "title"));
-//		
-			// Add All
-//		subentity3.setSubentities(new ArrayList<Subentity>());
-//		subentity3.getSubentities().add(subentity4);
-
 			// Add All
 			subentity2.setSubentities(new ArrayList<Subentity>());
 			subentity2.getSubentities().add(subentity3);
 
 			subentities.add(subentity2);
 
+		} else if (filter.getKnowledgeAreas() != null && filter.getKnowledgeAreas().size() > 0) {
+			Subentity subentity2 = new Subentity();
+
+			String fieldName2 = "relatedBy";
+
+			subentity2.setIgnorePrefix(true);
+			subentity2.setFieldName(fieldName2);
+
+			// Extra fields
+			String fieldName3 = "relates";
+			Subentity subentity3 = new Subentity();
+			subentity3.setIgnorePrefix(true);
+
+			subentity3.setFieldName(fieldName3);
+
+			// Extra fields
+			String fieldName4 = "hasKnowledgeArea";
+			Subentity subentity4 = new Subentity();
+			// subentity2.setIgnorePrefix(true);
+			subentity4.setQueryFieldName(fieldName4);
+			subentity4.setFieldName(fieldName4);
+			subentity4.setFields(Arrays.asList("id", "title"));
+
+			// Add All
+			subentity3.setSubentities(new ArrayList<Subentity>());
+			subentity3.getSubentities().add(subentity4);
+
+			// Add All
+			subentity2.setSubentities(new ArrayList<Subentity>());
+			subentity2.getSubentities().add(subentity3);
+
+			subentities.add(subentity2);
 		}
 		entity.setSubentities(subentities);
 		return entity;
