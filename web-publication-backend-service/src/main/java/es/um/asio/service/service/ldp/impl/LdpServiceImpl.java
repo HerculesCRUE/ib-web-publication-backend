@@ -103,12 +103,17 @@ public class LdpServiceImpl implements LdpService {
 	}
 	
 	@Override
-	public Page<LdpSearchResultDto> findByCategory(final String category, final Pageable pageable) {		
+	public Page<LdpSearchResultDto> findByCategory(final String category, final Pageable pageable) {
 		return findByTitle(category, TITLE_QUERY_TYPE_CATEGORY, pageable);
 	}
 	
 	private Page<LdpSearchResultDto> findByTitle(final String searchToken, final String type, final Pageable pageable) {
-		List<LdpSearchResultDto> results = executeQuery(buildFindQuery(TITLE_QUERY, type, searchToken, pageable), this::mapToLdpSearchResultDto);
+		List<LdpSearchResultDto> results = executeQuery(buildFindQuery(TITLE_QUERY, type, searchToken, pageable), this::mapToLdpSearchResultDto);				
+		if (type.equals(TITLE_QUERY_TYPE_CATEGORY)) {
+			results = results.stream()
+					.filter(result -> result.getUri().equals(searchToken))
+					.collect(Collectors.toList());
+		}
 		Integer count = executeQuery(String.format(TITLE_QUERY_COUNT, uriNamespace, type, searchToken, uriNamespace, type, searchToken, uriNamespace, type, searchToken), this::mapToCount).get(0);
 		return new PageImpl<LdpSearchResultDto>(results, pageable,count);
 	}
