@@ -5,6 +5,7 @@ package es.um.asio.service.service.sparql.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,12 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 
 import es.um.asio.service.domain.SparqlQuery;
 import es.um.asio.service.filter.sparql.SparqlQueryFilter;
@@ -74,6 +80,12 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 	@Autowired
 	private QueryBuilder queryBuilder;
+	
+	@Autowired
+	private SqparqlResponseDateFormatter dateFormatter;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	/** The rest template. */
 	private final RestTemplate restTemplate;
@@ -347,6 +359,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 					body = this.getBody(query, headers);
 				}
 				result = this.restTemplate.exchange(this.fusekiTrellisUrl, HttpMethod.POST, body, Object.class);
+				result = formatResponse(result);
 			} catch (final Exception e) {
 				this.logger.error("Error retrieving results from fuseki cause {}", e.getMessage());
 			}
@@ -391,6 +404,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		ResponseEntity<Object> result;
 		MultiValueMap<String, String> newHeader = new LinkedMultiValueMap<>();
 		newHeader.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+		tempResult = formatResponse(tempResult);
 		return new ResponseEntity<Object>(tempResult.getBody(), newHeader, tempResult.getStatusCode());
 	}
 
@@ -488,6 +502,30 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	@Override
 	public void delete(String id) {
 		this.sparqlQueryRepository.deleteById(id);
+	}
+	
+	private ResponseEntity<Object> formatResponse(ResponseEntity<Object> response) {
+		if (response == null || response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
+			return response;
+		}
+
+		JSONObject jsonObject = null;
+		try {
+			jsonObject = new JSONObject((LinkedHashMap<String, Object>) response.getBody());
+			DocumentContext parsedDataContext = JsonPath.parse(jsonObject.toString());
+			parsedDataContext.map("$.results.bindings[*].*.value", dateFormatter);
+			
+			return new ResponseEntity<Object>(objectMapper.readValue(parsedDataContext.jsonString(), LinkedHashMap.class),
+					response.getHeaders(), response.getStatusCode());
+		} catch (PathNotFoundException p) {
+			this.logger.debug(String.format("formatResponse - Invalid path for response. response: %", jsonObject != null ? jsonObject.toString() : null));
+		} catch (Exception e) {
+			this.logger.error(String.format("formatResponse - Unknown error formatting response. response: %s",
+					jsonObject != null ? jsonObject.toString() : null), e);
+		}
+
+		return response;
+
 	}
 
 }

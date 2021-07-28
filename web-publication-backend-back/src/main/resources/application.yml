@@ -25,6 +25,8 @@ app:
   # Service who get Sparql query results from certain nodes
   federationNode:
     url: http://localhost:9328/federation/nodes/list
+  trellis:
+    dateFormatOutput: dd-MM-yyyy
   serviceDiscoveryExcludeNodes:
     url: https://linkeddata1.um.es/service-discovery/service-discovery/exclude/nodes/name
   node: um
