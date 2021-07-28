@@ -104,16 +104,12 @@ public class LdpServiceImpl implements LdpService {
 	
 	@Override
 	public Page<LdpSearchResultDto> findByCategory(final String category, final Pageable pageable) {
-		return findByTitle(category, TITLE_QUERY_TYPE_CATEGORY, pageable);
+		//Query uses like filter. For http://hercules.org/um/es-ES/rec/Book it also retrieves http://hercules.org/um/es-ES/rec/Book-chapter. A '/' character is added to the end of category
+		return findByTitle(category.concat("/"), TITLE_QUERY_TYPE_CATEGORY, pageable);
 	}
 	
 	private Page<LdpSearchResultDto> findByTitle(final String searchToken, final String type, final Pageable pageable) {
-		List<LdpSearchResultDto> results = executeQuery(buildFindQuery(TITLE_QUERY, type, searchToken, pageable), this::mapToLdpSearchResultDto);				
-		if (type.equals(TITLE_QUERY_TYPE_CATEGORY)) {
-			results = results.stream()
-					.filter(result -> result.getUri().equals(searchToken))
-					.collect(Collectors.toList());
-		}
+		List<LdpSearchResultDto> results = executeQuery(buildFindQuery(TITLE_QUERY, type, searchToken, pageable), this::mapToLdpSearchResultDto);
 		Integer count = executeQuery(String.format(TITLE_QUERY_COUNT, uriNamespace, type, searchToken, uriNamespace, type, searchToken, uriNamespace, type, searchToken), this::mapToCount).get(0);
 		return new PageImpl<LdpSearchResultDto>(results, pageable,count);
 	}
