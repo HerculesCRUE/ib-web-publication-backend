@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.graalvm.compiler.loop.InductionVariable.Direction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
@@ -36,7 +34,7 @@ import es.um.asio.service.service.sparql.SparqlExecQuery;
 @Service
 public class LdpServiceImpl implements LdpService {
 
-	private static final String TITLE_QUERY_TYPE_TITLE = "title";
+	private static final String TITLE_QUERY_TYPE_TITLE = "titleFilter";
 	private static final String TITLE_QUERY_TYPE_CATEGORY = "uri";	
 	
 	private static final String COUNT_QUERY = "SELECT ?entity (count(distinct ?ac) as ?count) " + "WHERE { "
@@ -48,15 +46,15 @@ public class LdpServiceImpl implements LdpService {
 			+ "  ?ac <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?entity . "
 			+ "  FILTER regex(str(?entity), \"%s/rec\", \"i\") " + "}";
 	
-	private static final String TITLE_QUERY = "SELECT ?uri (GROUP_CONCAT(?title2; SEPARATOR=\", \") AS ?title) "
+	private static final String TITLE_QUERY = "SELECT ?uri (GROUP_CONCAT(?titleFilter; SEPARATOR=\", \") AS ?title) "
 			+ "WHERE {"
-			+ "{?uri <%s/rec/title> ?title2."
+			+ "{?uri <%s/rec/title> ?titleFilter."
 			+ "    FILTER regex(str(?%s), \"%s\", \"i\")} "
 			+ "UNION "
-			+ "{ ?uri <%s/rec/name> ?title2."
+			+ "{ ?uri <%s/rec/name> ?titleFilter."
 			+ "    FILTER regex(str(?%s), \"%s\", \"i\") }"			
 			+ "UNION "
-			+ "{ ?uri <%s/rec/id> ?title2."
+			+ "{ ?uri <%s/rec/id> ?titleFilter."
 			+ "    FILTER regex(str(?%s), \"%s\", \"i\") }"
 			+ "} "
 			+ "GROUP BY ?uri "
@@ -65,13 +63,13 @@ public class LdpServiceImpl implements LdpService {
 	
 	private static final String TITLE_QUERY_COUNT = "SELECT (count(distinct ?uri) as ?count) "
 			+ "WHERE {"
-			+ "{?uri <%s/rec/title> ?title2."
+			+ "{?uri <%s/rec/title> ?titleFilter."
 			+ "    FILTER regex(str(?%s), \"%s\", \"i\")} "
 			+ "UNION "
-			+ "{ ?uri <%s/rec/name> ?title2."
+			+ "{ ?uri <%s/rec/name> ?titleFilter."
 			+ "    FILTER regex(str(?%s), \"%s\", \"i\") }"			
 			+ "UNION "
-			+ "{ ?uri <%s/rec/id> ?title2."
+			+ "{ ?uri <%s/rec/id> ?titleFilter."
 			+ "    FILTER regex(str(?%s), \"%s\", \"i\") }"
 			+ "} ";
 	
