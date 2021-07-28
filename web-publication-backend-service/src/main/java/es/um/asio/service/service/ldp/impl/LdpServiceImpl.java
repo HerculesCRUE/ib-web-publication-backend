@@ -48,13 +48,13 @@ public class LdpServiceImpl implements LdpService {
 	
 	private static final String TITLE_QUERY = "SELECT ?uri (GROUP_CONCAT(?titleFilter; SEPARATOR=\", \") AS ?title) "
 			+ "WHERE {"
-			+ "{?uri <%s/rec/title> ?titleFilter."
+			+ "{?uri <%s/def/title> ?titleFilter."
 			+ "    FILTER regex(str(?%s), \"%s\", \"i\")} "
 			+ "UNION "
-			+ "{ ?uri <%s/rec/name> ?titleFilter."
+			+ "{ ?uri <%s/def/name> ?titleFilter."
 			+ "    FILTER regex(str(?%s), \"%s\", \"i\") }"			
 			+ "UNION "
-			+ "{ ?uri <%s/rec/id> ?titleFilter."
+			+ "{ ?uri <%s/def/id> ?titleFilter."
 			+ "    FILTER regex(str(?%s), \"%s\", \"i\") }"
 			+ "} "
 			+ "GROUP BY ?uri "
@@ -63,13 +63,13 @@ public class LdpServiceImpl implements LdpService {
 	
 	private static final String TITLE_QUERY_COUNT = "SELECT (count(distinct ?uri) as ?count) "
 			+ "WHERE {"
-			+ "{?uri <%s/rec/title> ?titleFilter."
+			+ "{?uri <%s/def/title> ?titleFilter."
 			+ "    FILTER regex(str(?%s), \"%s\", \"i\")} "
 			+ "UNION "
-			+ "{ ?uri <%s/rec/name> ?titleFilter."
+			+ "{ ?uri <%s/def/name> ?titleFilter."
 			+ "    FILTER regex(str(?%s), \"%s\", \"i\") }"			
 			+ "UNION "
-			+ "{ ?uri <%s/rec/id> ?titleFilter."
+			+ "{ ?uri <%s/def/id> ?titleFilter."
 			+ "    FILTER regex(str(?%s), \"%s\", \"i\") }"
 			+ "} ";
 	
