@@ -60,10 +60,9 @@ public class EventServiceImpl extends FusekiService<EventFilter> implements Even
 
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDate())) {
-				strBuilder.append("FILTER (?date = \"");
+				strBuilder.append("FILTER regex(?date, \"");
 				strBuilder.append(filter.getDate());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
+				strBuilder.append("\",\"i\"");				
 				strBuilder.append(") . ");
 			}
 
