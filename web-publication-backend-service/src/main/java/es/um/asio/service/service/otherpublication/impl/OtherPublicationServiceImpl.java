@@ -108,10 +108,17 @@ public class OtherPublicationServiceImpl extends FusekiService<OtherPublicationF
 	@Override
 	public Entity retrieveEntity(OtherPublicationFilter filter) {
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
-				: Arrays.asList("Dossier");
+				: Arrays.asList("Dossier", "Other");
+		
+		List<String> typesReplace = new ArrayList<>();
+		
+		for (String type : types) {
+			typesReplace.add(type.replace("Other", "Publication"));
+		}
 
-		Entity entity = new Entity("OtherPublication", types, "id", "title", "date", "description", "ocicnum",
-				"nowhere:type");
+		Entity entity = new Entity("OtherPublication", typesReplace, "id", "title", "date", "nowhere:type");
+		
+		entity.setOptionalFields(Arrays.asList("description", "ocicnum"));
 
 		return entity;
 	}
@@ -120,10 +127,15 @@ public class OtherPublicationServiceImpl extends FusekiService<OtherPublicationF
 	public Entity retrieveEntity(String type) {
 		List<String> types = new ArrayList<String>();
 		String[] splitType = type.split("/");
-		types.add(splitType[splitType.length - 1]);
+		types.add(splitType[splitType.length - 1]);	
+		
+		if(type.equals("Dossier")) {
+			return new Entity("OtherPublication", types, "id", "title", "date", "description", "ocicnum", "nowhere:type");			
+		} else if(type.equals("Publication")){
+			return new Entity("OtherPublication", types, "id", "title", "date", "keyword", "summary", "doi", "PageStart", "PageEnd", "nowhere:type");
+		}
 
-		return new Entity("OtherPublication", types, "id", "title", "date", "description", "ocicnum", "nowhere:type");
-
+		return null;
 	}
 
 	@Override
