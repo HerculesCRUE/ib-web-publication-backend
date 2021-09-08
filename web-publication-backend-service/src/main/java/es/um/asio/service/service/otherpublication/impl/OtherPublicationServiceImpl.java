@@ -2,7 +2,9 @@ package es.um.asio.service.service.otherpublication.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +20,7 @@ import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
 import es.um.asio.service.model.SimpleQuery;
+import es.um.asio.service.model.Subentity;
 import es.um.asio.service.service.document.impl.DocumentServiceImpl;
 import es.um.asio.service.service.impl.FusekiService;
 import es.um.asio.service.service.otherpublication.OtherPublicationService;
@@ -119,6 +122,21 @@ public class OtherPublicationServiceImpl extends FusekiService<OtherPublicationF
 		Entity entity = new Entity("OtherPublication", typesReplace, "id", "title", "date", "nowhere:type");
 		
 		entity.setOptionalFields(Arrays.asList("description", "ocicnum"));
+		
+		if (StringUtils.isNotBlank(filter.getAuthorId())) {
+			List<Subentity> subentities = new ArrayList<Subentity>();
+
+			String fieldName = "correspondingAuthor";
+
+			Map<String, String> filters = new HashMap<>();
+			filters.put("id", filter.getAuthorId());
+
+			Subentity subentity = new Subentity();
+			subentity.setFieldName(fieldName);
+			subentity.setFilters(filters);
+			subentities.add(subentity);
+			entity.setSubentities(subentities);
+		}
 
 		return entity;
 	}
