@@ -96,11 +96,8 @@ public class LdpServiceImpl implements LdpService {
 			+ "  OPTIONAL {?related asio-def:name ?name}"
 			+ "} ";
 	
-	private static final String ENTITY_QUERY = "SELECT * "
-			+ "WHERE { "
-			+ "  ?ac ?key ?value. "
-			+ "  FILTER regex(str(?ac), \"%s\", \"i\")   "
-			+ "}";
+	private static final String ENTITY_QUERY = "SELECT * WHERE " 
+			+ "  <%s> ?key ?value. }";
 	
 	private static final String JSON_LD_TEMPLATE = "CONSTRUCT {?ac ?key ?value} WHERE {%s}";
 			
