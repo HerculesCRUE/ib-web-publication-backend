@@ -97,7 +97,7 @@ public class LdpServiceImpl implements LdpService {
 			+ "} ";
 	
 	private static final String ENTITY_QUERY = "SELECT * WHERE " 
-			+ "  <%s> ?key ?value. }";
+			+ " { <%s> ?key ?value. }";
 	
 	private static final String JSON_LD_TEMPLATE = "CONSTRUCT {?ac ?key ?value} WHERE {%s}";
 			
