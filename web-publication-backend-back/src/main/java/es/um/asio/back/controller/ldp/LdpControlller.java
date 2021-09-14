@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.um.asio.service.dto.LdpEntityCountDto;
 import es.um.asio.service.dto.LdpEntityDetailsDto;
+import es.um.asio.service.dto.LdpEntityRelatedDto;
 import es.um.asio.service.dto.LdpSearchResultDto;
 import es.um.asio.service.service.ldp.LdpService;
 import lombok.AccessLevel;
@@ -54,6 +55,15 @@ public class LdpControlller {
 
 		return ldpService.findDetails(uri);
 	}
+	
+	@GetMapping(LdpControlller.Mappings.FIND_RELATED)
+	public Page<LdpEntityRelatedDto> findEntityRelated(@RequestParam(required = true) String uri, Pageable pageable) {
+		if (StringUtils.isBlank(uri)) {
+			throw new IllegalArgumentException();
+		}
+
+		return ldpService.findRelated(uri, pageable);
+	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	static final class Mappings {
@@ -81,5 +91,10 @@ public class LdpControlller {
 		 * Controller request mapping.
 		 */
 		protected static final String FIND_DETAILS = "/findDetails";
+		
+		/**
+		 * Controller request mapping.
+		 */
+		protected static final String FIND_RELATED = "/findRelated";
 	}
 }

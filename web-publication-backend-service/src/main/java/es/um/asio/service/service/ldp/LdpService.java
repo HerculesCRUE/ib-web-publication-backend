@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 
 import es.um.asio.service.dto.LdpEntityCountDto;
 import es.um.asio.service.dto.LdpEntityDetailsDto;
+import es.um.asio.service.dto.LdpEntityRelatedDto;
 import es.um.asio.service.dto.LdpSearchResultDto;
 
 public interface LdpService {
@@ -16,4 +17,6 @@ public interface LdpService {
 	Page<LdpSearchResultDto> findByCategory(final String category, final Pageable pageable);
 	
 	LdpEntityDetailsDto findDetails(final String uri);
+	
+	Page<LdpEntityRelatedDto> findRelated(final String uri, final Pageable pageable);
 }

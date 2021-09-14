@@ -27,6 +27,7 @@ import com.google.common.base.Predicate;
 import es.um.asio.service.dto.LdpEntityCountDto;
 import es.um.asio.service.dto.LdpEntityDetailsDto;
 import es.um.asio.service.dto.LdpEntityDetailsDto.LdpEntityDetail;
+import es.um.asio.service.dto.LdpEntityRelatedDto;
 import es.um.asio.service.dto.LdpSearchResultDto;
 import es.um.asio.service.service.ldp.LdpService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
@@ -71,6 +72,28 @@ public class LdpServiceImpl implements LdpService {
 			+ "UNION "
 			+ "{ ?uri <%s/def/id> ?titleFilter."
 			+ "    FILTER regex(str(?%s), \"%s\", \"i\") }"
+			+ "} ";
+	
+	private static final String RELATED_QUERY = "prefix asio-def: <%s/def/>"
+			+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "		
+			+ "SELECT ?related ?property ?typeUri ?id ?title ?name ?description WHERE {"
+			+ " ?related ?property <%s> ."
+			+ "  ?related  rdf:type ?typeUri ."
+			+ "  OPTIONAL {?related asio-def:title ?title} ."
+			+ "  OPTIONAL {?related asio-def:id ?id}"
+			+ "  OPTIONAL {?related asio-def:name ?name}"
+			+ "} "
+			+ "ORDER BY %s (?%s) "
+			+ "LIMIT %s offset %s";
+	
+	private static final String RELATED_QUERY_COUNT = "prefix asio-def: <%s/def/>"
+			+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "		
+			+ "SELECT (count (?related) as ?count) WHERE {"
+			+ " ?related ?property <%s> ."
+			+ "  ?related  rdf:type ?typeUri ."
+			+ "  OPTIONAL {?related asio-def:title ?title} ."
+			+ "  OPTIONAL {?related asio-def:id ?id}"
+			+ "  OPTIONAL {?related asio-def:name ?name}"
 			+ "} ";
 	
 	private static final String ENTITY_QUERY = "SELECT * "
@@ -121,8 +144,15 @@ public class LdpServiceImpl implements LdpService {
 		detailsDto.setRelations(findDetailsRelations(detailsDto));
 		detailsDto.setJsonLd(findDetailsJson(uri));
 		return detailsDto;				
-	}
+	}	
 	
+	@Override
+	public Page<LdpEntityRelatedDto> findRelated(final String uri, final Pageable pageable) {
+		List<LdpEntityRelatedDto> results = executeQuery(buildRelatedQuery(RELATED_QUERY, uri, pageable), this::mapToLdpEntityRelatedDto);
+		Integer count = executeQuery(String.format(RELATED_QUERY_COUNT, uriNamespace, uri), this::mapToCount).get(0);
+		return new PageImpl<LdpEntityRelatedDto>(results, pageable,count);
+	}
+
 	private LdpEntityDetailsDto findDetailsProperties (final String uri) {
 		LdpEntityDetailsDto detailsDto = new LdpEntityDetailsDto();		
 		detailsDto.setProperties(executeQuery(String.format(ENTITY_QUERY, uri), this::mapToLdpEntityDetailsDto));
@@ -147,8 +177,7 @@ public class LdpServiceImpl implements LdpService {
 		return String.format(query, uriNamespace, order.getDirection(), order.getProperty(), pageable.getPageSize(),
 				pageable.getOffset());
 	}
-	
-	
+		
 	private String buildFindQuery(String query, String type, String title, Pageable pageable) {
 		Order order = new Order(Direction.ASC, "uri");
 		if (!pageable.getSort().toList().isEmpty()) {
@@ -156,7 +185,17 @@ public class LdpServiceImpl implements LdpService {
 		}
 		return String.format(query, uriNamespace, type, title, uriNamespace, type, title, uriNamespace, type, title, order.getDirection(), order.getProperty(), pageable.getPageSize(),
 				pageable.getOffset());
+	}
+	
+	private String buildRelatedQuery(String query, String uri, Pageable pageable) {
+		Order order = new Order(Direction.ASC, "typeUri");
+		if (!pageable.getSort().toList().isEmpty()) {
+			order = pageable.getSort().toList().get(0);
+		}
+		return String.format(query, uriNamespace, uri, order.getDirection(), order.getProperty(), pageable.getPageSize(),
+				pageable.getOffset());
 	}	
+	
 	
 	private <T> List<T> executeQuery(final String query, final Function<JSONObject, T> mapper) {
 		return executeQuery(query, mapper, true, null);
@@ -228,6 +267,35 @@ public class LdpServiceImpl implements LdpService {
 		}
 	}
 	
+	private LdpEntityRelatedDto mapToLdpEntityRelatedDto (JSONObject jsonObject) {
+		LdpEntityRelatedDto ldpEntityRelatedDto = new LdpEntityRelatedDto();
+		try {
+			String relationship = getValueFromProperty(jsonObject, "property");
+			String relatedUri = getValueFromProperty(jsonObject, "related");						
+			String relatedType = getValueFromProperty(jsonObject, "typeUri");		
+			
+			String relatedDescription = null;
+			if (getValueFromProperty(jsonObject, "title") != null) {
+				relatedDescription = getValueFromProperty(jsonObject, "title");
+			} else if (getValueFromProperty(jsonObject, "description") != null) {
+				relatedDescription = getValueFromProperty(jsonObject, "description");
+			} else if (getValueFromProperty(jsonObject, "name") != null) {
+				relatedDescription = getValueFromProperty(jsonObject, "name");
+			} else if (getValueFromProperty(jsonObject, "id") != null) {
+				relatedDescription = getValueFromProperty(jsonObject, "id");
+			}
+			
+			ldpEntityRelatedDto.setRelationship(relationship);
+			ldpEntityRelatedDto.setRelatedUri(relatedUri);
+			ldpEntityRelatedDto.setRelatedType(relatedType);
+			ldpEntityRelatedDto.setRelatedDescription(relatedDescription);
+			
+			return ldpEntityRelatedDto;
+		}catch (Exception e) {
+			return null;
+		}
+	}
+	
 	private Integer mapToCount(JSONObject jsonObject) {
 		try {
 			return Integer.parseInt(jsonObject.getJSONObject("count").getString("value"));
@@ -250,6 +318,14 @@ public class LdpServiceImpl implements LdpService {
 			return true;
 		} catch (Exception e) {
 			return false;
+		}
+	}
+	
+	private String getValueFromProperty (final JSONObject jsonObject, final String property) {
+		try {
+			return jsonObject.getJSONObject(property).getString("value");
+		} catch (Exception e) {
+			return null;
 		}
 	}
 
