@@ -1,15 +1,18 @@
 package es.um.asio.service.service.ldp.impl;
 
-import java.lang.annotation.Inherited;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.hibernate.hql.internal.ast.DetailedSemanticException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +28,6 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import com.google.common.base.Predicate;
 
 import es.um.asio.service.dto.LdpEntityCountDto;
 import es.um.asio.service.dto.LdpEntityDetailsDto;
@@ -83,6 +84,9 @@ public class LdpServiceImpl implements LdpService {
 
 	@Value("${app.ldp.uri-namespace}")
 	private String uriNamespace;
+	
+	@Value("${app.ldp.validEntities}")
+	private String[] validEntities;
 
 	@Autowired
 	private SparqlExecQuery sparqlExecQuery;
@@ -90,6 +94,7 @@ public class LdpServiceImpl implements LdpService {
 	@Override
 	public Page<LdpEntityCountDto> entityCount(final Pageable pageable) {
 		List<LdpEntityCountDto> results = executeQuery(buildQuery(COUNT_QUERY, pageable), this::mapToLdpEntityCountDto);
+	    results = results.stream().filter(count -> isValidCategory(count.getEntity())).collect(Collectors.toList());
 		Integer count = executeQuery(String.format(COUNT_QUERY_COUNT, uriNamespace), this::mapToCount).get(0);
 		return new PageImpl<LdpEntityCountDto>(results, pageable, count);
 	}
@@ -110,6 +115,7 @@ public class LdpServiceImpl implements LdpService {
 	private Page<LdpSearchResultDto> findByTitle(final String searchToken, final String type, final Pageable pageable) {
 		List<LdpSearchResultDto> results = executeQuery(buildFindQuery(TITLE_QUERY, type, searchToken, pageable),
 				this::mapToLdpSearchResultDto);
+	    results = results.stream().filter(count -> isValidEntity(count.getUri())).collect(Collectors.toList());
 		Integer count = executeQuery(String.format(TITLE_QUERY_COUNT, uriNamespace, type, searchToken, uriNamespace,
 				type, searchToken, uriNamespace, type, searchToken), this::mapToCount).get(0);
 		return new PageImpl<LdpSearchResultDto>(results, pageable, count);
@@ -118,8 +124,10 @@ public class LdpServiceImpl implements LdpService {
 	@Override
 	public LdpEntityDetailsDto findDetails(final String uri) {
 		LdpEntityDetailsDto detailsDto = findDetailsProperties(uri);
-		detailsDto.setRelations(findDetailsRelations(detailsDto));
+		detailsDto.setRelations(findDetailsRelations(detailsDto).stream()
+				.filter(relation -> !relation.getUri().equals(uri)).collect(Collectors.toList()));
 		detailsDto.setJsonLd(findDetailsJson(uri));
+		detailsDto = changeUrlPropertiesWithRelations(detailsDto);
 		return detailsDto;
 	}
 
@@ -127,6 +135,7 @@ public class LdpServiceImpl implements LdpService {
 	public Page<LdpEntityRelatedDto> findRelated(final String uri, final Pageable pageable) {
 		List<LdpEntityRelatedDto> results = executeQuery(buildRelatedQuery(RELATED_QUERY, uri, pageable),
 				this::mapToLdpEntityRelatedDto);
+		results = mapInheritedRelationships(results, uri);
 		Integer count = executeQuery(String.format(RELATED_QUERY_COUNT, uriNamespace, uri), this::mapToCount).get(0);
 		return new PageImpl<LdpEntityRelatedDto>(results, pageable, count);
 	}
@@ -144,10 +153,52 @@ public class LdpServiceImpl implements LdpService {
 	}
 
 	private List<LdpEntityDetailsDto> findDetailsRelations(final LdpEntityDetailsDto detailsDto) {
-		Predicate<LdpEntityDetail> isDetailRelation = detail -> detail.getKey().startsWith(uriNamespace)
-				&& isValidUrl(detail.getValue());
-		return detailsDto.getProperties().stream().filter(isDetailRelation)
-				.map(detail -> findDetailsProperties(detail.getValue())).collect(Collectors.toList());
+		return detailsDto.getProperties().stream()
+				.filter(this::isValidRelation)
+				.map(detail -> findDetailsProperties(detail.getValue()))
+				.flatMap(this::mapNextInheritedInformation)
+				.collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(new Comparator<LdpEntityDetailsDto>() {
+			        @Override
+			        public int compare(LdpEntityDetailsDto s1, LdpEntityDetailsDto s2) {
+			            return s1.getUri().compareTo(s2.getUri());
+			        }
+				})),
+                ArrayList::new));		
+	}
+	
+	private Stream<LdpEntityDetailsDto> mapNextInheritedInformation (LdpEntityDetailsDto ldpEntityDetailsDto) {				
+		if (ldpEntityDetailsDto == null || ldpEntityDetailsDto.getProperties().isEmpty()) {
+			return Stream.empty();
+		}
+		
+		if (isValidEntity(ldpEntityDetailsDto.getUri())) {
+			return Stream.of(ldpEntityDetailsDto);
+		}
+		
+		return ldpEntityDetailsDto.getProperties().stream()
+				.filter(detail -> isValidEntity(detail.getValue()))
+				.map(detail -> findDetailsProperties(detail.getValue()));
+	}
+	
+	private LdpEntityDetailsDto changeUrlPropertiesWithRelations(LdpEntityDetailsDto ldpEntityDetailsDto) {		
+		String relationProperty = ldpEntityDetailsDto.getProperties().stream()
+				.filter(this::isValidRelation)
+				.findFirst()
+				.map(LdpEntityDetail::getKey)
+				.orElse(null);
+		
+		List<LdpEntityDetail> entityDetailsWithoutRelationProperties = ldpEntityDetailsDto.getProperties().stream()
+				.filter(property -> !isValidURL(property.getValue()))
+				.collect(Collectors.toList());
+		
+		ldpEntityDetailsDto.getRelations().stream()		
+		.forEach(relation -> {
+			entityDetailsWithoutRelationProperties.add(new LdpEntityDetail(relationProperty, relation.getUri()));
+		});
+		
+		ldpEntityDetailsDto.setProperties(entityDetailsWithoutRelationProperties);
+		
+		return ldpEntityDetailsDto;		
 	}
 
 	private String buildQuery(String query, Pageable pageable) {
@@ -260,8 +311,8 @@ public class LdpServiceImpl implements LdpService {
 			String relatedUri = getValueFromProperty(jsonObject, "related");
 			String relatedType = getValueFromProperty(jsonObject, "typeUri");
 
-			String relatedDescription = null;
-			boolean inherited = false;
+			String relatedDescription = null;			
+			ldpEntityRelatedDto.setInheritedRelationship(false);
 			if (getValueFromProperty(jsonObject, "title") != null) {
 				relatedDescription = getValueFromProperty(jsonObject, "title");
 			} else if (getValueFromProperty(jsonObject, "description") != null) {
@@ -269,30 +320,64 @@ public class LdpServiceImpl implements LdpService {
 			} else if (getValueFromProperty(jsonObject, "name") != null) {
 				relatedDescription = getValueFromProperty(jsonObject, "name");
 			} else if (getValueFromProperty(jsonObject, "id") != null) {
-				inherited = true;
+				ldpEntityRelatedDto.setInheritedRelationship(true);
 				relatedDescription = getValueFromProperty(jsonObject, "id");
 			}
 
-			ldpEntityRelatedDto.setRelationship(relationship);
-			ldpEntityRelatedDto.setRelatedUri(relatedUri);
+			ldpEntityRelatedDto.setRelationship(relationship);			
 			ldpEntityRelatedDto.setRelatedType(relatedType);
-			ldpEntityRelatedDto
-					.setRelatedDescription(inherited ? getInheritedDescription(relatedUri) : relatedDescription);
+			ldpEntityRelatedDto.setRelatedUri(relatedUri);			
+			ldpEntityRelatedDto.setRelatedDescription(relatedDescription);						
 
-			return ldpEntityRelatedDto.getRelatedDescription() != null ? ldpEntityRelatedDto : null;
+			return ldpEntityRelatedDto;
 		} catch (Exception e) {
 			return null;
 		}
 	}
 
-	private String getInheritedDescription(String relatedUri) {
-		Page<LdpEntityRelatedDto> ldpEntityRelatedDto = findRelated(relatedUri, PageRequest.of(0, Integer.MAX_VALUE));
+	private List<LdpEntityRelatedDto> mapInheritedRelationships(List<LdpEntityRelatedDto> ldpEntityRelatedDto, String originalUri) {
+		if (ldpEntityRelatedDto==null || ldpEntityRelatedDto.isEmpty()) {
+			return ldpEntityRelatedDto;			
+		}
+		
+		List<LdpEntityRelatedDto> adaptedRelatedEntities = new ArrayList<>();
+		for (LdpEntityRelatedDto adaptedRelatedEntity : ldpEntityRelatedDto) {
+			if (adaptedRelatedEntity.isInheritedRelationship()) {
+				adaptedRelatedEntities.addAll(mapInheritedInformation(adaptedRelatedEntity));			
+			} else {
+				adaptedRelatedEntities.add(adaptedRelatedEntity);
+			}
+		}		
+						
+		return adaptedRelatedEntities.stream()
+				.filter(adaptedRelated -> !adaptedRelated.getRelatedUri().equals(originalUri))
+				.collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(new Comparator<LdpEntityRelatedDto>() {
+			        @Override
+			        public int compare(LdpEntityRelatedDto s1, LdpEntityRelatedDto s2) {
+			            return s1.getRelatedDescription().compareTo(s2.getRelatedDescription());
+			        }
+				})),
+                ArrayList::new));		
+	}
+	
+	private List<LdpEntityRelatedDto> mapInheritedInformation(LdpEntityRelatedDto ldpEntityRelatedDto) {
+		Page<LdpEntityRelatedDto> ldpEntityRelatedInherited = findRelated(ldpEntityRelatedDto.getRelatedUri(),
+				PageRequest.of(0, Integer.MAX_VALUE));
 
-		if (ldpEntityRelatedDto == null) {
+		if (ldpEntityRelatedInherited == null) {
 			return null;
 		}
 
-		return ldpEntityRelatedDto.get().findFirst().map(related -> related.getRelatedDescription()).orElse(null);
+		return ldpEntityRelatedInherited.get()
+				.map(related -> {
+					LdpEntityRelatedDto inheritedInformation = new LdpEntityRelatedDto();
+					inheritedInformation.setRelationship(ldpEntityRelatedDto.getRelationship());
+					inheritedInformation.setRelatedType(related.getRelatedType());
+					inheritedInformation.setRelatedDescription(related.getRelatedDescription());
+					inheritedInformation.setRelatedUri(related.getRelatedUri());
+					return inheritedInformation;
+				})
+				.collect(Collectors.toList());		
 	}
 
 	private Integer mapToCount(JSONObject jsonObject) {
@@ -310,8 +395,8 @@ public class LdpServiceImpl implements LdpService {
 			return null;
 		}
 	}
-
-	private boolean isValidUrl(String uri) {
+	
+	private boolean isValidURL(String uri) {
 		try {
 			new URL(uri);
 			return true;
@@ -320,11 +405,30 @@ public class LdpServiceImpl implements LdpService {
 		}
 	}
 
+	private boolean isValidEntity(String uri) {
+		return Arrays.stream(validEntities).anyMatch(uri::contains);
+	}
+	
+	private boolean isValidCategory(String uri) {
+		return Arrays.stream(validEntities).anyMatch(uri::endsWith);
+	}
+
 	private String getValueFromProperty(final JSONObject jsonObject, final String property) {
 		try {
 			return jsonObject.getJSONObject(property).getString("value");
 		} catch (Exception e) {
 			return null;
 		}
+	}
+	
+	private boolean isValidRelation(LdpEntityDetail detail) {
+		return detail.getKey().startsWith(uriNamespace)
+				&& isValidURL(detail.getValue()) && isUUID(detail.getValue());		
+	}
+	
+	private boolean isUUID(String uri) {
+		Pattern pattern = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}");
+		Matcher matcher = pattern.matcher(uri);
+		return matcher.find();					
 	}
 }

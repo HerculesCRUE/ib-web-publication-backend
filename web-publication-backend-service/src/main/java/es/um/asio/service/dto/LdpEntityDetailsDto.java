@@ -24,6 +24,7 @@ public class LdpEntityDetailsDto {
 	
 	@AllArgsConstructor
 	@Getter
+	@Setter
 	public static class LdpEntityDetail {
 		
 		private String key;
