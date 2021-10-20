@@ -93,7 +93,7 @@ public class ResearchStaffServiceImpl extends FusekiService<ResearchStaffFilter>
 	@Override
 	public Entity retrieveEntity(ResearchStaffFilter filter) {
 		Entity entity = new Entity("Researcher-role", "nowhere:id", "nowhere:gender", "nowhere:name",
-				"nowhere:nickname", "nowhere:personalMaibox", "nowhere:researchLine", "nowhere:hasKnowledgeAreatitle");
+				"nowhere:nickname", "nowhere:personalMaibox", "nowhere:researchLine", "nowhere:hasKnowledgeAreatitle","freetext:(?inheresIn AS ?uri)");
 
 		List<Subentity> subentities = new ArrayList<Subentity>();
 		Subentity subentity = new Subentity();

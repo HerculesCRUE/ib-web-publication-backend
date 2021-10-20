@@ -102,7 +102,7 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 		}
 
 		Entity entity = new Entity("AcademicPublication", typesReplace, "abbreviation", "date", "doi", "id", "title",
-				"nowhere:type");
+				"nowhere:type", "freetext:(?x AS ?uri)");
 
 		// Add data to subentity atributes and filters
 		if (filter.getDirectedBy() != null && !filter.getDirectedBy().isEmpty()) {

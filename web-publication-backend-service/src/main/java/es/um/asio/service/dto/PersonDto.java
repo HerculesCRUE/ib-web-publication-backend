@@ -14,6 +14,11 @@ public class PersonDto {
 	 * The id
 	 */
 	private String id;
+	
+	/**
+	 * The uri
+	 */
+	private String uri;
 
 	/**
 	 * The title

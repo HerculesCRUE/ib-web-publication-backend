@@ -69,4 +69,8 @@ public class OrganizationDto {
 	 * The type. 
 	 */
 	private String type;
+	/** 
+	 * The uri. 
+	 */
+	private String uri;
 }

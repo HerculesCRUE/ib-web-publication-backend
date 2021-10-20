@@ -9,5 +9,6 @@ import es.um.asio.service.mapper.decorator.PersonMapperDecorator;
 @Mapper
 @DecoratedWith(PersonMapperDecorator.class)
 public interface PersonMapper extends BaseMapper<PersonDto> {
+	
 
 }

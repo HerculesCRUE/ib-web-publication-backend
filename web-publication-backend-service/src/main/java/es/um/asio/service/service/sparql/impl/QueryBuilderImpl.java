@@ -76,14 +76,17 @@ public class QueryBuilderImpl implements QueryBuilder {
 		if (fields != null) {
 			for (String field : fields) {
 				String fieldFinal = field;
-
-				if (field.contains(":")) {
+				if (field.startsWith("freetext:")) {
 					fieldFinal = field.split(":")[field.split(":").length - 1];
-				} else if (field.contains(",")) {
-					fieldFinal = field.split(",")[0];
-				}
+				} else {
+					if (field.contains(":")) {
+						fieldFinal = field.split(":")[field.split(":").length - 1];
+					} else if (field.contains(",")) {
+						fieldFinal = field.split(",")[0];
+					}
 
-				strBuilder.append("?");
+					strBuilder.append("?");
+				}
 				strBuilder.append(fieldFinal);
 				strBuilder.append(" ");
 			}
@@ -122,7 +125,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 		StringBuilder strBuilder = new StringBuilder();
 
 		for (String field : fields) {
-			if (field.startsWith("nowhere:")) {
+			if (field.startsWith("nowhere:") || field.startsWith("freetext:")) {
 				continue;
 			} else if (field.contains(",")) {
 				String[] split = field.split(",");
@@ -151,10 +154,10 @@ public class QueryBuilderImpl implements QueryBuilder {
 		StringBuilder strBuilder = new StringBuilder();
 
 		if (optionalFields != null) {
-			strBuilder.append("OPTIONAL { ");
+			
 			for (String field : optionalFields) {
 				String[] split = field.split(",");
-
+				strBuilder.append(" OPTIONAL { ");
 				strBuilder.append("?x ");
 
 				for (int i = 0; i < split.length; i++) {
@@ -167,8 +170,9 @@ public class QueryBuilderImpl implements QueryBuilder {
 				strBuilder.append(" ?");
 				strBuilder.append(split[0]);
 				strBuilder.append(" . ");
+				strBuilder.append("} ");
 			}
-			strBuilder.append("} ");
+			
 		}
 
 		return strBuilder.toString();

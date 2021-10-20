@@ -57,7 +57,7 @@ app:
     import-error-topic-name: import-error
   ldp:
     uri-namespace: http://hercules.org/um/es-ES
-    validEntities: Person, Publication, Conference, Department, Project, Research-group, Doctoral-thesis, Organization, Activity, Center, University            
+    validEntities: Person, Publication, Conference, Department, Project, Research-group, Doctoral-thesis, Organization, Activity, Center, University, Patent            
 ## Actuator
 management:
   endpoint:

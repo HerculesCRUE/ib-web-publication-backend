@@ -199,7 +199,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	@Override
 	public Entity retrieveEntity(ProjectFilter filter) {
 		Entity entity = new Entity("Project", "abbreviation", "endDate", "id", "projectClassification", "startDate",
-				"modality", "title");
+				"modality", "title", "freetext:(?x AS ?uri)");
 
 		// Add data to subentity atributes and filters
 		if (filter.getAuthorId() != null && !filter.getAuthorId().isEmpty()) {

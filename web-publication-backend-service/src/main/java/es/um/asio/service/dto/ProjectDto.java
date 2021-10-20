@@ -70,4 +70,9 @@ public class ProjectDto {
 	 * The status 
 	 */
 	private String status;
+	
+	/**
+	 * The uri
+	 */
+	private String uri;
 }

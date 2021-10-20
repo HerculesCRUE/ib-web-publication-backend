@@ -119,7 +119,7 @@ public class OtherPublicationServiceImpl extends FusekiService<OtherPublicationF
 			typesReplace.add(type.replace("Other", "Publication"));
 		}
 
-		Entity entity = new Entity("OtherPublication", typesReplace, "id", "title", "date", "nowhere:type");
+		Entity entity = new Entity("OtherPublication", typesReplace, "id", "title", "date", "nowhere:type", "freetext:(?x AS ?uri)");
 		
 		entity.setOptionalFields(Arrays.asList("description", "ocicnum"));
 		

@@ -161,8 +161,16 @@ public class PatentServiceImpl implements PatentService {
 
 	@Override
 	public Entity retrieveEntity(PatentFilter filter) {
-		Entity entity = new Entity("Patent", "dateIssued", "doi", "id", "keyword", "mode", "title");
+		Entity entity = new Entity("Patent", "title", "freetext:(?x AS ?uri)");
+		List<String> optional = new ArrayList<>();
+		optional.add("dateIssued");
+		optional.add("doi");
+		optional.add("keyword");
+		optional.add("id");
+		optional.add("mode");
 
+
+		entity.setOptionalFields(optional);
 		// Add data to subentity atributes and filters
 		if (filter.getOrganizationId() != null && !filter.getOrganizationId().isEmpty()) {
 			List<Subentity> subentities = new ArrayList<Subentity>();

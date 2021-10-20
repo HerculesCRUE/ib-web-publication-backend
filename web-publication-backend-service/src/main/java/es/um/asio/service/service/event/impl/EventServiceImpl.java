@@ -116,7 +116,7 @@ public class EventServiceImpl extends FusekiService<EventFilter> implements Even
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
 				: Arrays.asList("Conference", "Exhibit", "Activity");
 
-		Entity entity = new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
+		Entity entity = new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type", "freetext:(?x AS ?uri)");
 
 		if (StringUtils.isNotBlank(filter.getParticipantId())) {
 			List<Subentity> subentities = new ArrayList<Subentity>();

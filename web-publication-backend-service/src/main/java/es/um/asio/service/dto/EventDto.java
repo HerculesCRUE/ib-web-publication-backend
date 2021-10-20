@@ -26,5 +26,8 @@ public class EventDto {
 
 	/** The location. */
 	private String locality;
+	
+	/** The uri **/
+	private String uri;
 
 }

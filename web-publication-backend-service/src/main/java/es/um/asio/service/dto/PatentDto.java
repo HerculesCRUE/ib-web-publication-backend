@@ -64,4 +64,8 @@ public class PatentDto {
 	 * The summary
 	 */
 //	private String summary;
+	/**
+	 * The uri
+	 */
+	private String uri;
 }
