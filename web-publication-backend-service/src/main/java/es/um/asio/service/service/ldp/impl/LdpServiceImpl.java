@@ -229,6 +229,9 @@ public class LdpServiceImpl implements LdpService {
 			if (extractTypeFromUri(ldpEntitiesProperties.getUriNamespace(), value) != null) {
 				return null;
 			}
+			if(StringUtils.isBlank(value) || value.equals("null")) {
+				return null;
+			}
 			return LdpEntityDetailsDto.buildDetail(key, value);
 		} catch (Exception e) {
 			return null;
@@ -243,7 +246,7 @@ public class LdpServiceImpl implements LdpService {
 
 			String relatedDescription = null;
 			for (String property : ldpEntitiesProperties.getValidProperties()) {
-				if (!StringUtils.isBlank(getValueFromProperty(jsonObject, property + "_result"))) {
+				if (!StringUtils.isBlank(getValueFromProperty(jsonObject, property + "_result")) && !getValueFromProperty(jsonObject, property + "_result").equals("null")) {
 					relatedDescription = getValueFromProperty(jsonObject, property + "_result");
 					break;
 				}
