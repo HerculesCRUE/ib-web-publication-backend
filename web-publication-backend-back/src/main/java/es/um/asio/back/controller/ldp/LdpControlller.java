@@ -57,12 +57,13 @@ public class LdpControlller {
 	}
 	
 	@GetMapping(LdpControlller.Mappings.FIND_RELATED)
-	public Page<LdpEntityRelatedDto> findEntityRelated(@RequestParam(required = true) String uri, Pageable pageable) {
+	public Page<LdpEntityRelatedDto> findEntityRelated(@RequestParam(required = true) String uri, Pageable pageable,@RequestParam(required = true) String type) {
 		if (StringUtils.isBlank(uri)) {
 			throw new IllegalArgumentException();
 		}
 
-		return ldpService.findRelated(uri, pageable);
+		
+		return ldpService.findRelated(uri, pageable, type);
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)

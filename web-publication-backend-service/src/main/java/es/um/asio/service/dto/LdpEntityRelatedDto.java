@@ -14,6 +14,4 @@ public class LdpEntityRelatedDto {
 	private String relatedType;
 	
 	private String relatedDescription;
-	
-	private boolean inheritedRelationship;
 }

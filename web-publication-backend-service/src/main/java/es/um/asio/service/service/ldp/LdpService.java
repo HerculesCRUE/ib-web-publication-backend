@@ -18,5 +18,5 @@ public interface LdpService {
 	
 	LdpEntityDetailsDto findDetails(final String uri);
 	
-	Page<LdpEntityRelatedDto> findRelated(final String uri, final Pageable pageable);
+	Page<LdpEntityRelatedDto> findRelated(final String uri, final Pageable pageable, final String type);
 }

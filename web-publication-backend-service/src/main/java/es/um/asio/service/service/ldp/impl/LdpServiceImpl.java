@@ -1,27 +1,23 @@
 package es.um.asio.service.service.ldp.impl;
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
@@ -29,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import es.um.asio.service.config.properties.LdpEntitiesProperties;
 import es.um.asio.service.dto.LdpEntityCountDto;
 import es.um.asio.service.dto.LdpEntityDetailsDto;
 import es.um.asio.service.dto.LdpEntityDetailsDto.LdpEntityDetail;
@@ -63,39 +60,24 @@ public class LdpServiceImpl implements LdpService {
 			+ "{ ?uri <%s/def/name> ?titleFilter." + "    FILTER regex(str(?%s), \"%s\", \"i\") }" + "UNION "
 			+ "{ ?uri <%s/def/id> ?titleFilter." + "    FILTER regex(str(?%s), \"%s\", \"i\") }" + "} ";
 
-	private static final String RELATED_QUERY = "prefix asio-def: <%s/def/>"
-			+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
-			+ "SELECT ?related ?property ?typeUri ?id ?title ?name ?description WHERE {" + " ?related ?property <%s> ."
-			+ "  ?related  rdf:type ?typeUri ." + "  OPTIONAL {?related asio-def:title ?title} ."
-			+ "  OPTIONAL {?related asio-def:id ?id}" + "  OPTIONAL {?related asio-def:name ?name}" + "} "
-			+ "ORDER BY %s (?%s) " + "LIMIT %s offset %s";
-
-	private static final String RELATED_QUERY_COUNT = "prefix asio-def: <%s/def/>"
-			+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
-			+ "SELECT (count (?related) as ?count) WHERE {" + " ?related ?property <%s> ."
-			+ "  ?related  rdf:type ?typeUri ." + "  OPTIONAL {?related asio-def:title ?title} ."
-			+ "  OPTIONAL {?related asio-def:id ?id}" + "  OPTIONAL {?related asio-def:name ?name}" + "} ";
-
 	private static final String ENTITY_QUERY = "SELECT * WHERE " + " { <%s> ?key ?value. }";
 
 	private static final String JSON_LD_TEMPLATE = "CONSTRUCT {?ac ?key ?value} WHERE {%s}";
 
 	private final Logger logger = LoggerFactory.getLogger(LdpServiceImpl.class);
 
-	@Value("${app.ldp.uri-namespace}")
-	private String uriNamespace;
-	
-	@Value("${app.ldp.validEntities}")
-	private String[] validEntities;
-
 	@Autowired
 	private SparqlExecQuery sparqlExecQuery;
+
+	@Autowired
+	private LdpEntitiesProperties ldpEntitiesProperties;
 
 	@Override
 	public Page<LdpEntityCountDto> entityCount(final Pageable pageable) {
 		List<LdpEntityCountDto> results = executeQuery(buildQuery(COUNT_QUERY, pageable), this::mapToLdpEntityCountDto);
-	    results = results.stream().filter(count -> isValidCategory(count.getEntity())).collect(Collectors.toList());
-		Integer count = executeQuery(String.format(COUNT_QUERY_COUNT, uriNamespace), this::mapToCount).get(0);
+		results = results.stream().filter(count -> ldpEntitiesProperties.isValidCategory(count.getEntity())).collect(Collectors.toList());
+		Integer count = executeQuery(String.format(COUNT_QUERY_COUNT, ldpEntitiesProperties.getUriNamespace()),
+				this::mapToCount).get(0);
 		return new PageImpl<LdpEntityCountDto>(results, pageable, count);
 	}
 
@@ -115,28 +97,33 @@ public class LdpServiceImpl implements LdpService {
 	private Page<LdpSearchResultDto> findByTitle(final String searchToken, final String type, final Pageable pageable) {
 		List<LdpSearchResultDto> results = executeQuery(buildFindQuery(TITLE_QUERY, type, searchToken, pageable),
 				this::mapToLdpSearchResultDto);
-	    results = results.stream().filter(count -> isValidEntity(count.getUri())).collect(Collectors.toList());
-		Integer count = executeQuery(String.format(TITLE_QUERY_COUNT, uriNamespace, type, searchToken, uriNamespace,
-				type, searchToken, uriNamespace, type, searchToken), this::mapToCount).get(0);
+		results = results.stream().filter(count -> ldpEntitiesProperties.isValidEntity(count.getUri())).collect(Collectors.toList());
+		Integer count = executeQuery(String.format(TITLE_QUERY_COUNT, ldpEntitiesProperties.getUriNamespace(), type,
+				searchToken, ldpEntitiesProperties.getUriNamespace(), type, searchToken,
+				ldpEntitiesProperties.getUriNamespace(), type, searchToken), this::mapToCount).get(0);
 		return new PageImpl<LdpSearchResultDto>(results, pageable, count);
 	}
 
 	@Override
 	public LdpEntityDetailsDto findDetails(final String uri) {
 		LdpEntityDetailsDto detailsDto = findDetailsProperties(uri);
-		detailsDto.setRelations(findDetailsRelations(detailsDto).stream()
-				.filter(relation -> !relation.getUri().equals(uri)).collect(Collectors.toList()));
 		detailsDto.setJsonLd(findDetailsJson(uri));
-		detailsDto = changeUrlPropertiesWithRelations(detailsDto);
 		return detailsDto;
 	}
 
 	@Override
-	public Page<LdpEntityRelatedDto> findRelated(final String uri, final Pageable pageable) {
-		List<LdpEntityRelatedDto> results = executeQuery(buildRelatedQuery(RELATED_QUERY, uri, pageable),
-				this::mapToLdpEntityRelatedDto);
-		results = mapInheritedRelationships(results, uri);
-		Integer count = executeQuery(String.format(RELATED_QUERY_COUNT, uriNamespace, uri), this::mapToCount).get(0);
+	public Page<LdpEntityRelatedDto> findRelated(final String uri, final Pageable pageable, final String type) {
+		String findRelatedQuery = LdpQueryUtils.buildRelatedQuery(ldpEntitiesProperties, uri, pageable, false, type);
+
+		if (StringUtils.isBlank(findRelatedQuery)) {
+			return new PageImpl<LdpEntityRelatedDto>(Collections.emptyList(), pageable, 0);
+		}
+
+		List<LdpEntityRelatedDto> results = executeQuery(findRelatedQuery, this::mapToLdpEntityRelatedDto);
+
+		String findCountRelatedQuery = LdpQueryUtils.buildRelatedQuery(ldpEntitiesProperties, uri, pageable, true,
+				type);
+		Integer count = executeQuery(findCountRelatedQuery, this::mapToCount).get(0);
 		return new PageImpl<LdpEntityRelatedDto>(results, pageable, count);
 	}
 
@@ -152,59 +139,10 @@ public class LdpServiceImpl implements LdpService {
 				"application/ld+json").get(0);
 	}
 
-	private List<LdpEntityDetailsDto> findDetailsRelations(final LdpEntityDetailsDto detailsDto) {
-		return detailsDto.getProperties().stream()
-				.filter(this::isValidRelation)
-				.map(detail -> findDetailsProperties(detail.getValue()))
-				.flatMap(this::mapNextInheritedInformation)
-				.collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(new Comparator<LdpEntityDetailsDto>() {
-			        @Override
-			        public int compare(LdpEntityDetailsDto s1, LdpEntityDetailsDto s2) {
-			            return s1.getUri().compareTo(s2.getUri());
-			        }
-				})),
-                ArrayList::new));		
-	}
-	
-	private Stream<LdpEntityDetailsDto> mapNextInheritedInformation (LdpEntityDetailsDto ldpEntityDetailsDto) {				
-		if (ldpEntityDetailsDto == null || ldpEntityDetailsDto.getProperties().isEmpty()) {
-			return Stream.empty();
-		}
-		
-		if (isValidEntity(ldpEntityDetailsDto.getUri())) {
-			return Stream.of(ldpEntityDetailsDto);
-		}
-		
-		return ldpEntityDetailsDto.getProperties().stream()
-				.filter(detail -> isValidEntity(detail.getValue()))
-				.map(detail -> findDetailsProperties(detail.getValue()));
-	}
-	
-	private LdpEntityDetailsDto changeUrlPropertiesWithRelations(LdpEntityDetailsDto ldpEntityDetailsDto) {		
-		String relationProperty = ldpEntityDetailsDto.getProperties().stream()
-				.filter(this::isValidRelation)
-				.findFirst()
-				.map(LdpEntityDetail::getKey)
-				.orElse(null);
-		
-		List<LdpEntityDetail> entityDetailsWithoutRelationProperties = ldpEntityDetailsDto.getProperties().stream()
-				.filter(property -> !isValidURL(property.getValue()))
-				.collect(Collectors.toList());
-		
-		ldpEntityDetailsDto.getRelations().stream()		
-		.forEach(relation -> {
-			entityDetailsWithoutRelationProperties.add(new LdpEntityDetail(relationProperty, relation.getUri()));
-		});
-		
-		ldpEntityDetailsDto.setProperties(entityDetailsWithoutRelationProperties);
-		
-		return ldpEntityDetailsDto;		
-	}
-
 	private String buildQuery(String query, Pageable pageable) {
 		Order order = pageable.getSort().toList().get(0);
-		return String.format(query, uriNamespace, order.getDirection(), order.getProperty(), pageable.getPageSize(),
-				pageable.getOffset());
+		return String.format(query, ldpEntitiesProperties.getUriNamespace(), order.getDirection(), order.getProperty(),
+				pageable.getPageSize(), pageable.getOffset());
 	}
 
 	private String buildFindQuery(String query, String type, String title, Pageable pageable) {
@@ -212,17 +150,9 @@ public class LdpServiceImpl implements LdpService {
 		if (!pageable.getSort().toList().isEmpty()) {
 			order = pageable.getSort().toList().get(0);
 		}
-		return String.format(query, uriNamespace, type, title, uriNamespace, type, title, uriNamespace, type, title,
-				order.getDirection(), order.getProperty(), pageable.getPageSize(), pageable.getOffset());
-	}
-
-	private String buildRelatedQuery(String query, String uri, Pageable pageable) {
-		Order order = new Order(Direction.ASC, "typeUri");
-		if (!pageable.getSort().toList().isEmpty()) {
-			order = pageable.getSort().toList().get(0);
-		}
-		return String.format(query, uriNamespace, uri, order.getDirection(), order.getProperty(),
-				pageable.getPageSize(), pageable.getOffset());
+		return String.format(query, ldpEntitiesProperties.getUriNamespace(), type, title,
+				ldpEntitiesProperties.getUriNamespace(), type, title, ldpEntitiesProperties.getUriNamespace(), type,
+				title, order.getDirection(), order.getProperty(), pageable.getPageSize(), pageable.getOffset());
 	}
 
 	private <T> List<T> executeQuery(final String query, final Function<JSONObject, T> mapper) {
@@ -270,13 +200,11 @@ public class LdpServiceImpl implements LdpService {
 			dto.setUri(jsonObject.getJSONObject("uri").getString("value"));
 			String title = jsonObject.getJSONObject("title").getString("value");
 			if (title != null) {
-				title = Stream.of(title.split(","))
-						.filter(titleToken -> !titleToken.isEmpty())
-						.findFirst()
+				title = Stream.of(title.split(",")).filter(titleToken -> !titleToken.isEmpty()).findFirst()
 						.orElse(title);
 			}
 			dto.setTitle(title);
-			
+
 		} catch (Exception e) {
 			return null;
 		}
@@ -298,6 +226,9 @@ public class LdpServiceImpl implements LdpService {
 		try {
 			String key = jsonObject.getJSONObject("key").getString("value");
 			String value = jsonObject.getJSONObject("value").getString("value");
+			if (extractTypeFromUri(ldpEntitiesProperties.getUriNamespace(), value) != null) {
+				return null;
+			}
 			return LdpEntityDetailsDto.buildDetail(key, value);
 		} catch (Exception e) {
 			return null;
@@ -307,77 +238,28 @@ public class LdpServiceImpl implements LdpService {
 	private LdpEntityRelatedDto mapToLdpEntityRelatedDto(JSONObject jsonObject) {
 		LdpEntityRelatedDto ldpEntityRelatedDto = new LdpEntityRelatedDto();
 		try {
-			String relationship = getValueFromProperty(jsonObject, "property");
+			String relationship = getValueFromProperty(jsonObject, "link_result");
 			String relatedUri = getValueFromProperty(jsonObject, "related");
-			String relatedType = getValueFromProperty(jsonObject, "typeUri");
 
-			String relatedDescription = null;			
-			ldpEntityRelatedDto.setInheritedRelationship(false);
-			if (getValueFromProperty(jsonObject, "title") != null) {
-				relatedDescription = getValueFromProperty(jsonObject, "title");
-			} else if (getValueFromProperty(jsonObject, "description") != null) {
-				relatedDescription = getValueFromProperty(jsonObject, "description");
-			} else if (getValueFromProperty(jsonObject, "name") != null) {
-				relatedDescription = getValueFromProperty(jsonObject, "name");
-			} else if (getValueFromProperty(jsonObject, "id") != null) {
-				ldpEntityRelatedDto.setInheritedRelationship(true);
-				relatedDescription = getValueFromProperty(jsonObject, "id");
+			String relatedDescription = null;
+			for (String property : ldpEntitiesProperties.getValidProperties()) {
+				if (!StringUtils.isBlank(getValueFromProperty(jsonObject, property + "_result"))) {
+					relatedDescription = getValueFromProperty(jsonObject, property + "_result");
+					break;
+				}
 			}
 
-			ldpEntityRelatedDto.setRelationship(relationship);			
-			ldpEntityRelatedDto.setRelatedType(relatedType);
-			ldpEntityRelatedDto.setRelatedUri(relatedUri);			
-			ldpEntityRelatedDto.setRelatedDescription(relatedDescription);						
+			ldpEntityRelatedDto
+					.setRelationship(extractRelationShipFromUri(ldpEntitiesProperties.getUriNamespace(), relationship));
+			ldpEntityRelatedDto.setRelatedType(extractTypeFromUri(ldpEntitiesProperties.getUriNamespace(), relatedUri));
+			ldpEntityRelatedDto.setRelatedUri(relatedUri);
+			ldpEntityRelatedDto.setRelatedDescription(relatedDescription);
 
 			return ldpEntityRelatedDto;
 		} catch (Exception e) {
+			logger.error("mapToLdpEntityRelatedDto - Unkown error. " + jsonObject, e);
 			return null;
 		}
-	}
-
-	private List<LdpEntityRelatedDto> mapInheritedRelationships(List<LdpEntityRelatedDto> ldpEntityRelatedDto, String originalUri) {
-		if (ldpEntityRelatedDto==null || ldpEntityRelatedDto.isEmpty()) {
-			return ldpEntityRelatedDto;			
-		}
-		
-		List<LdpEntityRelatedDto> adaptedRelatedEntities = new ArrayList<>();
-		for (LdpEntityRelatedDto adaptedRelatedEntity : ldpEntityRelatedDto) {
-			if (adaptedRelatedEntity.isInheritedRelationship()) {
-				adaptedRelatedEntities.addAll(mapInheritedInformation(adaptedRelatedEntity));			
-			} else {
-				adaptedRelatedEntities.add(adaptedRelatedEntity);
-			}
-		}		
-						
-		return adaptedRelatedEntities.stream()
-				.filter(adaptedRelated -> !adaptedRelated.getRelatedUri().equals(originalUri))
-				.collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(new Comparator<LdpEntityRelatedDto>() {
-			        @Override
-			        public int compare(LdpEntityRelatedDto s1, LdpEntityRelatedDto s2) {
-			            return s1.getRelatedDescription().compareTo(s2.getRelatedDescription());
-			        }
-				})),
-                ArrayList::new));		
-	}
-	
-	private List<LdpEntityRelatedDto> mapInheritedInformation(LdpEntityRelatedDto ldpEntityRelatedDto) {
-		Page<LdpEntityRelatedDto> ldpEntityRelatedInherited = findRelated(ldpEntityRelatedDto.getRelatedUri(),
-				PageRequest.of(0, Integer.MAX_VALUE));
-
-		if (ldpEntityRelatedInherited == null) {
-			return null;
-		}
-
-		return ldpEntityRelatedInherited.get()
-				.map(related -> {
-					LdpEntityRelatedDto inheritedInformation = new LdpEntityRelatedDto();
-					inheritedInformation.setRelationship(ldpEntityRelatedDto.getRelationship());
-					inheritedInformation.setRelatedType(related.getRelatedType());
-					inheritedInformation.setRelatedDescription(related.getRelatedDescription());
-					inheritedInformation.setRelatedUri(related.getRelatedUri());
-					return inheritedInformation;
-				})
-				.collect(Collectors.toList());		
 	}
 
 	private Integer mapToCount(JSONObject jsonObject) {
@@ -396,23 +278,6 @@ public class LdpServiceImpl implements LdpService {
 		}
 	}
 	
-	private boolean isValidURL(String uri) {
-		try {
-			new URL(uri);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	private boolean isValidEntity(String uri) {
-		return Arrays.stream(validEntities).anyMatch(uri::contains);
-	}
-	
-	private boolean isValidCategory(String uri) {
-		return Arrays.stream(validEntities).anyMatch(uri::endsWith);
-	}
-
 	private String getValueFromProperty(final JSONObject jsonObject, final String property) {
 		try {
 			return jsonObject.getJSONObject(property).getString("value");
@@ -420,15 +285,23 @@ public class LdpServiceImpl implements LdpService {
 			return null;
 		}
 	}
-	
-	private boolean isValidRelation(LdpEntityDetail detail) {
-		return detail.getKey().startsWith(uriNamespace)
-				&& isValidURL(detail.getValue()) && isUUID(detail.getValue());		
+
+	private String extractTypeFromUri(String uriNamespace, String uri) {
+		String pattern = "(" + uriNamespace
+				+ "/rec/)(.*)(/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})";
+		final Matcher urlRegExpMatcher = Pattern.compile(pattern).matcher(uri);
+		if (urlRegExpMatcher.find() && urlRegExpMatcher.groupCount() == 3) {
+			return urlRegExpMatcher.group(2);
+		}
+		return null;
 	}
-	
-	private boolean isUUID(String uri) {
-		Pattern pattern = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}");
-		Matcher matcher = pattern.matcher(uri);
-		return matcher.find();					
+
+	private String extractRelationShipFromUri(String uriNamespace, String relationShip) {
+		String pattern = "(" + uriNamespace + "/def/)(.*)";
+		final Matcher urlRegExpMatcher = Pattern.compile(pattern).matcher(relationShip);
+		if (urlRegExpMatcher.find() && urlRegExpMatcher.groupCount() == 2) {
+			return urlRegExpMatcher.group(2);
+		}
+		return null;
 	}
 }

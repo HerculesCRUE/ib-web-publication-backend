@@ -18,7 +18,7 @@ app:
     services: false
   # trellis
   fusekitrellis:
-    url: http://localhost:3030/trellis/sparql
+    url: https://sparqlld1desa.um.es/trellis/sparql
   # Service who get Sparql query results from all nodes
   federationAll:
     url: http://localhost:9328/federation/nodes/all
@@ -56,8 +56,24 @@ app:
   kafka:
     import-error-topic-name: import-error
   ldp:
-    uri-namespace: http://hercules.org/um/es-ES
-    validEntities: Person, Publication, Conference, Department, Project, Research-group, Doctoral-thesis, Organization, Activity, Center, University, Patent            
+    uri-namespace: https://ldpld1desa.um.es/um/es-ES
+    invalidEntities: Researcher-position, Researcher-role, Research-group, Phd-supervising-relationship, Supervisee-role, Feature, Project-contract, Funding, Research-field, Awarded-degree, Funding-source, Funding-program, Academic-subject
+    validProperties: title, description, name, id
+    entities:
+      - type: Person
+        back:
+          - inheresIn:back|relates:back
+          - inheresIn:back|relatedBy:forward|relatedBy:back
+      - type: Department, Center, University
+        forward:
+          - relatedBy:forward|relates:forward
+          - relatedBy:forward|realtedBy:back|inheresIn:forward
+          - relatedBy:forward|realtedBy:back|relates:back
+      - type: Project
+        forward:
+          - relates:forward|inheresIn:forward
+          - relates:forward|realtedBy:forward|relates:forward
+        
 ## Actuator
 management:
   endpoint:
