@@ -32,6 +32,8 @@ import es.um.asio.service.dto.LdpEntityDetailsDto.LdpEntityDetail;
 import es.um.asio.service.dto.LdpEntityRelatedDto;
 import es.um.asio.service.dto.LdpSearchResultDto;
 import es.um.asio.service.service.ldp.LdpService;
+import es.um.asio.service.service.ldp.impl.LdpQueryUtils.Category;
+import es.um.asio.service.service.ldp.impl.LdpQueryUtils.Type;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
 
 @Service
@@ -51,13 +53,15 @@ public class LdpServiceImpl implements LdpService {
 
 	private static final String TITLE_QUERY = "SELECT ?uri (GROUP_CONCAT(?titleFilter; SEPARATOR=\", \") AS ?title) "
 			+ "WHERE {" + "{?uri <%s/def/title> ?titleFilter." + "    FILTER regex(str(?%s), \"%s\", \"i\")} "
-			+ "UNION " + "{ ?uri <%s/def/name> ?titleFilter." + "    FILTER regex(str(?%s), \"%s\", \"i\") }" + "UNION "
+			+ "UNION " + "{ ?uri <%s/def/name> ?titleFilter." + "    FILTER regex(str(?%s), \"%s\", \"i\") } "
+			+ "UNION { ?uri <%s/def/correspondingAuthor> ?titleFilter." + "    FILTER regex(str(?%s), \"%s\", \"i\") } UNION "
 			+ "{ ?uri <%s/def/id> ?titleFilter." + "    FILTER regex(str(?%s), \"%s\", \"i\") }" + "} "
 			+ "GROUP BY ?uri " + "ORDER BY %s (?%s) " + "LIMIT %s " + "OFFSET %s ";
 
 	private static final String TITLE_QUERY_COUNT = "SELECT (count(distinct ?uri) as ?count) " + "WHERE {"
 			+ "{?uri <%s/def/title> ?titleFilter." + "    FILTER regex(str(?%s), \"%s\", \"i\")} " + "UNION "
 			+ "{ ?uri <%s/def/name> ?titleFilter." + "    FILTER regex(str(?%s), \"%s\", \"i\") }" + "UNION "
+			+ "{ ?uri <%s/def/correspondingAuthor> ?titleFilter." + "    FILTER regex(str(?%s), \"%s\", \"i\") }" + "UNION "
 			+ "{ ?uri <%s/def/id> ?titleFilter." + "    FILTER regex(str(?%s), \"%s\", \"i\") }" + "} ";
 
 	private static final String ENTITY_QUERY = "SELECT * WHERE " + " { <%s> ?key ?value. }";
@@ -100,20 +104,26 @@ public class LdpServiceImpl implements LdpService {
 		results = results.stream().filter(count -> ldpEntitiesProperties.isValidEntity(count.getUri())).collect(Collectors.toList());
 		Integer count = executeQuery(String.format(TITLE_QUERY_COUNT, ldpEntitiesProperties.getUriNamespace(), type,
 				searchToken, ldpEntitiesProperties.getUriNamespace(), type, searchToken,
+				ldpEntitiesProperties.getUriNamespace(), type, searchToken,
 				ldpEntitiesProperties.getUriNamespace(), type, searchToken), this::mapToCount).get(0);
 		return new PageImpl<LdpSearchResultDto>(results, pageable, count);
 	}
 
 	@Override
 	public LdpEntityDetailsDto findDetails(final String uri) {
-		LdpEntityDetailsDto detailsDto = findDetailsProperties(uri);
-		detailsDto.setJsonLd(findDetailsJson(uri));
+		LdpEntityDetailsDto detailsDto = new LdpEntityDetailsDto();
+		detailsDto.setProperties(executeQuery(String.format(ENTITY_QUERY, uri), this::mapToLdpEntityDetailsDto));
+		detailsDto.setUri(uri);
+		detailsDto.setJsonLd(executeQuery(String.format(JSON_LD_TEMPLATE, String.format(ENTITY_QUERY, uri)), this::mapToString, false,
+				"application/ld+json").get(0));
 		return detailsDto;
 	}
 
 	@Override
 	public Page<LdpEntityRelatedDto> findRelated(final String uri, final Pageable pageable, final String type) {
-		String findRelatedQuery = LdpQueryUtils.buildRelatedQuery(ldpEntitiesProperties, uri, pageable, false, type);
+		Category category = Category.from(type);
+		
+		String findRelatedQuery = LdpQueryUtils.buildRelatedQuery(ldpEntitiesProperties, uri, pageable, Type.DATA, category);
 
 		if (StringUtils.isBlank(findRelatedQuery)) {
 			return new PageImpl<LdpEntityRelatedDto>(Collections.emptyList(), pageable, 0);
@@ -121,22 +131,23 @@ public class LdpServiceImpl implements LdpService {
 
 		List<LdpEntityRelatedDto> results = executeQuery(findRelatedQuery, this::mapToLdpEntityRelatedDto);
 
-		String findCountRelatedQuery = LdpQueryUtils.buildRelatedQuery(ldpEntitiesProperties, uri, pageable, true,
-				type);
+		String findCountRelatedQuery = LdpQueryUtils.buildRelatedQuery(ldpEntitiesProperties, uri, pageable, Type.COUNT,
+				category);
 		Integer count = executeQuery(findCountRelatedQuery, this::mapToCount).get(0);
 		return new PageImpl<LdpEntityRelatedDto>(results, pageable, count);
 	}
+	
+	@Override
+	public List<String> findRelatedCategories(final String uri, final String type) {		
+		String findRelatedQuery = LdpQueryUtils.buildRelatedQuery(ldpEntitiesProperties, uri, null, Type.GROUP, Category.from(type));
 
-	private LdpEntityDetailsDto findDetailsProperties(final String uri) {
-		LdpEntityDetailsDto detailsDto = new LdpEntityDetailsDto();
-		detailsDto.setProperties(executeQuery(String.format(ENTITY_QUERY, uri), this::mapToLdpEntityDetailsDto));
-		detailsDto.setUri(uri);
-		return detailsDto;
-	}
+		if (StringUtils.isBlank(findRelatedQuery)) {
+			return Collections.emptyList();
+		}
 
-	private String findDetailsJson(final String uri) {
-		return executeQuery(String.format(JSON_LD_TEMPLATE, String.format(ENTITY_QUERY, uri)), this::mapToString, false,
-				"application/ld+json").get(0);
+		return executeQuery(findRelatedQuery, this::mapToGroup).stream()
+				.map(categoryGroup -> extractTypeFromUri(ldpEntitiesProperties.getUriNamespace(), categoryGroup))
+				.collect(Collectors.toList());		
 	}
 
 	private String buildQuery(String query, Pageable pageable) {
@@ -152,6 +163,7 @@ public class LdpServiceImpl implements LdpService {
 		}
 		return String.format(query, ldpEntitiesProperties.getUriNamespace(), type, title,
 				ldpEntitiesProperties.getUriNamespace(), type, title, ldpEntitiesProperties.getUriNamespace(), type,
+				title, ldpEntitiesProperties.getUriNamespace(), type,
 				title, order.getDirection(), order.getProperty(), pageable.getPageSize(), pageable.getOffset());
 	}
 
@@ -272,6 +284,14 @@ public class LdpServiceImpl implements LdpService {
 			return null;
 		}
 	}
+	
+	private String mapToGroup(JSONObject jsonObject) {
+		try {
+			return jsonObject.getJSONObject("type").getString("value");
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
 	private String mapToString(JSONObject jsonObject) {
 		try {
@@ -290,11 +310,11 @@ public class LdpServiceImpl implements LdpService {
 	}
 
 	private String extractTypeFromUri(String uriNamespace, String uri) {
-		String pattern = "(" + uriNamespace
-				+ "/rec/)(.*)(/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})";
+		String pattern = "^((" + uriNamespace
+				+ "/rec/)([a-z\\-A-Z]+))+(?:/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}))?$";
 		final Matcher urlRegExpMatcher = Pattern.compile(pattern).matcher(uri);
-		if (urlRegExpMatcher.find() && urlRegExpMatcher.groupCount() == 3) {
-			return urlRegExpMatcher.group(2);
+		if (urlRegExpMatcher.find() && urlRegExpMatcher.groupCount() == 4) {
+			return urlRegExpMatcher.group(3);
 		}
 		return null;
 	}

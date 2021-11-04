@@ -1,5 +1,7 @@
 package es.um.asio.back.controller.ldp;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -65,6 +67,16 @@ public class LdpControlller {
 		
 		return ldpService.findRelated(uri, pageable, type);
 	}
+	
+	@GetMapping(LdpControlller.Mappings.FIND_RELATED_CATEGORIES)
+	public List<String> findEntityRelatedCAtegories(@RequestParam(required = true) String uri,@RequestParam(required = true) String type) {
+		if (StringUtils.isBlank(uri)) {
+			throw new IllegalArgumentException();
+		}
+
+		
+		return ldpService.findRelatedCategories(uri, type);
+	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	static final class Mappings {
@@ -97,5 +109,10 @@ public class LdpControlller {
 		 * Controller request mapping.
 		 */
 		protected static final String FIND_RELATED = "/findRelated";
+		
+		/**
+		 * Controller request mapping.
+		 */
+		protected static final String FIND_RELATED_CATEGORIES = "/findRelated/categories";
 	}
 }

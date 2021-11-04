@@ -58,17 +58,22 @@ app:
   ldp:
     uri-namespace: https://ldpld1desa.um.es/um/es-ES
     invalidEntities: Researcher-position, Researcher-role, Research-group, Phd-supervising-relationship, Supervisee-role, Feature, Project-contract, Funding, Research-field, Awarded-degree, Funding-source, Funding-program, Academic-subject
-    validProperties: title, description, name, id
+    validProperties: title, description, name, correspondingAuthor, id
     entities:
       - type: Person
         back:
           - inheresIn:back|relates:back
           - inheresIn:back|relatedBy:forward|relatedBy:back
-      - type: Department, Center, University
+      - type: Department, Center
         forward:
           - relatedBy:forward|relates:forward
           - relatedBy:forward|realtedBy:back|inheresIn:forward
           - relatedBy:forward|realtedBy:back|relates:back
+      - type: University
+        back:
+          - relates:back|relatedBy:back
+          - relates:back|realtedBy:back|inheresIn:forward
+          - relates:back|realtedBy:back|relates:back
       - type: Project
         forward:
           - relates:forward|inheresIn:forward

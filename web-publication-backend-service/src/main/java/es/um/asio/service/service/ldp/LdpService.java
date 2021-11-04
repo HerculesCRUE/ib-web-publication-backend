@@ -1,5 +1,7 @@
 package es.um.asio.service.service.ldp;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,4 +21,6 @@ public interface LdpService {
 	LdpEntityDetailsDto findDetails(final String uri);
 	
 	Page<LdpEntityRelatedDto> findRelated(final String uri, final Pageable pageable, final String type);
+	
+	List<String> findRelatedCategories(final String uri, final String type);
 }
