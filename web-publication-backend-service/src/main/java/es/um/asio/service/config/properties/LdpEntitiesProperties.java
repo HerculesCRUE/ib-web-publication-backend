@@ -22,6 +22,8 @@ public class LdpEntitiesProperties {
 	
 	private String[] invalidEntities;
 	
+	private String[] filteredDetailsProperties;
+	
 	private List<LdpEntityProperties> entities;
 	
 	public boolean isValidEntity(String uri) {

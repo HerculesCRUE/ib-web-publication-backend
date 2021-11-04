@@ -238,13 +238,8 @@ public class LdpServiceImpl implements LdpService {
 		try {
 			String key = jsonObject.getJSONObject("key").getString("value");
 			String value = jsonObject.getJSONObject("value").getString("value");
-			if (extractTypeFromUri(ldpEntitiesProperties.getUriNamespace(), value) != null) {
-				return null;
-			}
-			if(StringUtils.isBlank(value) || value.equals("null")) {
-				return null;
-			}
-			return LdpEntityDetailsDto.buildDetail(key, value);
+
+			return isValueDetailsFiltered(value) || isKeyDetailsFiltered(key) ? null : LdpEntityDetailsDto.buildDetail(key, value);
 		} catch (Exception e) {
 			return null;
 		}
@@ -326,5 +321,24 @@ public class LdpServiceImpl implements LdpService {
 			return urlRegExpMatcher.group(2);
 		}
 		return null;
+	}
+	
+	private boolean isKeyDetailsFiltered(String key) {
+		for (String filteredProperty : ldpEntitiesProperties.getFilteredDetailsProperties()) {
+			if (key.endsWith("/"+filteredProperty)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean isValueDetailsFiltered(String value) {
+		if (extractTypeFromUri(ldpEntitiesProperties.getUriNamespace(), value) != null) {
+			return true;
+		}
+		if(StringUtils.isBlank(value) || value.equals("null")) {
+			return true;
+		}
+		return false;
 	}
 }
