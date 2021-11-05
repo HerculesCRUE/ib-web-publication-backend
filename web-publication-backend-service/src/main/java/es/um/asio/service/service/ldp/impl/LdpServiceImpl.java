@@ -29,6 +29,7 @@ import es.um.asio.service.config.properties.LdpEntitiesProperties;
 import es.um.asio.service.dto.LdpEntityCountDto;
 import es.um.asio.service.dto.LdpEntityDetailsDto;
 import es.um.asio.service.dto.LdpEntityDetailsDto.LdpEntityDetail;
+import es.um.asio.service.filter.ldp.LdpRelatedFilter;
 import es.um.asio.service.dto.LdpEntityRelatedDto;
 import es.um.asio.service.dto.LdpSearchResultDto;
 import es.um.asio.service.service.ldp.LdpService;
@@ -120,10 +121,10 @@ public class LdpServiceImpl implements LdpService {
 	}
 
 	@Override
-	public Page<LdpEntityRelatedDto> findRelated(final String uri, final Pageable pageable, final String type) {
+	public Page<LdpEntityRelatedDto> findRelated(final String uri, final Pageable pageable, final String type, final List<LdpRelatedFilter> filters) {
 		Category category = Category.from(type);
 		
-		String findRelatedQuery = LdpQueryUtils.buildRelatedQuery(ldpEntitiesProperties, uri, pageable, Type.DATA, category);
+		String findRelatedQuery = LdpQueryUtils.buildRelatedQuery(ldpEntitiesProperties, uri, pageable, Type.DATA, category, filters);
 
 		if (StringUtils.isBlank(findRelatedQuery)) {
 			return new PageImpl<LdpEntityRelatedDto>(Collections.emptyList(), pageable, 0);
@@ -132,14 +133,14 @@ public class LdpServiceImpl implements LdpService {
 		List<LdpEntityRelatedDto> results = executeQuery(findRelatedQuery, this::mapToLdpEntityRelatedDto);
 
 		String findCountRelatedQuery = LdpQueryUtils.buildRelatedQuery(ldpEntitiesProperties, uri, pageable, Type.COUNT,
-				category);
+				category, filters);
 		Integer count = executeQuery(findCountRelatedQuery, this::mapToCount).get(0);
 		return new PageImpl<LdpEntityRelatedDto>(results, pageable, count);
 	}
 	
 	@Override
 	public List<String> findRelatedCategories(final String uri, final String type) {		
-		String findRelatedQuery = LdpQueryUtils.buildRelatedQuery(ldpEntitiesProperties, uri, null, Type.GROUP, Category.from(type));
+		String findRelatedQuery = LdpQueryUtils.buildRelatedQuery(ldpEntitiesProperties, uri, null, Type.GROUP, Category.from(type), null);
 
 		if (StringUtils.isBlank(findRelatedQuery)) {
 			return Collections.emptyList();

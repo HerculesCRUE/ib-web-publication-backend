@@ -9,6 +9,7 @@ import es.um.asio.service.dto.LdpEntityCountDto;
 import es.um.asio.service.dto.LdpEntityDetailsDto;
 import es.um.asio.service.dto.LdpEntityRelatedDto;
 import es.um.asio.service.dto.LdpSearchResultDto;
+import es.um.asio.service.filter.ldp.LdpRelatedFilter;
 
 public interface LdpService {
 
@@ -20,7 +21,7 @@ public interface LdpService {
 	
 	LdpEntityDetailsDto findDetails(final String uri);
 	
-	Page<LdpEntityRelatedDto> findRelated(final String uri, final Pageable pageable, final String type);
+	Page<LdpEntityRelatedDto> findRelated(final String uri, final Pageable pageable, final String type, final List<LdpRelatedFilter> filters);
 	
 	List<String> findRelatedCategories(final String uri, final String type);
 }

@@ -13,9 +13,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.util.CollectionUtils;
 
 import es.um.asio.service.config.properties.LdpEntitiesProperties;
 import es.um.asio.service.config.properties.LdpEntityProperties;
+import es.um.asio.service.filter.ldp.LdpRelatedFilter;
 import lombok.Getter;
 
 public class LdpQueryUtils {	
@@ -68,12 +70,12 @@ public class LdpQueryUtils {
 	}
 
 	public static String buildRelatedQuery(LdpEntitiesProperties ldpEntitiesProperties, String uri, Pageable pageable,
-			Type queryType, Category category) {
+			Type queryType, Category category, List<LdpRelatedFilter> filters) {
 
 		StringBuilder queryBuilder = new StringBuilder();
 		
 		queryBuilder.append(buildSelectQuery(ldpEntitiesProperties, queryType));
-		queryBuilder.append(buildWhereQuery(ldpEntitiesProperties, uri, category));
+		queryBuilder.append(buildWhereQuery(ldpEntitiesProperties, uri, category, filters));
 		queryBuilder.append(buildGroupAndOrderQuery(queryType, pageable));		
 
 		return queryBuilder.toString();
@@ -120,12 +122,12 @@ public class LdpQueryUtils {
 		return selectQueryBuilder.append(selectQuery).toString();
 	}
 	
-	private static String buildWhereQuery(LdpEntitiesProperties ldpEntitiesProperties, String uri, Category category) {
+	private static String buildWhereQuery(LdpEntitiesProperties ldpEntitiesProperties, String uri, Category category, List<LdpRelatedFilter> filters) {
 		List<String> queryInfo = buildDirectRelation(category);
 		queryInfo.addAll(findRelations(uri, category, ldpEntitiesProperties));		
 		return queryInfo.stream()
 				.map(subqueryInfo -> buildSubquery(subqueryInfo, uri, ldpEntitiesProperties.getValidProperties(),
-						ldpEntitiesProperties.getInvalidEntities()))
+						ldpEntitiesProperties.getInvalidEntities(), filters))
 				.collect(Collectors.joining(" UNION ", " WHERE {", "}"));
 	}
 	
@@ -151,7 +153,7 @@ public class LdpQueryUtils {
 		return directRelation;
 	}
 	
-	private static String buildSubquery(String subqueryInfo, String uri, String[] properties, String[] invalidEntities) {
+	private static String buildSubquery(String subqueryInfo, String uri, String[] properties, String[] invalidEntities, List<LdpRelatedFilter> filters) {
 		String[] relations = subqueryInfo.split("\\|");
 		String subquery = "{";
 
@@ -185,15 +187,32 @@ public class LdpQueryUtils {
 		for (String key : properties) {
 			subquery += " OPTIONAL {" + "    ?related" + relationOrder + " asio-def:" + key + " ?" + key + " }";
 		}
-
-		subquery += Stream.of(invalidEntities)
-				.map(invalidEntity -> "!contains (str(?related), \"" + invalidEntity + "\")")
-				.collect(Collectors.joining(" && ", "FILTER (", ")"));
+			
+		subquery += buildFilters(uri, invalidEntities, filters);	
 		
-		subquery += " FILTER(?related != <"+uri+">)";
-
 		subquery += "}";
-
+		
 		return subquery;
+	}
+	
+	private static String buildFilters(String uri, String[] invalidEntities, List<LdpRelatedFilter> filters) {					
+		String invalidEntitiesFilter = Stream.of(invalidEntities)
+				.map(invalidEntity -> "!contains (str(?related), \"" + invalidEntity + "\")")
+				.collect(Collectors.joining(" && ", "FILTER (", ") "));
+		
+		String sameRequestEntityFilter = " FILTER(?related != <"+uri+">) ";
+		
+		String requestFilters = null;
+		if(!CollectionUtils.isEmpty(filters)) {
+			requestFilters = filters.stream()
+					.map(filter -> " contains (str(?related), \""+filter.getValue()+"\") ")
+					.collect(Collectors.joining(" && ", "FILTER (", ")"));
+		}
+		
+		return new StringBuilder()
+				.append(invalidEntitiesFilter)
+				.append(sameRequestEntityFilter)
+				.append(requestFilters != null ? requestFilters : "")
+				.toString();							
 	}
 }
