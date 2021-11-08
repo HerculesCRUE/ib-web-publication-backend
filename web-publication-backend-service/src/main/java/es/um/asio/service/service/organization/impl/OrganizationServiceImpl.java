@@ -18,6 +18,7 @@ import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
 import es.um.asio.service.model.SimpleQuery;
+import es.um.asio.service.model.Subentity;
 import es.um.asio.service.service.impl.FusekiService;
 import es.um.asio.service.service.organization.OrganizationService;
 import es.um.asio.service.service.sparql.SparqlExecQuery;
@@ -39,7 +40,7 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 
 		PageableQuery pageableQuery = new PageableQuery(this.retrieveEntity(filter), filtersChunk(filter), pageable);
 
-		return serviceSPARQL.run(pageableQuery);
+		return serviceSPARQL.runOrganization(pageableQuery);
 	}
 
 	@Override
@@ -144,11 +145,60 @@ public class OrganizationServiceImpl extends FusekiService<OrganizationFilter> i
 
 	@Override
 	public Entity retrieveEntity(OrganizationFilter filter) {
+
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
 				: Arrays.asList("Center", "Department", "Research-group", "Organization", "Funding-organization",
 						"University");
 
-		return new Entity("Organization", types, "abbreviation", "id", "title", "description", "nowhere:type","freetext:(?x AS ?uri)");
+		Entity entity = new Entity("Organization", types, "abbreviation", "id", "title", "description", "nowhere:type",
+				"freetext:(?x AS ?uri)",
+				"freetext:(GROUP_CONCAT(distinct ?relatestitle;separator=\"; \") as ?relatestitles)");
+
+		List<Subentity> subentities = new ArrayList<Subentity>();
+		// Extra fields
+		// relatedBy type University / Center
+
+		Subentity subentity = new Subentity();
+		String fieldName = "relatedBy";
+		subentity.setFieldName(fieldName);
+		subentity.setIgnorePrefix(true);
+		subentities.add(subentity);
+
+		// research-Position
+		List<Subentity> subentities2 = new ArrayList<Subentity>();
+		Subentity subentity2 = new Subentity();
+		String fieldName2 = "relates";
+		subentity2.setQueryFieldName("relates");
+		subentity2.setFieldName(fieldName2);
+		List<String> types2;
+		if (filter != null && StringUtils.isNotBlank(filter.getTypes()) && filter.getTypes().contains("Center")) {
+			types2 = Arrays.asList("University");
+		} else {
+			types2 = Arrays.asList("Center", "University");
+		}
+
+		subentity2.setTypes(types2);
+		List<String> fields = new ArrayList<>();
+		fields.add("title");
+		fields.add("id");
+		subentity2.setFields(fields);
+
+		subentities2.add(subentity2);
+
+		subentity.setSubentities(subentities2);
+
+		entity.setSubentities(subentities);
+
+		List<String> groups = new ArrayList<>();
+		groups.add("abbreviation");
+		groups.add("id");
+		groups.add("title");
+		groups.add("type");
+		groups.add("description");
+		groups.add("x");
+		entity.setGroup(groups);
+
+		return entity;
 	}
 
 	@Override

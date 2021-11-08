@@ -154,7 +154,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 		StringBuilder strBuilder = new StringBuilder();
 
 		if (optionalFields != null) {
-			
+
 			for (String field : optionalFields) {
 				String[] split = field.split(",");
 				strBuilder.append(" OPTIONAL { ");
@@ -172,7 +172,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 				strBuilder.append(" . ");
 				strBuilder.append("} ");
 			}
-			
+
 		}
 
 		return strBuilder.toString();
@@ -379,6 +379,42 @@ public class QueryBuilderImpl implements QueryBuilder {
 			strBuilder.append(filters.toString());
 		}
 
+		return strBuilder.toString();
+	}
+
+	@Override
+	public Map<String, String> queryChunksOrganization(Entity entity, Pageable page) {
+		String selectChunk = this.selectChunk(entity.getFields()) + this.selectChunk(entity.getOptionalFields());
+		String typeChunk = this.typeChunk(entity.getEntity(), entity.getTypes());
+
+		String fieldsChunk = this.fieldsChunk(entity.getFields()) + this.optionalFieldsChunk(entity.getOptionalFields())
+				+ this.subfieldsChunkOrganization(entity.getSubentities());
+
+		String limit = String.valueOf(page.getPageSize());
+		String offset = String.valueOf(page.getOffset());
+		String order = this.orderChunk(page.getSort());
+		String group = this.groupChunk(entity.getGroup());
+		String join = this.joinChunk(entity.getJoin());
+
+		Map<String, String> map = new HashMap<>();
+		map.put(FusekiConstants.SELECT_CHUNK, selectChunk);
+		map.put(FusekiConstants.COUNT_CHUNK, FusekiConstants.COUNT_CHUNK_TEMPLATE);
+		map.put(FusekiConstants.TYPE_CHUNK, typeChunk);
+		map.put(FusekiConstants.FIELDS_CHUNK, fieldsChunk);
+		map.put(FusekiConstants.GROUP, group);
+		map.put(FusekiConstants.ORDER, order);
+		map.put(FusekiConstants.LIMIT, limit);
+		map.put(FusekiConstants.OFFSET, offset);
+		map.put(FusekiConstants.JOIN_CHUNK, join);
+
+		return map;
+	}
+
+	private String subfieldsChunkOrganization(List<Subentity> subentities) {
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append("OPTIONAL { ");
+		strBuilder = setDataToSubFieldsChunk(strBuilder, subentities, "")
+				.append(" } FILTER (?relatesid not in (?id)) ");
 		return strBuilder.toString();
 	}
 
