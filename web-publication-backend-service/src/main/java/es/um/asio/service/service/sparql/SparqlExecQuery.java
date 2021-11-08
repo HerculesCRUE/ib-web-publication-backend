@@ -39,7 +39,7 @@ public interface SparqlExecQuery {
 	 * @return the response entity
 	 */
 	ResponseEntity<Object> callFusekiTrellis(String query, Boolean isFederated);
-	
+
 	ResponseEntity<Object> callFusekiTrellis(final String query, Boolean isFederated, String accept);
 
 	List<Object> runCount(SimpleQuery query);
@@ -51,5 +51,7 @@ public interface SparqlExecQuery {
 	SparqlQuery update(SparqlQuery convertSparqlQueryFromDto);
 
 	void delete(String id);
+
+	Page<FusekiResponse> runOrganization(PageableQuery pageableQuery);
 
 }

@@ -5,7 +5,6 @@ package es.um.asio.service.service.sparql.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,10 +79,10 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 	@Autowired
 	private QueryBuilder queryBuilder;
-	
+
 	@Autowired
 	private SqparqlResponseDateFormatter dateFormatter;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -503,7 +502,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 	public void delete(String id) {
 		this.sparqlQueryRepository.deleteById(id);
 	}
-	
+
 	private ResponseEntity<Object> formatResponse(ResponseEntity<Object> response) {
 		if (response == null || response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
 			return response;
@@ -514,11 +513,13 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 			jsonObject = new JSONObject((LinkedHashMap<String, Object>) response.getBody());
 			DocumentContext parsedDataContext = JsonPath.parse(jsonObject.toString());
 			parsedDataContext.map("$.results.bindings[*].*.value", dateFormatter);
-			
-			return new ResponseEntity<Object>(objectMapper.readValue(parsedDataContext.jsonString(), LinkedHashMap.class),
-					response.getHeaders(), response.getStatusCode());
+
+			return new ResponseEntity<Object>(
+					objectMapper.readValue(parsedDataContext.jsonString(), LinkedHashMap.class), response.getHeaders(),
+					response.getStatusCode());
 		} catch (PathNotFoundException p) {
-			this.logger.debug(String.format("formatResponse - Invalid path for response. response: %", jsonObject != null ? jsonObject.toString() : null));
+			this.logger.debug(String.format("formatResponse - Invalid path for response. response: %",
+					jsonObject != null ? jsonObject.toString() : null));
 		} catch (Exception e) {
 			this.logger.error(String.format("formatResponse - Unknown error formatting response. response: %s",
 					jsonObject != null ? jsonObject.toString() : null), e);
@@ -526,6 +527,35 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 
 		return response;
 
+	}
+
+	@Override
+	public Page<FusekiResponse> runOrganization(PageableQuery page) {
+		Page<FusekiResponse> result = null;
+		List<FusekiResponse> contentResult = new ArrayList<>();
+		Integer totalElements = 0;
+
+		this.logger.info("Calling fuseki: {}", this.fusekiTrellisUrl);
+
+		try {
+			// we retrieve the params in order to build the query later
+			final Map<String, String> params = this.queryBuilder.queryChunksOrganization(page.getEntity(),
+					page.getPage());
+			params.put(FusekiConstants.FILTERS_CHUNK, page.getFilters());
+
+			this.logger.info("Calling query: {}", this.selectPaginatedQueryDistinct(params));
+
+			contentResult = this.getElements(this.selectPaginatedQueryDistinct(params));
+			totalElements = this.getTotalElements(this.countQueryDistinct(params));
+
+			this.logger.info("Total: {}", totalElements);
+		} catch (final Exception e) {
+			this.logger.error("Error building the page {}", page);
+		}
+
+		result = new PageImpl<>(contentResult, page.getPage(), totalElements);
+
+		return result;
 	}
 
 }
