@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.um.asio.back.util.Constants;
 import es.um.asio.service.service.mail.EmailService;
-import es.um.asio.service.util.UserUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -25,8 +24,6 @@ public class MailController {
 
 	@Autowired
 	private EmailService emailService;
-
-	private UserUtils userUtils;
 
 	@PostMapping(MailController.Mappings.SEND)
 	public String sendMail(@RequestBody final Object request) throws Exception {
@@ -52,7 +49,7 @@ public class MailController {
 		String subject = null;
 		String text = null;
 		if (Constants.IMPORT.equals(type)) {
-			mails.add(userUtils.lastUserImportJob());
+			mails.add(emailService.lastUserImportJob());
 			subject = Constants.SUBJECT_IMPORT;
 			text = Constants.EMAIL_BODY_IMPORT;
 		}
