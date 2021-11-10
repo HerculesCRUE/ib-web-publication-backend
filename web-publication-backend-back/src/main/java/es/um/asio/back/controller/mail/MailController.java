@@ -26,6 +26,7 @@ public class MailController {
 	@Autowired
 	private EmailService emailService;
 
+	@Autowired
 	private UserUtils userUtils;
 
 	@PostMapping(MailController.Mappings.SEND)
