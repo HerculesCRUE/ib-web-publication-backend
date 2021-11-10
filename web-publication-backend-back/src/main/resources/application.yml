@@ -57,7 +57,7 @@ app:
     import-error-topic-name: import-error
   ldp:
     uri-namespace: https://ldpld1desa.um.es/um/es-ES
-    invalidEntities: Researcher-position, Researcher-role, Research-group, Phd-supervising-relationship, Supervisee-role, Feature, Project-contract, Funding, Research-field, Awarded-degree, Funding-source, Funding-program, Academic-subject
+    invalidEntities: Researcher-position, Researcher-role, Phd-supervising-relationship, Supervisee-role, Feature, Project-contract, Funding, Research-field, Awarded-degree, Funding-source, Funding-program, Academic-subject
     validProperties: title, description, name, correspondingAuthor, id
     filteredDetailsProperties: localId, id
     entities:
@@ -79,6 +79,13 @@ app:
         forward:
           - relates:forward|inheresIn:forward
           - relates:forward|realtedBy:forward|relates:forward
+      - type: Research-group
+        forward:
+          - relatedBy:forward|relates:forward
+          - relatedBy:forward|realtedBy:back|inheresIn:forward
+          - relatedBy:forward|realtedBy:back|relates:back          
+    
+          
         
 ## Actuator
 management:
