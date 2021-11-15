@@ -414,7 +414,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 		StringBuilder strBuilder = new StringBuilder();
 		strBuilder.append("OPTIONAL { ");
 		strBuilder = setDataToSubFieldsChunk(strBuilder, subentities, "")
-				.append(" } FILTER (?relatesid not in (?id)) ");
+				.append(" FILTER (?relatesid not in (?id)) }  ");
 		return strBuilder.toString();
 	}
 
