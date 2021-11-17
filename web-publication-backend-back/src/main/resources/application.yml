@@ -135,11 +135,11 @@ spring:
   mail:
     host: smtp.um.es
     port: 25
-    username: hercules@um.es 
+    username: herculesges@um.es 
     properties:
       mail:
         smtp:
-          auth: true
+          auth: false
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
