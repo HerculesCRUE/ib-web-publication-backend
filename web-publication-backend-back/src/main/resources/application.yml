@@ -133,10 +133,9 @@ keycloak:
 # Spring configuration
 spring:
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: herculesizertis@gmail.com
-    password: h3rcul3s1z3rt1s
+    host: smtp.um.es
+    port: 25
+    username: hercules@um.es 
     properties:
       mail:
         smtp:
