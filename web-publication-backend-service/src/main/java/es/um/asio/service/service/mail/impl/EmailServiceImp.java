@@ -36,6 +36,7 @@ public class EmailServiceImp implements EmailService {
 		for (String to : tos) {
 			msg.setTo(to);
 		}
+		((JavaMailSenderImpl)javaMailSender).getSession().setDebug(true);
 		msg.setFrom(from);
 		msg.setSubject(subject);
 		msg.setText(text);
