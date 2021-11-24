@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,18 +26,18 @@ public class MailController {
 	@Autowired
 	private EmailService emailService;
 
+	@Value("${spring.mail.username}")
+	private String to;
+
 	@PostMapping(MailController.Mappings.SEND)
 	public String sendMail(@RequestBody final Object request) throws Exception {
 		List<String> mails = new ArrayList<>();
+		mails.add(to);
 		final HashMap map = (HashMap) request;
-		if (map.get("mailList") == null || map.get("subject") == null || map.get("text") == null) {
-			throw new Exception("Attributes mailList, subject and text are required");
+		if (map.get("subject") == null || map.get("text") == null) {
+			throw new Exception("Attributes  subject and text are required");
 		}
-		if (map.get("mailList") instanceof ArrayList) {
-			mails = (List<String>) map.get("mailList");
-		} else if (map.get("mailList") instanceof String) {
-			mails.add((String) map.get("mailList"));
-		}
+
 		String subject = (String) map.get("subject");
 		String text = (String) map.get("text");
 		emailService.sendSimpleMail(mails, subject, text);
