@@ -65,16 +65,16 @@ public class ProjectController {
 //			p.setBirthDate(person.getRelatesBirthDate());
 //			p.setDescription(person.getRelatesDescription());
 //			p.setFirstName(person.getRelatesFirstName());
-			p.setGender(person.getInheresInGender());
+			p.setGender(person.getInheresIngender());
 //			p.setHasContactInfo(person.getRelatesHasContactInfo());
 //			p.setHomepage(person.getRelatesHomepage());
-			p.setId(person.getInheresInId());
+			p.setId(person.getInheresInid());
 //			p.setImage(person.getRelatesImage());
-			p.setName(person.getInheresInName());
-			p.setNickname(person.getInheresInNickname());
-			p.setPersonalMaibox(person.getInheresInPersonalMaibox());
-			p.setResearchLine(person.getInheresInResearchLine());
-			p.setSubjectArea(person.getInheresInSubjectArea());
+			p.setName(person.getInheresInname());
+			p.setNickname(person.getInheresInnickname());
+			p.setPersonalMaibox(person.getInheresInpersonalMaibox());
+			p.setResearchLine(person.getInheresInresearchLine());
+			p.setSubjectArea(person.getInheresInsubjectArea());
 //			p.setSurname(person.getRelatesSurname());
 //			p.setTaxId(person.getRelatesTaxId());
 

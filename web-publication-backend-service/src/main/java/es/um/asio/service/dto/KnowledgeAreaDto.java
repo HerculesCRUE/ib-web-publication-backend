@@ -19,4 +19,8 @@ public class KnowledgeAreaDto {
 	 * The title
 	 */
 	private String title;
+	/**
+	 * The uri
+	 */
+	private String uri;
 }

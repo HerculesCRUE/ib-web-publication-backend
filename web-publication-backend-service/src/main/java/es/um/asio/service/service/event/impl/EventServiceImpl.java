@@ -60,10 +60,9 @@ public class EventServiceImpl extends FusekiService<EventFilter> implements Even
 
 		if (filter != null) {
 			if (StringUtils.isNotBlank(filter.getDate())) {
-				strBuilder.append("FILTER (?date = \"");
+				strBuilder.append("FILTER regex(?date, \"");
 				strBuilder.append(filter.getDate());
-				strBuilder.append("\"");
-				strBuilder.append(filter.getLanguage());
+				strBuilder.append("\",\"i\"");				
 				strBuilder.append(") . ");
 			}
 
@@ -117,7 +116,7 @@ public class EventServiceImpl extends FusekiService<EventFilter> implements Even
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
 				: Arrays.asList("Conference", "Exhibit", "Activity");
 
-		Entity entity = new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type");
+		Entity entity = new Entity("Evento", types, "date", "id", "locality", "title", "nowhere:type", "freetext:(?x AS ?uri)");
 
 		if (StringUtils.isNotBlank(filter.getParticipantId())) {
 			List<Subentity> subentities = new ArrayList<Subentity>();

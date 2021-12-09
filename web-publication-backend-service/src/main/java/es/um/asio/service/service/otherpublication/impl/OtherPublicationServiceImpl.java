@@ -2,7 +2,9 @@ package es.um.asio.service.service.otherpublication.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +20,7 @@ import es.um.asio.service.model.Entity;
 import es.um.asio.service.model.FusekiResponse;
 import es.um.asio.service.model.PageableQuery;
 import es.um.asio.service.model.SimpleQuery;
+import es.um.asio.service.model.Subentity;
 import es.um.asio.service.service.document.impl.DocumentServiceImpl;
 import es.um.asio.service.service.impl.FusekiService;
 import es.um.asio.service.service.otherpublication.OtherPublicationService;
@@ -108,10 +111,32 @@ public class OtherPublicationServiceImpl extends FusekiService<OtherPublicationF
 	@Override
 	public Entity retrieveEntity(OtherPublicationFilter filter) {
 		List<String> types = StringUtils.isNotBlank(filter.getTypes()) ? Arrays.asList(filter.getTypes().split(","))
-				: Arrays.asList("Dossier");
+				: Arrays.asList("Dossier", "Other");
+		
+		List<String> typesReplace = new ArrayList<>();
+		
+		for (String type : types) {
+			typesReplace.add(type.replace("Other", "Publication"));
+		}
 
-		Entity entity = new Entity("OtherPublication", types, "id", "title", "date", "description", "ocicnum",
-				"nowhere:type");
+		Entity entity = new Entity("OtherPublication", typesReplace, "id", "title", "date", "nowhere:type", "freetext:(?x AS ?uri)");
+		
+		entity.setOptionalFields(Arrays.asList("description", "ocicnum"));
+		
+		if (StringUtils.isNotBlank(filter.getAuthorId())) {
+			List<Subentity> subentities = new ArrayList<Subentity>();
+
+			String fieldName = "correspondingAuthor";
+
+			Map<String, String> filters = new HashMap<>();
+			filters.put("id", filter.getAuthorId());
+
+			Subentity subentity = new Subentity();
+			subentity.setFieldName(fieldName);
+			subentity.setFilters(filters);
+			subentities.add(subentity);
+			entity.setSubentities(subentities);
+		}
 
 		return entity;
 	}
@@ -120,10 +145,15 @@ public class OtherPublicationServiceImpl extends FusekiService<OtherPublicationF
 	public Entity retrieveEntity(String type) {
 		List<String> types = new ArrayList<String>();
 		String[] splitType = type.split("/");
-		types.add(splitType[splitType.length - 1]);
+		types.add(splitType[splitType.length - 1]);	
+		
+		if(type.equals("Dossier")) {
+			return new Entity("OtherPublication", types, "id", "title", "date", "description", "ocicnum", "nowhere:type");			
+		} else if(type.equals("Publication")){
+			return new Entity("OtherPublication", types, "id", "title", "date", "keyword", "summary", "doi", "PageStart", "PageEnd", "nowhere:type");
+		}
 
-		return new Entity("OtherPublication", types, "id", "title", "date", "description", "ocicnum", "nowhere:type");
-
+		return null;
 	}
 
 	@Override

@@ -9,14 +9,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProjectDetailDto {
-	
-	/** 
+
+	/**
 	 * The id
 	 */
 	private String id;
-	
-	/** 
-	 * The title 
+
+	/**
+	 * The title
 	 */
 	private String title;
 
@@ -24,22 +24,22 @@ public class ProjectDetailDto {
 	 * The abbreviation
 	 */
 	private String abbreviation;
-	
+
 	/**
 	 * The description
 	 */
 	private String description;
-	
+
 	/**
 	 * The endDate
 	 */
-	private String dateEnd;
-	
+	private String endDate;
+
 	/**
 	 * The foreseenJustificationDate
 	 */
 	private String foreseenJustificationDate;
-	
+
 	/**
 	 * The keyword
 	 */
@@ -49,24 +49,24 @@ public class ProjectDetailDto {
 	 * The modality
 	 */
 	private String modality;
-	
+
 	/**
 	 * The needsEthicalValidation
 	 */
 	private String needsEthicalValidation;
-	
+
 	/**
 	 * The projectClassification
 	 */
 	private String projectClassification;
-	
-	/** 
-	 * The startDate 
+
+	/**
+	 * The startDate
 	 */
-	private String dateStart;
-	
-	/** 
-	 * The status 
+	private String startDate;
+
+	/**
+	 * The status
 	 */
 	private String status;
 }

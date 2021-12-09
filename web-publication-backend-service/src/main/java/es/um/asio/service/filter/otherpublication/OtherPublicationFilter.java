@@ -59,4 +59,9 @@ public class OtherPublicationFilter extends Filter {
 	 * The year to
 	 */
 	private String dateTo;
+	
+	/**
+	 * The author id.
+	 */
+	private String authorId;
 }

@@ -39,4 +39,9 @@ public class OtherPublicationDto {
 	 * The type
 	 */
 	private String type;
+	/**
+	 * The uri
+	 * 
+	 */
+	private String uri;
 }

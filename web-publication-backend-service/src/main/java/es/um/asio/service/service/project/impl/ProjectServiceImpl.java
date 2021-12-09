@@ -199,7 +199,7 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	@Override
 	public Entity retrieveEntity(ProjectFilter filter) {
 		Entity entity = new Entity("Project", "abbreviation", "endDate", "id", "projectClassification", "startDate",
-				"modality", "title");
+				"modality", "title", "freetext:(?x AS ?uri)");
 
 		// Add data to subentity atributes and filters
 		if (filter.getAuthorId() != null && !filter.getAuthorId().isEmpty()) {
@@ -260,10 +260,10 @@ public class ProjectServiceImpl extends FusekiService<ProjectFilter> implements 
 	}
 
 	private Entity retrieveParticipantsEntity() {
-		Entity entity = new Entity("Project", "id", "nowhere:inheresInBirthDate", "nowhere:inheresInDescription",
-				"nowhere:inheresInFirstName", "nowhere:inheresInGender", "nowhere:inheresInImage",
-				"nowhere:inheresInName", "nowhere:inheresInId", "nowhere:inheresInNickname",
-				"nowhere:inheresInResearchLine", "nowhere:inheresInSurname", "nowhere:inheresInTaxId");
+		Entity entity = new Entity("Project", "id", "nowhere:inheresInbirthDate", "nowhere:inheresIndescription",
+				"nowhere:inheresInfirstName", "nowhere:inheresIngender", "nowhere:inheresInimage",
+				"nowhere:inheresInname", "nowhere:inheresInid", "nowhere:inheresInnickname",
+				"nowhere:inheresInresearchLine", "nowhere:inheresInsurname", "nowhere:inheresIntaxId");
 
 		List<Subentity> subentities = new ArrayList<Subentity>();
 		// Extra fields

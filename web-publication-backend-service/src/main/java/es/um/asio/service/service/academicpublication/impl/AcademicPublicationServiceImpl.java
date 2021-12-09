@@ -102,7 +102,7 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 		}
 
 		Entity entity = new Entity("AcademicPublication", typesReplace, "abbreviation", "date", "doi", "id", "title",
-				"nowhere:type");
+				"nowhere:type", "freetext:(?x AS ?uri)");
 
 		// Add data to subentity atributes and filters
 		if (filter.getDirectedBy() != null && !filter.getDirectedBy().isEmpty()) {
@@ -162,8 +162,20 @@ public class AcademicPublicationServiceImpl extends FusekiService<AcademicPublic
 		String[] splitType = type.split("/");
 		types.add(splitType[splitType.length - 1]);
 
-		return new Entity("AcademicPublication", types, "date", "doi", "endPage", "id", "placeOfPublication",
-				"publishedIn", "startPage", "summary", "title", "nowhere:type");
+		Entity entity = new Entity("AcademicPublication", types, "date", "doi", "id", "placeOfPublication", "summary",
+				"title", "nowhere:type");
+
+		List<String> optional = new ArrayList<>();
+		optional.add("endPage");
+		optional.add("publishedIn");
+		optional.add("startPage");
+		optional.add("pageEnd");
+		optional.add("pageStart");
+
+		entity.setOptionalFields(optional);
+
+		return entity;
+
 	}
 
 	@Override

@@ -76,14 +76,17 @@ public class QueryBuilderImpl implements QueryBuilder {
 		if (fields != null) {
 			for (String field : fields) {
 				String fieldFinal = field;
-
-				if (field.contains(":")) {
+				if (field.startsWith("freetext:")) {
 					fieldFinal = field.split(":")[field.split(":").length - 1];
-				} else if (field.contains(",")) {
-					fieldFinal = field.split(",")[0];
-				}
+				} else {
+					if (field.contains(":")) {
+						fieldFinal = field.split(":")[field.split(":").length - 1];
+					} else if (field.contains(",")) {
+						fieldFinal = field.split(",")[0];
+					}
 
-				strBuilder.append("?");
+					strBuilder.append("?");
+				}
 				strBuilder.append(fieldFinal);
 				strBuilder.append(" ");
 			}
@@ -122,7 +125,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 		StringBuilder strBuilder = new StringBuilder();
 
 		for (String field : fields) {
-			if (field.startsWith("nowhere:")) {
+			if (field.startsWith("nowhere:") || field.startsWith("freetext:")) {
 				continue;
 			} else if (field.contains(",")) {
 				String[] split = field.split(",");
@@ -131,7 +134,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 
 				for (int i = 0; i < split.length; i++) {
 					strBuilder.append(i > 0 ? "|" : "");
-					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/def/");
 					strBuilder.append(split[i]);
 					strBuilder.append(">");
 				}
@@ -151,15 +154,15 @@ public class QueryBuilderImpl implements QueryBuilder {
 		StringBuilder strBuilder = new StringBuilder();
 
 		if (optionalFields != null) {
-			strBuilder.append("OPTIONAL { ");
+
 			for (String field : optionalFields) {
 				String[] split = field.split(",");
-
+				strBuilder.append(" OPTIONAL { ");
 				strBuilder.append("?x ");
 
 				for (int i = 0; i < split.length; i++) {
 					strBuilder.append(i > 0 ? "|" : "");
-					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/def/");
 					strBuilder.append(split[i]);
 					strBuilder.append(">");
 				}
@@ -167,8 +170,9 @@ public class QueryBuilderImpl implements QueryBuilder {
 				strBuilder.append(" ?");
 				strBuilder.append(split[0]);
 				strBuilder.append(" . ");
+				strBuilder.append("} ");
 			}
-			strBuilder.append("} ");
+
 		}
 
 		return strBuilder.toString();
@@ -178,7 +182,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 		StringBuilder strBuilder = new StringBuilder();
 
 		strBuilder.append("?x ");
-		strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+		strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/def/");
 		strBuilder.append(field);
 		strBuilder.append("> ");
 		strBuilder.append("?");
@@ -192,7 +196,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 		StringBuilder strBuilder = new StringBuilder();
 
 		strBuilder.append("?" + prefix + " ");
-		strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+		strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/def/");
 		strBuilder.append(field);
 		strBuilder.append("> ");
 		strBuilder.append("?");
@@ -215,12 +219,12 @@ public class QueryBuilderImpl implements QueryBuilder {
 				String namedField = (subentity.getQueryFieldName() != null && !subentity.getQueryFieldName().isBlank())
 						? subentity.getQueryFieldName()
 						: subentity.getFieldName();
-				String nextPrefix = (prefix.isEmpty()) ? namedField : prefix + capitalizeFirstLetter(namedField);
+				String nextPrefix = (prefix.isEmpty()) ? namedField : prefix + namedField;
 				if (subentity.getQueryFieldName() != null && !subentity.getQueryFieldName().isBlank()) {
 					strBuilder.append("?");
 					strBuilder.append(prefix);
 					strBuilder.append(" ");
-					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+					strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/def/");
 					strBuilder.append(subentity.getFieldName());
 					strBuilder.append("> ");
 					strBuilder.append("?");
@@ -249,14 +253,14 @@ public class QueryBuilderImpl implements QueryBuilder {
 				if (subentity.getFields() != null) {
 					for (String field : subentity.getFields()) {
 						strBuilder.append("?" + namedField + " ");
-						strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+						strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/def/");
 						strBuilder.append(field);
 						strBuilder.append("> ");
 						strBuilder.append("?");
 						if (subentity.getIgnorePrefix() != null && subentity.getIgnorePrefix()) {
 							strBuilder.append(field);
 						} else {
-							strBuilder.append(namedField + capitalizeFirstLetter(field));
+							strBuilder.append(namedField + field);
 						}
 						strBuilder.append(" . ");
 					}
@@ -267,14 +271,14 @@ public class QueryBuilderImpl implements QueryBuilder {
 					StringBuilder strBuilderFilters = new StringBuilder();
 					for (Entry<String, String> filter : subentity.getFilters().entrySet()) {
 						strBuilder.append("?" + nextPrefix + " ");
-						strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/rec/");
+						strBuilder.append("<" + this.propetiesUrl + "/um/es-ES/def/");
 						strBuilder.append(filter.getKey());
 						strBuilder.append("> ");
 						strBuilder.append("?");
-						strBuilder.append(nextPrefix + capitalizeFirstLetter(filter.getKey()));
+						strBuilder.append(nextPrefix + filter.getKey());
 						strBuilder.append(" . ");
 						strBuilderFilters.append("FILTER ( str(?");
-						strBuilderFilters.append(nextPrefix + capitalizeFirstLetter(filter.getKey()));
+						strBuilderFilters.append(nextPrefix + filter.getKey());
 						strBuilderFilters.append(") = \"");
 						strBuilderFilters.append(filter.getValue());
 						strBuilderFilters.append("\") . ");
@@ -347,7 +351,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 					fields.append(" ");
 
 					where.append(model);
-					where.append(" <" + this.propetiesUrl + "/um/es-ES/rec/");
+					where.append(" <" + this.propetiesUrl + "/um/es-ES/def/");
 					where.append(s.getValue());
 					where.append("> ?");
 					where.append(s.getValue());
@@ -378,10 +382,46 @@ public class QueryBuilderImpl implements QueryBuilder {
 		return strBuilder.toString();
 	}
 
-	private String capitalizeFirstLetter(String original) {
-		if (original == null || original.length() == 0) {
-			return original;
-		}
-		return original.substring(0, 1).toUpperCase() + original.substring(1);
+	@Override
+	public Map<String, String> queryChunksOrganization(Entity entity, Pageable page) {
+		String selectChunk = this.selectChunk(entity.getFields()) + this.selectChunk(entity.getOptionalFields());
+		String typeChunk = this.typeChunk(entity.getEntity(), entity.getTypes());
+
+		String fieldsChunk = this.fieldsChunk(entity.getFields()) + this.optionalFieldsChunk(entity.getOptionalFields())
+				+ this.subfieldsChunkOrganization(entity.getSubentities());
+
+		String limit = String.valueOf(page.getPageSize());
+		String offset = String.valueOf(page.getOffset());
+		String order = this.orderChunk(page.getSort());
+		String group = this.groupChunk(entity.getGroup());
+		String join = this.joinChunk(entity.getJoin());
+
+		Map<String, String> map = new HashMap<>();
+		map.put(FusekiConstants.SELECT_CHUNK, selectChunk);
+		map.put(FusekiConstants.COUNT_CHUNK, FusekiConstants.COUNT_CHUNK_TEMPLATE);
+		map.put(FusekiConstants.TYPE_CHUNK, typeChunk);
+		map.put(FusekiConstants.FIELDS_CHUNK, fieldsChunk);
+		map.put(FusekiConstants.GROUP, group);
+		map.put(FusekiConstants.ORDER, order);
+		map.put(FusekiConstants.LIMIT, limit);
+		map.put(FusekiConstants.OFFSET, offset);
+		map.put(FusekiConstants.JOIN_CHUNK, join);
+
+		return map;
 	}
+
+	private String subfieldsChunkOrganization(List<Subentity> subentities) {
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append("OPTIONAL { ");
+		strBuilder = setDataToSubFieldsChunk(strBuilder, subentities, "")
+				.append(" FILTER (?relatesid not in (?id)) }  ");
+		return strBuilder.toString();
+	}
+
+//	private String capitalizeFirstLetter(String original) {
+//		if (original == null || original.length() == 0) {
+//			return original;
+//		}
+//		return original.substring(0, 1).toUpperCase() + original.substring(1);
+//	}
 }

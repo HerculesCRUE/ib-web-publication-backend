@@ -18,13 +18,15 @@ app:
     services: false
   # trellis
   fusekitrellis:
-    url: http://localhost:3030/trellis/sparql
+    url: https://sparqlld1desa.um.es/trellis/sparql
   # Service who get Sparql query results from all nodes
   federationAll:
     url: http://localhost:9328/federation/nodes/all
   # Service who get Sparql query results from certain nodes
   federationNode:
     url: http://localhost:9328/federation/nodes/list
+  trellis:
+    dateFormatOutput: dd-MM-yyyy
   serviceDiscoveryExcludeNodes:
     url: https://linkeddata1.um.es/service-discovery/service-discovery/exclude/nodes/name
   node: um
@@ -54,7 +56,37 @@ app:
   kafka:
     import-error-topic-name: import-error
   ldp:
-    uri-namespace: https://ldpld1.um.es/um/es-ES/rec
+    uri-namespace: https://ldpld1desa.um.es/um/es-ES
+    invalidEntities: Researcher-position, Researcher-role, Phd-supervising-relationship, Supervisee-role, Feature, Project-contract, Funding, Research-field, Awarded-degree, Funding-source, Funding-program, Academic-subject
+    validProperties: title, description, name, correspondingAuthor, id
+    filteredDetailsProperties: localId, id
+    entities:
+      - type: Person
+        back:
+          - inheresIn:back|relates:back
+          - inheresIn:back|relatedBy:forward|relatedBy:back
+      - type: Department, Center
+        forward:
+          - relatedBy:forward|relates:forward
+          - relatedBy:forward|realtedBy:back|inheresIn:forward
+          - relatedBy:forward|realtedBy:back|relates:back
+      - type: University
+        back:
+          - relates:back|relatedBy:back
+          - relates:back|realtedBy:back|inheresIn:forward
+          - relates:back|realtedBy:back|relates:back
+      - type: Project
+        forward:
+          - relates:forward|inheresIn:forward
+          - relates:forward|realtedBy:forward|relates:forward
+      - type: Research-group
+        forward:
+          - relatedBy:forward|relates:forward
+          - relatedBy:forward|realtedBy:back|inheresIn:forward
+          - relatedBy:forward|realtedBy:back|relates:back          
+    
+          
+        
 ## Actuator
 management:
   endpoint:
@@ -75,7 +107,7 @@ management:
       
 ## In case of configure web endpoints, remove it or change port number
 server:
-  port: 8787
+  port: 18787
   use-forward-headers: true
   tomcat:
     remote-ip-header: x-forwarded-for
@@ -101,14 +133,13 @@ keycloak:
 # Spring configuration
 spring:
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: herculesizertis@gmail.com
-    password: h3rcul3s1z3rt1s
+    host: smtp.um.es
+    port: 25
+    username: herculesges@um.es 
     properties:
       mail:
         smtp:
-          auth: true
+          auth: false
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000

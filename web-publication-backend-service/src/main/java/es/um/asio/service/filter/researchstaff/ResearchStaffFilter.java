@@ -1,5 +1,7 @@
 package es.um.asio.service.filter.researchstaff;
 
+import java.util.List;
+
 import es.um.asio.service.filter.Filter;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,11 +24,13 @@ public class ResearchStaffFilter extends Filter {
 	 * The name
 	 */
 	private String name;
-	
+
 	/**
 	 * The title
 	 */
 	private String title;
-	
-	private String knowledgeArea;
+
+	private List<String> knowledgeAreas;
+
+	private String organizationId;
 }
