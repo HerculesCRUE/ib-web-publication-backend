@@ -242,7 +242,7 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		final String result = String.format(FusekiConstants.QUERY__SIMPLE_TEMPLATE_SELECT,
 				params.get(FusekiConstants.SELECT_CHUNK), params.get(FusekiConstants.TYPE_CHUNK),
 				params.get(FusekiConstants.FIELDS_CHUNK), params.get(FusekiConstants.JOIN_CHUNK),
-				params.get(FusekiConstants.FILTERS_CHUNK));
+				params.get(FusekiConstants.FILTERS_CHUNK), params.get(FusekiConstants.ORDER));
 
 		return result;
 	}

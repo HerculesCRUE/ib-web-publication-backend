@@ -29,7 +29,7 @@ public class KnowledgeAreaServiceImpl extends FusekiService<KnowledgeAreaFilter>
 
 	@Autowired
 	private SparqlExecQuery serviceSPARQL;
-	
+
 	@Override
 	public Page<FusekiResponse> findPaginated(KnowledgeAreaFilter filter, Pageable pageable) {
 		logger.info("Searching KnowledgeAreas with filter: {} page: {}", filter, pageable);
@@ -42,16 +42,16 @@ public class KnowledgeAreaServiceImpl extends FusekiService<KnowledgeAreaFilter>
 	@Override
 	public List<Object> findAll() {
 		logger.info("Get all KnowledgeAreas");
-		
+
 		SimpleQuery query = new SimpleQuery(this.retrieveEntity(), "");
-		
+
 		return serviceSPARQL.run(query);
 	}
 
 	@Override
 	public String filtersChunk(KnowledgeAreaFilter filter) {
 		StringBuilder strBuilder = new StringBuilder();
-		
+
 		if (filter != null) {
 
 			if (StringUtils.isNotBlank(filter.getTitle())) {
@@ -63,13 +63,15 @@ public class KnowledgeAreaServiceImpl extends FusekiService<KnowledgeAreaFilter>
 				strBuilder.append("\", \"i\")) . ");
 			}
 		}
-		
+
 		return strBuilder.toString();
 	}
 
 	@Override
 	public Entity retrieveEntity() {
-		return new Entity("Knowledge-area", "id", "title","freetext:(?x AS ?uri)");
+		Entity entity = new Entity("Knowledge-area", "id", "title", "freetext:(?x AS ?uri)");
+
+		return entity;
 	}
 
 }

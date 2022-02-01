@@ -65,6 +65,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 		map.put(FusekiConstants.TYPE_CHUNK, typeChunk);
 		map.put(FusekiConstants.FIELDS_CHUNK, fieldsChunk);
 		map.put(FusekiConstants.GROUP, group);
+		map.put(FusekiConstants.ORDER, FusekiConstants.ORDER_ASC);
 		map.put(FusekiConstants.JOIN_CHUNK, join);
 
 		return map;
