@@ -558,4 +558,35 @@ public class SparqlExecQueryImpl implements SparqlExecQuery {
 		return result;
 	}
 
+	@Override
+	public List<Object> runOrder(SimpleQuery query, String order) {
+		List<FusekiResponse> contentResult = new ArrayList<>();
+
+		try {
+			// we retrieve the params in order to build the query later
+			final Map<String, String> params = this.queryBuilder.queryChunks(query.getEntity());
+			params.put(FusekiConstants.FILTERS_CHUNK, query.getFilters());
+
+			contentResult = this.getElements(this.selectSimpleQueryOrder(params, order));
+			this.logger.info("Calling query: {}", this.selectSimpleQueryOrder(params, order));
+		} catch (final Exception e) {
+			this.logger.error("Error building the page {}", query);
+		}
+
+		FusekiResponse fusekiResponse = (contentResult.size() > 0) ? contentResult.get(0) : new FusekiResponse();
+
+		Map<String, Object> mapResults = (Map<String, Object>) fusekiResponse.getResults();
+
+		return (List<Object>) mapResults.get("bindings");
+	}
+
+	private String selectSimpleQueryOrder(final Map<String, String> params, String order) {
+		final String result = String.format(FusekiConstants.QUERY__SIMPLE_TEMPLATE_SELECT_ORDERBY,
+				params.get(FusekiConstants.SELECT_CHUNK), params.get(FusekiConstants.TYPE_CHUNK),
+				params.get(FusekiConstants.FIELDS_CHUNK), params.get(FusekiConstants.JOIN_CHUNK),
+				params.get(FusekiConstants.FILTERS_CHUNK), order);
+
+		return result;
+	}
+
 }

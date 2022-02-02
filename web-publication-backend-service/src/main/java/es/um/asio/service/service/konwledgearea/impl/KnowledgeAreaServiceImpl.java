@@ -45,7 +45,7 @@ public class KnowledgeAreaServiceImpl extends FusekiService<KnowledgeAreaFilter>
 
 		SimpleQuery query = new SimpleQuery(this.retrieveEntity(), "");
 
-		return serviceSPARQL.run(query);
+		return serviceSPARQL.runOrder(query, "title");
 	}
 
 	@Override

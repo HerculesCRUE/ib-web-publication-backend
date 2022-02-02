@@ -54,4 +54,6 @@ public interface SparqlExecQuery {
 
 	Page<FusekiResponse> runOrganization(PageableQuery pageableQuery);
 
+	List<Object> runOrder(SimpleQuery query, String string);
+
 }
